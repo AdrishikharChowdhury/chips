@@ -1,11 +1,11 @@
+import Banner from "@/components/root/Banner";
 import ComponentList from "@/components/root/ComponentList";
-import ComponentOverview from "@/components/root/ComponentOverview";
 import { sampleComponents } from "@/constants";
 
 export default function Home() {
   return (
     <div>
-      <ComponentOverview {...sampleComponents[0]} />
+      <Banner />
       <ComponentList
         title="Latest Components"
         components={sampleComponents}

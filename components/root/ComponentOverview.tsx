@@ -40,8 +40,8 @@ export default function ComponentOverview({
           <p className="font-degular-display text-xl" >Borrow Component</p>
         </Button>
       </div>
-      <div className="relative flex flex-1 justify-center items-center rounded-4xl min-h-140">
-        <Image src={cover} alt={title} width={200} height={300} className="object-contain min-h-3/4 w-3/4 rounded-2xl" />
+      <div className="relative flex flex-1 justify-center items-center rounded-4xl h-140 overflow-hidden">
+        <Image src={cover} alt={title} width={300} height={450} className="h-full w-full object-contain rounded-2xl" />
       </div>
     </section>
   );
