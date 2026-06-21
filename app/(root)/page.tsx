@@ -9,7 +9,7 @@ export default function Home() {
       <ComponentList
         title="Latest Components"
         components={sampleComponents}
-        containerClassName="mt-28"
+        containerClassName="my-28"
       />
     </div>
   );
