@@ -1,26 +1,215 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Design System Colors */
+  --color-cream-paper: #fbf3e4;
+  --color-midnight-ink: #0b0f16;
+  --color-cobalt-blue: #1457d8;
+  --color-poppy-red: #e84522;
+  --color-marigold-yellow: #f5b400;
+  --color-blush-pink: #f2c3bd;
+
+  /* Typography — Font Families */
+  --font-degular-display: 'degular-display', 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-usual: 'usual', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 16px;
+  --leading-caption: 1.78;
+  --text-body: 18px;
+  --leading-body: 1.82;
+  --text-subheading: 22px;
+  --leading-subheading: 1.82;
+  --text-heading-sm: 52px;
+  --leading-heading-sm: 1.23;
+  --tracking-heading-sm: 0.47px;
+  --text-heading: 80px;
+  --leading-heading: 1.1;
+  --tracking-heading: 1.04px;
+  --text-display: 116px;
+  --leading-display: 1.03;
+  --tracking-display: 2.2px;
+
+  /* Spacing */
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-44: 44px;
+  --spacing-48: 48px;
+  --spacing-96: 96px;
+  --spacing-104: 104px;
+  --spacing-120: 120px;
+  --spacing-128: 128px;
+
+  /* Border Radius */
+  --radius-full: 9999px;
+
+  /* Shadcn compat — mapped to design system */
+  --color-background: #fbf3e4;
+  --color-foreground: #0b0f16;
+  --color-card: #fbf3e4;
+  --color-card-foreground: #0b0f16;
+  --color-popover: #fbf3e4;
+  --color-popover-foreground: #0b0f16;
+  --color-primary: #1457d8;
+  --color-primary-foreground: #fbf3e4;
+  --color-secondary: #e84522;
+  --color-secondary-foreground: #fbf3e4;
+  --color-muted: #fbf3e4;
+  --color-muted-foreground: #0b0f16;
+  --color-accent: #f5b400;
+  --color-accent-foreground: #0b0f16;
+  --color-destructive: #e84522;
+  --color-destructive-foreground: #fbf3e4;
+  --color-border: #0b0f16;
+  --color-input: #0b0f16;
+  --color-ring: #1457d8;
+  --color-chart-1: #1457d8;
+  --color-chart-2: #e84522;
+  --color-chart-3: #f5b400;
+  --color-chart-4: #f2c3bd;
+  --color-chart-5: #0b0f16;
+  --radius: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --sidebar: #fbf3e4;
+  --sidebar-foreground: #0b0f16;
+  --sidebar-primary: #1457d8;
+  --sidebar-primary-foreground: #fbf3e4;
+  --sidebar-accent: #f5b400;
+  --sidebar-accent-foreground: #0b0f16;
+  --sidebar-border: #0b0f16;
+  --sidebar-ring: #1457d8;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Colors */
+  --color-cream-paper: #fbf3e4;
+  --color-midnight-ink: #0b0f16;
+  --color-cobalt-blue: #1457d8;
+  --color-poppy-red: #e84522;
+  --color-marigold-yellow: #f5b400;
+  --color-blush-pink: #f2c3bd;
+
+  /* Typography — Font Families */
+  --font-degular-display: 'degular-display', 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-usual: 'usual', 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Typography — Scale */
+  --text-caption: 16px;
+  --leading-caption: 1.78;
+  --text-body: 18px;
+  --leading-body: 1.82;
+  --text-subheading: 22px;
+  --leading-subheading: 1.82;
+  --text-heading-sm: 52px;
+  --leading-heading-sm: 1.23;
+  --tracking-heading-sm: 0.47px;
+  --text-heading: 80px;
+  --leading-heading: 1.1;
+  --tracking-heading: 1.04px;
+  --text-display: 116px;
+  --leading-display: 1.03;
+  --tracking-display: 2.2px;
+
+  /* Typography — Weights */
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+
+  /* Spacing */
+  --spacing-unit: 4px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-44: 44px;
+  --spacing-48: 48px;
+  --spacing-96: 96px;
+  --spacing-104: 104px;
+  --spacing-120: 120px;
+  --spacing-128: 128px;
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --section-gap: 96px;
+  --card-padding: 32px;
+  --element-gap: 16-32px;
+
+  /* Border Radius */
+  --radius-full: 9999px;
+
+  /* Named Radii */
+  --radius-cards: 0px;
+  --radius-buttons: 9999px;
+  --radius-illustrations: 0px;
+
+  /* Surfaces */
+  --surface-cream-canvas: #fbf3e4;
+  --surface-cobalt-blue-panel: #1457d8;
+  --surface-poppy-red-panel: #e84522;
+  --surface-marigold-yellow-panel: #f5b400;
+}
+
+.admin {
+  /* Surface hierarchy — white canvas, dark sidebar */
+  --background: oklch(0.97 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #1457d8;
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.92 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.94 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: #e84522;
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.88 0 0);
+  --input: oklch(0.88 0 0);
+  --ring: #1457d8;
+  --chart-1: #1457d8;
+  --chart-2: #e84522;
+  --chart-3: #f5b400;
+  --chart-4: #f2c3bd;
+  --chart-5: #0b0f16;
+  --radius: 0.5rem;
+  --radius-sm: calc(0.5rem * 0.6);
+  --radius-md: calc(0.5rem * 0.8);
+  --radius-lg: 0.5rem;
+  --radius-xl: calc(0.5rem * 1.4);
+
+  /* Dark sidebar */
+  --sidebar: #0b0f16;
+  --sidebar-foreground: oklch(0.88 0 0);
+  --sidebar-primary: #1457d8;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.25 0 0);
+  --sidebar-accent-foreground: oklch(0.88 0 0);
+  --sidebar-border: oklch(0.25 0 0);
+  --sidebar-ring: #1457d8;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-cream-paper text-midnight-ink;
+  }
+  html {
+    @apply font-usual;
+  }
 }
