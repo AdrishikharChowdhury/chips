@@ -1,9 +1,21 @@
-import React from 'react'
+import { Components } from "@/types"
+import BookCard from "./BookCard"
 
-export default function ComponentList() {
+interface ComponentListProps {
+  title: string
+  components: Components[]
+  containerClassName?: string
+}
+
+export default function ComponentList({title, components,containerClassName}:ComponentListProps) {
   return (
-    <section>
-      <h2 className='font-degular-display text-4xl' >Popular Components</h2>
+    <section className={containerClassName} >
+      <h2 className='font-degular-display text-4xl' >{title}</h2>
+      <ul className="book-list">
+        {components.map((component) => (
+          <BookCard key={component.id} {...component} />
+        ))}
+      </ul>
     </section>
   )
 }

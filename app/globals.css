@@ -294,7 +294,7 @@
 
   /* Book List */
   .book-list {
-    @apply mt-10 flex flex-wrap gap-5 max-xs:justify-between xs:gap-10;
+    @apply mt-10 flex flex-col gap-5 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 sm:gap-6 md:gap-8 lg:gap-10;
   }
 
   /* Book Overview */
