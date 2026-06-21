@@ -29,8 +29,8 @@ export default function ComponentOverview({
           </div>
         </div>
         <div className="book-copies">
-          <p>Total Copies: <span className="">{total_copies}</span></p>
-          <p>Available Copies: <span className="">{available_copies}</span></p>
+          <p>Total Count: <span className="">{total_copies}</span></p>
+          <p>Available Count: <span className="">{available_copies}</span></p>
         </div>
         <p className="book-description">
           {description}

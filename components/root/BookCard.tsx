@@ -14,7 +14,7 @@ export default function BookCard({
   return (
     <li className={cn(isLoaned && "w-full")}>
       <Link
-        href={`/books/${id}`}
+        href={`/components/${id}`}
         className={cn(
           "group flex flex-col items-center rounded-t-4xl border-2 border-midnight-ink/10 bg-cream-paper min-h-130",
           isLoaned && "w-full flex-col items-center overflow-hidden",
