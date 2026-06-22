@@ -242,7 +242,7 @@
   }
 
   .form-input {
-    @apply w-full min-h-14 border-none text-base font-bold placeholder:font-normal text-midnight-ink placeholder:text-midnight-ink/40 focus-visible:ring-0 focus-visible:shadow-none bg-cream-paper border border-midnight-ink/20;
+    @apply w-full min-h-14 rounded-2xl border-none bg-[#FDFBD4] shadow px-4 py-3 text-base font-bold text-midnight-ink placeholder:font-normal placeholder:text-midnight-ink/40 transition-colors focus-visible:ring-0 focus-visible:outline-none;
   }
 
   /* Book Card */
