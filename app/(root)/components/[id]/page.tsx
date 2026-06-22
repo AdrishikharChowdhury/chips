@@ -9,6 +9,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ id: 
   const id = Number(idStr);
   const c = sampleComponents.find((c) => c.id === id);
   if (!c) notFound();
+  const genreArray = c.genre.split("/");
 
   return (
     <div className="space-y-8">
@@ -40,9 +41,11 @@ export default async function ComponentPage({ params }: { params: Promise<{ id: 
             <span className="border-2 border-poppy-red px-4 py-1.5 font-semibold text-poppy-red capitalize w-fit">by {c.author}</span>
           </div>
           <div className="flex flex-wrap gap-4 text-sm">
-            <span className="border-2 border-cobalt-blue px-4 py-1.5 font-semibold text-cobalt-blue">
-              {c.genre}
-            </span>
+            <div className="text-sm flex gap-4 self-center">
+              {genreArray.map((genreItem,idx:number) => (
+                <span className="text-cobalt-blue font-semibold border-2  border-cobalt-blue px-3 py-1 w-max text-center " key={idx} >{ genreItem}</span>
+              ))}
+            </div>
             <span className="flex items-center gap-1.5 border-2 border-midnight-ink/60 px-4 py-1.5 font-semibold text-midnight-ink">
               <Image src="/icons/star.svg" alt="" width={16} height={16} />
               {c.rating}
