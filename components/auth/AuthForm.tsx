@@ -73,7 +73,10 @@ export default function AuthForm<T extends FieldValues>({
                     {FIELD_NAMES[field as keyof typeof FIELD_NAMES]}:
                   </FieldLabel>
                   {field === "universityCard" ? (
-                    <ImageUpload />
+                    <ImageUpload
+                      onUpload={(url) => form.setValue(field as Path<T>, url as any)}
+                      value={ctrlField.value as string}
+                    />
                   ) : (
                     <Input
                       className="form-input pl-4"

@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "imagekit.io",
+      },
       { hostname: "upload.wikimedia.org" },
       { hostname: "cdn11.bigcommerce.com" },
       { hostname: "sigma.octopart.com" },
