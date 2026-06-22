@@ -16,7 +16,7 @@ export default function BookCard({
       <Link
         href={`/components/${id}`}
         className={cn(
-          "group flex flex-col items-center rounded-t-4xl border-2 border-midnight-ink/10 bg-cream-paper min-h-130",
+          "group flex flex-col items-center rounded-t-4xl border-2 border-midnight-ink/10 bg-cream-paper min-h-125 justify-between",
           isLoaned && "w-full flex-col items-center overflow-hidden",
         )}
       >
@@ -29,17 +29,17 @@ export default function BookCard({
             className="h-80 w-full overflow-hidden object-center rounded-t-2xl"
           />
         </div>
-        <div className="p-4">
+        <div className="pb-4 flex flex-col items-start">
           <div
             className={cn(
-              "mt-4 w-full text-center",
+              "w-full text-center",
               !isLoaned && "xs:max-w-60 max-w-36",
             )}
           >
             <p className="text-base font-semibold text-midnight-ink xs:text-lg">
               {title}
             </p>
-            <p className="mt-1 text-sm italic text-midnight-ink/60 xs:text-base">
+            <p className="text-sm italic text-midnight-ink/60 xs:text-base">
               {genre}
             </p>
           </div>
@@ -59,13 +59,15 @@ export default function BookCard({
                     11 days left to return
                   </p>
                 </div>
-                <Button className="w-full bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90">
-                  Download Receipt
+                <Button className="text-md py-6 px-8 w-full bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 space-x-2">
+                  <Image src="/icons/receipt.svg" alt="download" width={100} height={100} className="object-contain size-20" />
+                  <p>Download Receipt</p>
                 </Button>
               </>
             ) : (
-              <Button className=" bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 mt-3">
-                Borrow Now
+                <Button className="text-md py-6 px-8 bg-poppy-red text-cream-paper hover:bg-poppy-red/90 mt-3">
+                  <Image src="/icons/component.svg" alt="borrow" width={100} height={100} className="object-contain size-20 invert-100" />
+                <p>Borrow Now</p>
               </Button>
             )}
           </div>

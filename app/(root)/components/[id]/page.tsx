@@ -35,16 +35,15 @@ export default async function ComponentPage({ params }: { params: Promise<{ id: 
         </div>
 
         <div className="flex flex-col gap-6">
-          <div>
+          <div className="flex flex-col gap-4">
             <h1 className="text-4xl font-bold text-midnight-ink md:text-5xl">{c.title}</h1>
-            <p className="mt-2 text-lg text-midnight-ink/60">by {c.author}</p>
+            <span className="border-2 border-poppy-red px-4 py-1.5 font-semibold text-poppy-red capitalize w-fit">by {c.author}</span>
           </div>
-
           <div className="flex flex-wrap gap-4 text-sm">
-            <span className="rounded-full border-2 border-cobalt-blue px-4 py-1.5 font-semibold text-cobalt-blue">
+            <span className="border-2 border-cobalt-blue px-4 py-1.5 font-semibold text-cobalt-blue">
               {c.genre}
             </span>
-            <span className="flex items-center gap-1.5 rounded-full border-2 border-midnight-ink/20 px-4 py-1.5 font-semibold text-midnight-ink">
+            <span className="flex items-center gap-1.5 border-2 border-midnight-ink/60 px-4 py-1.5 font-semibold text-midnight-ink">
               <Image src="/icons/star.svg" alt="" width={16} height={16} />
               {c.rating}
             </span>
@@ -57,7 +56,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ id: 
             </div>
             <div>
               <p className="text-sm text-midnight-ink/40">Available</p>
-              <p className="text-2xl font-bold text-cobalt-blue">{c.available_copies}</p>
+              <p className={`text-2xl font-bold ${c.available_copies <= 5 ? 'text-red-500' : ''}`}>{c.available_copies}</p>
             </div>
           </div>
 
