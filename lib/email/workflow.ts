@@ -20,6 +20,7 @@ export async function sendViaEmailJS(payload: EmailPayload) {
           subject: payload.subject,
           message_html: payload.html,
         },
+        is_html: true,
       }),
     },
   );
