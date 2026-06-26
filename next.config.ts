@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       { hostname: "cdn-learn.adafruit.com" },
       { hostname: "cdn.sparkfun.com" },
       { hostname: "ewall.com.pk" },
+      { hostname: "ik.imagekit.io" },
     ],
   },
 };

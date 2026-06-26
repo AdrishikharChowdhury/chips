@@ -6,13 +6,12 @@ import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Session } from "next-auth";
 import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SignOutIcon, UserIcon } from "@phosphor-icons/react";
@@ -86,22 +85,14 @@ export default function Header({ session }: { session: Session }) {
                   <DropdownMenuContent className="border-2 border-midnight-ink/10 bg-cream-paper p-2 min-w-50">
                     <DropdownMenuGroup>
                       <DropdownMenuItem className="cursor-pointer rounded-none px-3 py-2.5 text-base transition-colors hover:bg-cobalt-blue/20">
-                        <UserIcon size={18} />
-                        <Link
-                          href="/my-profile"
-                          className="w-full text-midnight-ink transition-colors hover:text-cobalt-blue"
-                        >
+                        <Link href="/my-profile" className="flex w-full items-center gap-2 text-midnight-ink transition-colors hover:text-cobalt-blue">
+                          <UserIcon size={18} />
                           My Profile
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="cursor-pointer rounded-none px-3 py-2.5 text-base text-midnight-ink transition-colors hover:bg-poppy-red/20">
+                      <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer rounded-none px-3 py-2.5 text-base text-midnight-ink transition-colors hover:bg-poppy-red/20 hover:text-poppy-red">
                         <SignOutIcon size={18} />
-                        <Link
-                          href="/"
-                          className="w-full text-midnight-ink transition-colors hover:text-poppy-red"
-                        >
-                          Sign Out
-                        </Link>
+                        Sign Out
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
