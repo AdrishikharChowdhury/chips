@@ -57,3 +57,19 @@ export const signUp = async (params: AuthCredentials) => {
     return { success: false, message: "Sign Up Error" };
   }
 };
+
+export const updateProfile = async (
+  userId: string,
+  data: { fullName?: string; universityCard?: string; universityId?: number },
+) => {
+  try {
+    await db
+      .update(usersTable)
+      .set(data)
+      .where(eq(usersTable.id, userId));
+    return { success: true, message: "Profile updated successfully" };
+  } catch (error) {
+    console.log(error, "Update Profile Error");
+    return { success: false, message: "Failed to update profile" };
+  }
+};

@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { db } from "@/database";
 import { usersTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
@@ -33,7 +33,9 @@ export default async function MyProfilePage() {
 
       <div className="grid md:grid-cols-2 bg-[#fffef9] border-2 border-midnight-ink/20 shadow-xl">
         <div className="space-y-6 p-6">
-          <h2 className="text-xl font-bold text-midnight-ink">University ID Card</h2>
+          <h2 className="text-xl font-bold text-midnight-ink">
+            University ID Card
+          </h2>
           <div className="flex items-center justify-center overflow-hidden rounded-xl border-2 border-midnight-ink/10">
             <Image
               src={u.universityCard}
@@ -45,14 +47,18 @@ export default async function MyProfilePage() {
           </div>
         </div>
         <div className="p-6 flex flex-col justify-between">
-          <div className="space-y-6 p-6" >
-            <h2 className="text-xl font-bold text-midnight-ink">Account Details</h2>
+          <div className="space-y-6 p-6">
+            <h2 className="text-xl font-bold text-midnight-ink">
+              Account Details
+            </h2>
             <div className="space-y-5">
               <div className="flex items-center gap-3">
                 <IdCard size={20} className="text-cobalt-blue" />
-                <div className="flex items-center gap-2" >
+                <div className="flex items-center gap-2">
                   <p className="text-sm text-midnight-ink/50">University ID:</p>
-                  <p className="text-lg font-bold text-midnight-ink">{u.universityId}</p>
+                  <p className="text-lg font-bold text-midnight-ink">
+                    {u.universityId}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -89,7 +95,9 @@ export default async function MyProfilePage() {
                 <CalendarDays size={20} className="text-cobalt-blue" />
                 <div>
                   <p className="text-sm text-midnight-ink/50">Last Activity</p>
-                  <p className="text-lg font-bold text-midnight-ink">{u.lastActivityDate}</p>
+                  <p className="text-lg font-bold text-midnight-ink">
+                    {u.lastActivityDate}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -110,14 +118,33 @@ export default async function MyProfilePage() {
             </div>
           </div>
           <div className="flex self-center gap-6">
-            <Button className="font-degular-display text-xl py-6 w-fit px-4" > <Edit /> Edit</Button>
-            <Button className="font-degular-display text-xl py-6 w-fit px-4 bg-poppy-red hover:bg-poppy-red/80" >Sign out</Button>
+            <form action={async () => {
+              "use server"
+              redirect("/my-profile/edit")
+            }} >
+              <Button  className="font-degular-display text-xl py-6 w-fit px-4">
+                {" "}
+                <Edit /> Edit
+              </Button>
+            </form>
+            <form action={async () => {
+              "use server"
+              await signOut()
+            }} >
+            <Button
+              className="font-degular-display text-xl py-6 w-fit px-4 bg-poppy-red hover:bg-poppy-red/80"
+            >
+              Sign out
+              </Button>
+            </form>
           </div>
         </div>
       </div>
       <section className="w-full">
-        <p className="text-3xl font-semibold" >Your Components:</p>
-        <p className="text-center text-4xl text-midnight-ink/20 mt-6 font-degular-display" >No Borrowed Components Yet</p>
+        <p className="text-3xl font-semibold">Your Components:</p>
+        <p className="text-center text-4xl text-midnight-ink/20 mt-6">
+          No Borrowed Components Yet
+        </p>
       </section>
     </div>
   );
