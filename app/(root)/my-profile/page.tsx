@@ -31,7 +31,7 @@ export default async function MyProfilePage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 bg-[#fffef9]">
+      <div className="grid md:grid-cols-2 bg-[#fffef9] border-2 border-midnight-ink/20 shadow-xl">
         <div className="space-y-6 p-6">
           <h2 className="text-xl font-bold text-midnight-ink">University ID Card</h2>
           <div className="flex items-center justify-center overflow-hidden rounded-xl border-2 border-midnight-ink/10">
