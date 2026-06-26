@@ -10,6 +10,8 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { ratelimit } from "../ratelimit";
 import { redirect } from "next/navigation";
+import { workflowClient } from "@/lib/workflow";
+import { config } from "@/lib/config";
 
 const OTP_SECRET = process.env.AUTH_SECRET || "otp-dev-secret";
 
@@ -100,6 +102,15 @@ export const signUp = async (
     });
 
     await signInWithCredentials({ email, password });
+
+    try {
+      await workflowClient.trigger({
+        url: `${config.env.upstash.workflowUrl}/api/workflows`,
+        body: { email, name: fullName },
+      });
+    } catch (e) {
+      console.warn("Workflow trigger failed:", e);
+    }
 
     return { success: true, message: "User signed up successfully" };
   } catch (error) {
