@@ -1,6 +1,8 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import AuthForm from '@/components/auth/AuthForm';
+import { signUp } from '@/lib/actions/auth';
 import { signUpSchema } from '@/lib/validations';
 
 export default function SignUpPage() {
@@ -15,7 +17,7 @@ export default function SignUpPage() {
         universityId: 0,
         universityCard: "",
       }}
-      onSubmit={async () => ({ success: true })}
+      onSubmit={(data) => signUp(data as any)}
     />
   );
 }

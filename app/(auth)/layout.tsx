@@ -1,7 +1,11 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
+export default async function AuthLayout({ children }: { children: ReactNode }) {
+  const session = await auth();
+  if (session) redirect("/");
   return (
     <main className="auth-container">
       <section className="auth-form">
@@ -16,13 +20,17 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             />
             <h1 className="text-2xl font-semibold">C.H.I.P.S</h1>
           </div>
-          <div>
-            {children}
-          </div>
+          <div>{children}</div>
         </div>
       </section>
-      <section className="auth-illustration" >
-        <Image src="/images/banner.webp" alt="Banner" width={1000} height={1000} className="size-full object-cover" />
+      <section className="auth-illustration">
+        <Image
+          src="/images/banner.webp"
+          alt="Banner"
+          width={1000}
+          height={1000}
+          className="size-full object-cover"
+        />
       </section>
     </main>
   );

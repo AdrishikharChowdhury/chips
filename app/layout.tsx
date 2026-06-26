@@ -3,6 +3,8 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 const degularDisplay = Space_Grotesk({
   subsets: ["latin"],
@@ -21,11 +23,12 @@ export const metadata: Metadata = {
   description: "Centralized Hardware Inventory for Prototype Systems",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html
       lang="en"
@@ -36,10 +39,12 @@ export default function RootLayout({
         usual.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <Toaster />
-      </body>
+      <SessionProvider session={session}>
+        <body className="min-h-full flex flex-col">
+          {children}
+          <Toaster />
+        </body>
+      </SessionProvider>
     </html>
   );
 }

@@ -1,14 +1,8 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  useForm,
-  Controller,
-  FieldValues,
-  DefaultValues,
-  UseFormReturn,
-  SubmitHandler,
-  Path,
-} from "react-hook-form";
+import { useForm, Controller, Path } from "react-hook-form";
+import type { FieldValues } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -18,31 +12,44 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { ZodType } from "zod";
+import type { ZodType } from "zod";
 import ImageUpload from "./ImageUpload";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-interface AuthFormProps<T extends FieldValues> {
-  schema: ZodType<T, T>;
-  defaultValues: T;
-  onSubmit: (data: T) => Promise<{ success: boolean; error?: string }>;
+interface AuthFormProps {
+  schema: ZodType;
+  defaultValues: Record<string, unknown>;
+  onSubmit: (
+    data: Record<string, unknown>,
+  ) => Promise<{ success: boolean; message: string }>;
   type: "SIGN_IN" | "SIGN_UP";
 }
 
-export default function AuthForm<T extends FieldValues>({
+export default function AuthForm({
   type,
   schema,
   defaultValues,
   onSubmit,
-}: AuthFormProps<T>) {
+}: AuthFormProps) {
   const isSignIn = type === "SIGN_IN";
-
-  const form: UseFormReturn<T> = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: defaultValues as DefaultValues<T>,
+  const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(schema as any),
+    defaultValues,
   });
 
-  const handleSubmit: SubmitHandler<T> = async () => {};
+  const handleSubmit = async (data: Record<string, unknown>) => {
+    const result = await onSubmit(data);
+    if (result.success) {
+      toast.success(result.message);
+      router.push("/");
+    } else {
+      toast.error(result.message);
+    }
+    
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -54,15 +61,11 @@ export default function AuthForm<T extends FieldValues>({
           ? "Access vast collection of Electronics Components and Stay Updated"
           : "Please complete all fields and upload a valid university ID to gain access to the Inventory"}
       </p>
-      <form
-        id="form-rhf-demo"
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-6"
-      >
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         {Object.keys(defaultValues).map((field) => (
           <FieldGroup key={field}>
             <Controller
-              name={field as Path<T>}
+              name={field as Path<FieldValues>}
               control={form.control}
               render={({ field: ctrlField, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -74,13 +77,13 @@ export default function AuthForm<T extends FieldValues>({
                   </FieldLabel>
                   {field === "universityCard" ? (
                     <ImageUpload
-                      onUpload={(url) => form.setValue(field as Path<T>, url as any)}
+                      onUpload={(url) => form.setValue(field as any, url)}
                       value={ctrlField.value as string}
                     />
                   ) : (
                     <Input
                       className="form-input pl-4"
-                      {...ctrlField}
+                      {...(ctrlField as any)}
                       id={`form-rhf-demo-${field}`}
                       aria-invalid={fieldState.invalid}
                       autoComplete="off"
@@ -97,7 +100,12 @@ export default function AuthForm<T extends FieldValues>({
             />
           </FieldGroup>
         ))}
-        <Button type="submit" className="form-btn text-xl font-degular-display font-extrabold" >{ isSignIn ? "Sign In" : "Sign Up" }</Button>
+        <Button
+          type="submit"
+          className="form-btn text-xl font-degular-display font-extrabold"
+        >
+          {isSignIn ? "Sign In" : "Sign Up"}
+        </Button>
       </form>
       <p className="text-center text-base font-medium">
         {isSignIn ? "New to CHIPS?" : "Already have an account?"}

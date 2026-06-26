@@ -12,3 +12,11 @@ export interface Components {
   summary: string;
   isLoaned?: boolean;
 }
+
+export interface AuthCredentials {
+  fullName: string;
+  email: string;
+  password: string;
+  universityId: number;
+  universityCard: string;
+}
