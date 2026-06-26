@@ -42,9 +42,13 @@ export function renderWelcomeEmail(name: string): string {
   return `
 <div style="text-align: center;">
   <div style="display: inline-block; margin-bottom: 24px;">
-    <div style="width: 64px; height: 64px; background: #1457d8; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-      <span style="color: #fbf3e4; font-size: 32px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;">✓</span>
-    </div>
+    <table cellpadding="0" cellspacing="0" style="width: 64px; height: 64px; background: #1457d8;">
+      <tr>
+        <td style="text-align: center; vertical-align: middle; color: #fbf3e4; font-size: 32px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;">
+          ✓
+        </td>
+      </tr>
+    </table>
   </div>
   <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #0b0f16; margin: 0 0 8px;">
     Welcome, ${name}!
@@ -69,9 +73,13 @@ export function renderStatusChangeEmail(status: string): string {
   return `
 <div style="text-align: center;">
   <div style="display: inline-block; margin-bottom: 24px;">
-    <div style="width: 64px; height: 64px; background: ${color}; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-      <span style="color: #fbf3e4; font-size: 24px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;">!</span>
-    </div>
+    <table cellpadding="0" cellspacing="0" style="width: 64px; height: 64px; background: ${color};">
+      <tr>
+        <td style="text-align: center; vertical-align: middle; color: #fbf3e4; font-size: 24px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;">
+          !
+        </td>
+      </tr>
+    </table>
   </div>
   <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #0b0f16; margin: 0 0 8px;">
     Account Status Updated
@@ -91,9 +99,13 @@ export function renderVerificationDoneEmail(): string {
   return `
 <div style="text-align: center;">
   <div style="display: inline-block; margin-bottom: 24px;">
-    <div style="width: 64px; height: 64px; background: #1457d8; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-      <span style="color: #fbf3e4; font-size: 32px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;">✓</span>
-    </div>
+    <table cellpadding="0" cellspacing="0" style="width: 64px; height: 64px; background: #1457d8;">
+      <tr>
+        <td style="text-align: center; vertical-align: middle; color: #fbf3e4; font-size: 32px; font-weight: 700; font-family: 'Space Grotesk', sans-serif;">
+          ✓
+        </td>
+      </tr>
+    </table>
   </div>
   <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: #0b0f16; margin: 0 0 8px;">
     Email Verified
