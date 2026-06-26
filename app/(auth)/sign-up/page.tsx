@@ -17,7 +17,9 @@ export default function SignUpPage() {
         universityId: 0,
         universityCard: "",
       }}
-      onSubmit={(data) => signUp(data as any)}
+      onSubmit={(data, otp, otpExpiry, otpHmac) =>
+        signUp({ ...(data as any), otp, otpExpiry, otpHmac })
+      }
     />
   );
 }

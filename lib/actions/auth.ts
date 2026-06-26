@@ -3,14 +3,45 @@
 import { signIn } from "@/auth";
 import { db } from "@/database";
 import { usersTable } from "@/database/schema";
+import crypto from "crypto";
 import { AuthCredentials } from "@/types";
 import { hash } from "bcryptjs";
 import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { ratelimit } from "../ratelimit";
+import { redirect } from "next/navigation";
+
+const OTP_SECRET = process.env.AUTH_SECRET || "otp-dev-secret";
+
+function verifyOtpInternal(
+  email: string,
+  userOtp: string,
+  expiry: number,
+  hmac: string,
+) {
+  if (Date.now() > expiry) {
+    return false;
+  }
+  if (userOtp.length !== 6 || !/^\d+$/.test(userOtp)) {
+    return false;
+  }
+  const expected = crypto
+    .createHmac("sha256", OTP_SECRET)
+    .update(`${email}:${userOtp}:${expiry}`)
+    .digest("hex");
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(hmac));
+}
 
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">,
 ) => {
   const { email, password } = params;
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1"
+
+  const { success: rateLimited } = await ratelimit.limit(ip)
+  if (!rateLimited) {
+    redirect("/too-fast");
+  }
   try {
     const result = await signIn("credentials", {
       email,
@@ -19,18 +50,37 @@ export const signInWithCredentials = async (
     });
 
     if (result?.error) {
-      return { success: false, message: result.error };
+      return { success: false, message: "Invalid email or password" };
     }
 
     return { success: true, message: "User signed in successfully" };
   } catch (error) {
     console.log(error, "Sign In Error");
-    return { success: false, message: "Sign In Error" };
+    return { success: false, message: "Invalid email or password" };
   }
 };
 
-export const signUp = async (params: AuthCredentials) => {
-  const { fullName, email, password, universityId, universityCard } = params;
+export const signUp = async (
+  params: AuthCredentials & {
+    otp: string;
+    otpExpiry: number;
+    otpHmac: string;
+  },
+) => {
+  const { fullName, email, password, universityId, universityCard, otp, otpExpiry, otpHmac } = params;
+
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1"
+
+  const { success: rateLimited } = await ratelimit.limit(ip)
+  if (!rateLimited) {
+    redirect("/too-fast");
+  }
+
+  const otpValid = verifyOtpInternal(email, otp, otpExpiry, otpHmac);
+  if (!otpValid) {
+    return { success: false, message: "Email verification failed. Please try again." };
+  }
+
   const existingUser = await db
     .select()
     .from(usersTable)

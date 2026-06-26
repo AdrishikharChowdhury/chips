@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateProfile } from "@/lib/actions/auth";
 import { Edit } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import {
   Field,

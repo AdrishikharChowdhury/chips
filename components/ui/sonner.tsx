@@ -1,15 +1,11 @@
 "use client"
 
-import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CheckCircleIcon, InfoIcon, WarningIcon, XCircleIcon, SpinnerIcon } from "@phosphor-icons/react"
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
-
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
       className="toaster group"
       icons={{
         success: (
@@ -30,15 +26,23 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
-          "--border-radius": "var(--radius)",
+          "--normal-bg": "#fbf3e4",
+          "--normal-text": "#0b0f16",
+          "--normal-border": "#0b0f16",
+          "--border-radius": "0",
+          "--width": "auto",
         } as React.CSSProperties
       }
       toastOptions={{
         classNames: {
-          toast: "cn-toast",
+          toast:
+            "border-2 border-midnight-ink rounded-none font-usual shadow-none " +
+            "text-midnight-ink !bg-cream-paper !border-midnight-ink",
+          title: "text-sm font-semibold",
+          description: "text-xs text-midnight-ink/60",
+          success: "[&_[data-icon]_svg]:text-cobalt-blue",
+          error: "[&_[data-icon]_svg]:text-poppy-red",
+          info: "[&_[data-icon]_svg]:text-cobalt-blue",
         },
       }}
       {...props}

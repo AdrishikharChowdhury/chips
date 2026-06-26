@@ -7,5 +7,9 @@ export const config = {
       urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!,
     },
     databaseUrl: process.env.DATABASE_URL!,
-  }
-}
+    upsatsh: {
+      redisRestUrl: process.env.UPSTASH_REDIS_REST_URL!,
+      redisRestToken: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    },
+  },
+};
