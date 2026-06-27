@@ -1,16 +1,16 @@
 export interface Components {
   title: string;
-  author: string;
+  manufacturer: string;
   description: string;
-  genre: string;
+  type: string;
   rating: number;
-  total_copies: number;
-  available_copies: number;
+  totalCopies: number;
+  availableCopies: number;
   cover: string;
-  id: number;
-  video: string;
+  id: string;
   summary: string;
-  isLoaned?: boolean;
+  createdAt: Date | null;
+  isLoaned: boolean;
 }
 
 export interface AuthCredentials {
@@ -24,4 +24,16 @@ export interface AuthCredentials {
 export interface AdminSideBarLink {
   icon: string;
   text: string;
+}
+
+export interface ComponentParams {
+  title: string;
+  manufacturer: string;
+  description: string;
+  type: string;
+  rating: number;
+  totalCopies: number;
+  availableCopies: number;
+  cover: string;
+  summary: string;
 }

@@ -199,7 +199,7 @@
     @apply w-full min-h-14 rounded-xl font-bold text-base text-cream-paper;
   }
 
-  .book-form_input {
+  .component-form_input {
     @apply min-h-14 border border-midnight-ink/10 bg-midnight-ink/5 p-4 text-base font-semibold placeholder:font-normal placeholder:text-midnight-ink/40;
   }
 

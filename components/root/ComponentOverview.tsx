@@ -4,12 +4,12 @@ import { Button } from "../ui/button";
 
 export default function ComponentOverview({
   title,
-  author,
+  manufacturer,
   description,
-  genre,
+  type,
   rating,
-  total_copies,
-  available_copies,
+  totalCopies,
+  availableCopies,
   cover
 }: Components) {
   return (
@@ -18,10 +18,10 @@ export default function ComponentOverview({
         <h1 className="">{title}</h1>
         <div className="book-info">
           <p className="font-semibold">
-            By <span className="">{author}</span>
+            By <span className="">{manufacturer}</span>
           </p>
           <p>
-            Category: <span className="">{genre}</span>
+            Category: <span className="">{type}</span>
           </p>
           <div className="flex flex-row gap-1">
             <Image src="/icons/star.svg" alt="star" width={22} height={22} className="" />
@@ -29,8 +29,8 @@ export default function ComponentOverview({
           </div>
         </div>
         <div className="book-copies">
-          <p>Total Count: <span className="">{total_copies}</span></p>
-          <p>Available Count: <span className="">{available_copies}</span></p>
+          <p>Total Count: <span className="">{totalCopies}</span></p>
+          <p>Available Count: <span className="">{availableCopies}</span></p>
         </div>
         <p className="book-description">
           {description}

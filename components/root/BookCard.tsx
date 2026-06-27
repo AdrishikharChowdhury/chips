@@ -7,11 +7,11 @@ import { Button } from "../ui/button";
 export default function BookCard({
   id,
   title,
-  genre,
+  type,
   cover,
   isLoaned = false,
 }: Components) {
-  const genreArray = genre.split("/");
+  const typeArray = type.split("/");
   return (
     <li className={cn(isLoaned && "w-full")}>
       <Link
@@ -41,8 +41,8 @@ export default function BookCard({
               {title}
             </p>
             <div className="text-sm flex gap-4 self-center">
-              {genreArray.map((genreItem,idx:number) => (
-                <span className="text-midnight-ink font-semibold border-2  border-marigold-yellow bg-marigold-yellow/50 px-3 py-1 w-max text-center " key={idx} >{ genreItem}</span>
+              {typeArray.map((typeItem,idx:number) => (
+                <span className="text-midnight-ink font-semibold border-2  border-marigold-yellow bg-marigold-yellow/50 px-3 py-1 w-max text-center " key={idx} >{ typeItem}</span>
               ))}
             </div>
           </div>

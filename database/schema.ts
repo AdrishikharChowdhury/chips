@@ -34,3 +34,19 @@ export const usersTable = pgTable("users", {
     withTimezone: true,
   }).defaultNow(),
 });
+
+export const componentsTable = pgTable("components", {
+  id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
+  title: varchar("title", { length: 255 }).notNull(),
+  manufacturer: varchar("manufacturer", { length: 255 }).notNull(),
+  type: text("type").notNull(),
+  rating: integer("rating").notNull(),
+  cover: text("cover").notNull(),
+  description: text("description").notNull(),
+  totalCopies: integer("total_copies").notNull(),
+  availableCopies: integer("available_copies").notNull(),
+  summary: text("summary").notNull(),
+  createdAt: timestamp("created_at", {
+    withTimezone: true,
+  }).defaultNow(),
+});
