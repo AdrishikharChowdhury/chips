@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { sampleComponents } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
@@ -81,15 +80,15 @@ export default async function ComponentPage({
             <div>
               <p className="text-sm text-midnight-ink/40">Total Copies</p>
               <p className="text-2xl font-bold text-midnight-ink">
-                {c.total_copies}
+                {c.totalCopies}
               </p>
             </div>
             <div>
               <p className="text-sm text-midnight-ink/40">Available</p>
               <p
-                className={`text-2xl font-bold ${c.available_copies <= 5 ? "text-red-500" : ""}`}
+                className={`text-2xl font-bold ${c.availableCopies <= 5 ? "text-red-500" : ""}`}
               >
-                {c.available_copies}
+                {c.availableCopies}
               </p>
             </div>
           </div>
@@ -104,19 +103,20 @@ export default async function ComponentPage({
             </p>
             <p className="mt-1 text-midnight-ink/60">{c.summary}</p>
           </div>
-
-          <Button className="bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 py-6 px-8 w-fit">
-            <Image
-              src="/icons/component.svg"
-              alt=""
-              width={20}
-              height={20}
-              className="invert-100"
-            />
-            <span className="font-degular-display text-lg">
-              Borrow Component
-            </span>
-          </Button>
+          <Link href={`/api/borrow/${c.id}`}>
+            <Button className="bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 py-6 px-8 w-fit">
+              <Image
+                src="/icons/component.svg"
+                alt=""
+                width={20}
+                height={20}
+                className="invert-100"
+              />
+              <span className="font-degular-display text-lg">
+                Borrow Component
+              </span>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

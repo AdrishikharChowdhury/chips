@@ -1,4 +1,3 @@
-
 export const navigationLinks = [
   {
     href: "/library",
@@ -56,47 +55,56 @@ export const FIELD_TYPES = {
   password: "password",
 };
 
-export const componentFields = [{
-  title: "Component Title",
-  type: "text",
-  placeholder: "Enter the component title",
-  id: "title",
-}, {
-  title: "Manufacturer",
-  type: "text",
-  placeholder: "Enter the manufacturer",
-  id: "manufacturer",
-}, {
-  title: "Type",
-  type: "text",
-  placeholder: "Enter the type",
-  id: "type",
-}, {
-  title: "Rating",
-  type: "number",
-  placeholder: "Enter the rating",
-  id: "rating",
-}, {
-  title: "Total Copies",
-  type: "number",
-  placeholder: "Enter the total copies",
-  id: "totalCopies",
-}, {
-  title: "Description",
-  type: "textarea",
-  placeholder: "Enter the description",
-  id: "description",
-}, {
-  title: "Cover",
-  type: "file",
-  placeholder: "Select a cover image",
-  id: "cover",
-}, {
-  title: "Summary",
-  type: "textarea",
-  placeholder: "Enter the summary",
-  id: "summary",
-}] as const;
+export const componentFields = [
+  {
+    title: "Component Title",
+    type: "text",
+    placeholder: "Enter the component title",
+    id: "title",
+  },
+  {
+    title: "Manufacturer",
+    type: "text",
+    placeholder: "Enter the manufacturer",
+    id: "manufacturer",
+  },
+  {
+    title: "Type",
+    type: "text",
+    placeholder: "Enter the type",
+    id: "type",
+  },
+  {
+    title: "Rating",
+    type: "number",
+    placeholder: "Enter the rating",
+    id: "rating",
+  },
+  {
+    title: "Total Copies",
+    type: "number",
+    placeholder: "Enter the total copies",
+    id: "totalCopies",
+  },
+  {
+    title: "Description",
+    type: "textarea",
+    placeholder: "Enter the description",
+    id: "description",
+  },
+  {
+    title: "Cover",
+    type: "file",
+    placeholder: "Select a cover image",
+    id: "cover",
+  },
+  {
+    title: "Summary",
+    type: "textarea",
+    placeholder: "Enter the summary",
+    id: "summary",
+  },
+] as const;
 
 export const sampleComponents = [
   {
