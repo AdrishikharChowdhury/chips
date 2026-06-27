@@ -55,6 +55,11 @@ export const signInWithCredentials = async (
       return { success: false, message: "Invalid email or password" };
     }
 
+    await db
+      .update(usersTable)
+      .set({ lastActivityDate: new Date().toISOString().slice(0, 10) })
+      .where(eq(usersTable.email, email));
+
     return { success: true, message: "User signed in successfully" };
   } catch (error) {
     console.log(error, "Sign In Error");
@@ -126,7 +131,7 @@ export const updateProfile = async (
   try {
     await db
       .update(usersTable)
-      .set(data)
+      .set({ ...data, lastActivityDate: new Date().toISOString().slice(0, 10) })
       .where(eq(usersTable.id, userId));
     return { success: true, message: "Profile updated successfully" };
   } catch (error) {

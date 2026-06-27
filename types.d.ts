@@ -20,3 +20,8 @@ export interface AuthCredentials {
   universityId: number;
   universityCard: string;
 }
+
+export interface AdminSideBarLink {
+  icon: string;
+  text: string;
+}

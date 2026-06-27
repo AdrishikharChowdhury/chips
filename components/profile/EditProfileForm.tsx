@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { updateProfile } from "@/lib/actions/auth";
 import { Edit } from "lucide-react";
 import Link from "next/link";
@@ -26,6 +27,7 @@ interface EditProfilePageProps {
 
 export default function EditProfileForm({ user: u }: EditProfilePageProps) {
   const router = useRouter();
+  const { update } = useSession();
   const [fullName, setFullName] = useState(u.fullName);
   const [universityId, setUniversityId] = useState(String(u.universityId));
   const [universityCard, setUniversityCard] = useState(u.universityCard);
@@ -37,8 +39,10 @@ export default function EditProfileForm({ user: u }: EditProfilePageProps) {
       universityId: Number(universityId),
       universityCard,
     });
+    await update({ name: fullName });
     router.push("/my-profile");
     router.refresh();
+    console.log(u);
   };
 
   return (

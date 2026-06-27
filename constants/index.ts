@@ -24,14 +24,14 @@ export const adminSideBarLinks = [
     text: "All Users",
   },
   {
-    img: "/icons/admin/book.svg",
-    route: "/admin/books",
-    text: "All Books",
+    img: "/icons/admin/component.svg",
+    route: "/admin/components",
+    text: "All Components",
   },
   {
-    img: "/icons/admin/bookmark.svg",
-    route: "/admin/book-requests",
-    text: "Borrow Requests",
+    img: "/icons/admin/soldering.svg",
+    route: "/admin/component-requests",
+    text: "Component Requests",
   },
   {
     img: "/icons/admin/user.svg",
