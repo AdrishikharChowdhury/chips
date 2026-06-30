@@ -41,3 +41,11 @@ export interface BorrowComponentParams {
   dueDate: Date;
   amount?: number;
 }
+
+export interface CartItem {
+  id: string;
+  userId: string;
+  componentId: string;
+  createdAt: Date;
+}
+

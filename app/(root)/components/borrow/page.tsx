@@ -1,10 +1,8 @@
 import { auth } from "@/auth";
-import { db } from "@/database";
-import { eq } from "drizzle-orm";
-import { borrowRecords, componentsTable } from "@/database/schema";
-import Image from "next/image";
 import Link from "next/link";
 import { ComponentPagination } from "@/components/root/ComponentPagination";
+import { BorrowCard } from "@/components/borrow/BorrowCard";
+import { fetchBorrowedComponents } from "@/lib/actions/component";
 
 export default async function BorrowPage({
   searchParams,
@@ -22,25 +20,7 @@ export default async function BorrowPage({
       </div>
     );
   }
-  const { id: userId } = session.user;
-
-  const rows = await db
-    .select({
-      id: borrowRecords.id,
-      borrowDate: borrowRecords.borrowDate,
-      dueDate: borrowRecords.dueDate,
-      status: borrowRecords.status,
-      amount: borrowRecords.amount,
-      componentId: borrowRecords.componentId,
-      componentTitle: componentsTable.title,
-      componentManufacturer: componentsTable.manufacturer,
-      componentCover: componentsTable.cover,
-      componentType: componentsTable.type,
-    })
-    .from(borrowRecords)
-    .innerJoin(componentsTable, eq(borrowRecords.componentId, componentsTable.id))
-    .where(eq(borrowRecords.userId, userId))
-    .orderBy(borrowRecords.createdAt);
+  const rows = await fetchBorrowedComponents();
 
   const records = rows.reduce<Record<string, Omit<(typeof rows)[number], "borrowDate" | "amount"> & { borrowDate: Date | null; amount: number }>>((acc, row) => {
     const key = row.componentId;
@@ -87,98 +67,9 @@ export default async function BorrowPage({
         </div>
       ) : (
         <div className="grid w-full gap-6">
-          {paginatedRecords.map((record) => {
-            const typeArray = record.componentType?.split("/") ?? [];
-            return (
-              <div
-                key={record.id}
-                className="flex flex-col gap-4 rounded-2xl border-2 border-midnight-ink/10 bg-cream-paper p-4 md:flex-row md:items-center"
-              >
-                <div className="relative flex size-36 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-midnight-ink/5">
-                    {record.componentCover ? (
-                      <Image
-                        src={record.componentCover}
-                        alt={record.componentTitle ?? ""}
-                        width={144}
-                        height={144}
-                        className="size-full object-cover"
-                      />
-                    ) : (
-                      <div className="size-12 rounded-full bg-midnight-ink/10" />
-                    )}
-                </div>
-                <div className="flex flex-1 flex-col gap-1">
-                  <Link
-                    href={`/components/${record.componentId}`}
-                    className="text-lg font-bold text-midnight-ink hover:text-cobalt-blue"
-                  >
-                    {record.componentTitle}
-                  </Link>
-                  <p className="text-sm text-midnight-ink/60">
-                    {record.componentManufacturer}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {typeArray.map((t, i) => (
-                      <span
-                        key={i}
-                        className="rounded-full border border-cobalt-blue/30 bg-cobalt-blue/10 px-2.5 py-0.5 text-xs font-semibold text-cobalt-blue"
-                      >
-                        {t.trim()}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-6 md:gap-8">
-                  <div className="text-center">
-                    <p className="text-xs font-semibold text-midnight-ink/40 uppercase tracking-wider">
-                      Borrowed
-                    </p>
-                    <p className="text-sm font-bold text-midnight-ink">
-                      {record.borrowDate
-                        ? new Date(record.borrowDate).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                          })
-                        : "—"}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs font-semibold text-midnight-ink/40 uppercase tracking-wider">
-                      Due
-                    </p>
-                    <p className="text-sm font-bold text-midnight-ink">
-                      {record.dueDate
-                        ? new Date(record.dueDate).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                          })
-                        : "—"}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-xs font-semibold text-midnight-ink/40 uppercase tracking-wider">
-                      Status
-                    </p>
-                    <span
-                      className={`inline-block rounded-full px-3 py-0.5 text-xs font-bold ${
-                        record.status === "BORROWED"
-                          ? "bg-marigold-yellow/30 text-midnight-ink"
-                          : "bg-emerald-100 text-emerald-800"
-                      }`}
-                    >
-                      {record.status}
-                    </span>
-                  </div>
-                  {record.amount > 1 && (
-                    <span className="flex size-10 items-center justify-center rounded-full  bg-cobalt-blue text-xs font-bold text-white">
-                      {record.amount}
-                    </span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {paginatedRecords.map((record) => (
+            <BorrowCard key={record.id} {...record} />
+          ))}
         </div>
       )}
       <ComponentPagination

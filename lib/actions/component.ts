@@ -2,10 +2,17 @@
 
 import { auth } from "@/auth";
 import { db } from "@/database";
-import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
-import { BorrowComponentParams, Components } from "@/types";
+import {
+  borrowRecords,
+  cartItemsTable,
+  componentsTable,
+  usersTable,
+} from "@/database/schema";
+import { BorrowComponentParams, CartItem, Components } from "@/types";
 import { formatDate } from "date-fns";
-import { eq, count } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { eq, count, desc } from "drizzle-orm";
 
 export const borrowComponent = async (params: BorrowComponentParams) => {
   const session = await auth();
@@ -46,7 +53,12 @@ export const borrowComponent = async (params: BorrowComponentParams) => {
       .update(componentsTable)
       .set({ availableCopies: component[0].availableCopies - amount })
       .where(eq(componentsTable.id, componentId));
-    
+
+    await db
+      .update(usersTable)
+      .set({ lastActivityDate: new Date().toISOString().slice(0, 10) })
+      .where(eq(usersTable.id, userId));
+
     return {
       success: true,
       message: "Component borrowed successfully",
@@ -77,7 +89,10 @@ export const isVerified = async () => {
   return true;
 };
 
-export const fetchComponents = async (page: number = 1, perPage: number = 6) => {
+export const fetchComponents = async (
+  page: number = 1,
+  perPage: number = 6,
+) => {
   const offset = (page - 1) * perPage;
   const [components, countResult] = await Promise.all([
     db.select().from(componentsTable).limit(perPage).offset(offset),
@@ -87,4 +102,102 @@ export const fetchComponents = async (page: number = 1, perPage: number = 6) => 
     components: components as Components[],
     totalCount: countResult[0]?.total ?? 0,
   };
+};
+
+export const addToCart = async (componentId: string) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return;
+  try {
+    await db.insert(cartItemsTable).values({
+      userId,
+      componentId,
+    });
+
+    return {
+      success: true,
+      message: "Component added to cart successfully",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : String(error),
+    };
+  }
+};
+
+export const fetchCartItems = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return [];
+  try {
+    const cartItems = await db
+      .select()
+      .from(cartItemsTable)
+      .where(eq(cartItemsTable.userId, userId));
+    return cartItems as CartItem[];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+export const removeFromCart = async (cartItemId: string) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return;
+  try {
+    await db
+      .delete(cartItemsTable)
+      .where(eq(cartItemsTable.id, cartItemId));
+  } catch (error) {
+    console.log(error);
+  }
+  revalidatePath("/cart");
+  redirect("/cart");
+};
+
+export const clearCart = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return;
+  try {
+    await db
+      .delete(cartItemsTable)
+      .where(eq(cartItemsTable.userId, userId));
+  } catch (error) {
+    console.log(error);
+  }
+  revalidatePath("/cart");
+  redirect("/cart");
+};
+
+export const fetchBorrowedComponents = async () => {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/sign-in");
+
+  const { id: userId } = session.user;
+
+  const rows = await db
+    .select({
+      id: borrowRecords.id,
+      borrowDate: borrowRecords.borrowDate,
+      dueDate: borrowRecords.dueDate,
+      status: borrowRecords.status,
+      amount: borrowRecords.amount,
+      componentId: borrowRecords.componentId,
+      componentTitle: componentsTable.title,
+      componentManufacturer: componentsTable.manufacturer,
+      componentCover: componentsTable.cover,
+      componentType: componentsTable.type,
+    })
+    .from(borrowRecords)
+    .innerJoin(
+      componentsTable,
+      eq(borrowRecords.componentId, componentsTable.id),
+    )
+    .where(eq(borrowRecords.userId, userId))
+    .orderBy(desc(borrowRecords.createdAt))
+  return rows;
 };

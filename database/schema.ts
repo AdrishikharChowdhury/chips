@@ -74,3 +74,18 @@ export const borrowRecords = pgTable("borrow_records", {
     .notNull(),
   amount: integer("amount").notNull().default(1),
 });
+
+export const cartItemsTable = pgTable("cart_items", {
+  id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => usersTable.id),
+  componentId: uuid("component_id")
+    .notNull()
+    .references(() => componentsTable.id),
+  createdAt: timestamp("created_at", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+});

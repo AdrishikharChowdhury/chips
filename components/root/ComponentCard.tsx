@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { Star } from "@phosphor-icons/react";
+import { addToCart } from "@/lib/actions/component";
+import { toast } from "sonner";
 
 export default function ComponentCard({
   id,
@@ -19,14 +21,11 @@ export default function ComponentCard({
 }: Components) {
   const router = useRouter();
   const typeArray = type.split("/");
+  
 
   return (
-    <li className="flex">
-      <div className="flex w-full flex-col overflow-hidden border-2 border-midnight-ink/10 bg-cream-paper transition-colors hover:border-cobalt-blue/40">
-        <Link
-          href={`/components/${id}`}
-          className="group flex flex-col"
-        >
+    <div className="flex w-full flex-col overflow-hidden border-2 border-midnight-ink/10 bg-cream-paper transition-colors hover:border-cobalt-blue/40">
+        <Link href={`/components/${id}`} className="group flex flex-col">
           <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden bg-midnight-ink/3">
             <Image
               src={cover}
@@ -74,9 +73,20 @@ export default function ComponentCard({
           >
             Borrow Component
           </Button>
-          <Button className="w-fit bg-poppy-red text-xs font-bold text-cream-paper hover:bg-marigold-yellow/90" >Add To Cart</Button>
+          <Button
+            onClick={async () => {
+              const result = await addToCart(id);
+              if (result?.success) {
+                toast.success(result.message);
+              } else {
+                toast.error("An Error Occurred while adding to cart");
+              }
+            }}
+            className="w-fit bg-poppy-red text-xs font-bold text-cream-paper hover:bg-poppy-red-yellow/90"
+          >
+            Add To Cart
+          </Button>
         </div>
-      </div>
-    </li>
+    </div>
   );
 }
