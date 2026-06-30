@@ -11,7 +11,8 @@ export const navigationLinks = [
   {
     href: "/components/borrow",
     label: "Borrowed Components",
-  },{
+  },
+  {
     href: "/cart",
     label: "Cart",
   },
@@ -338,4 +339,16 @@ export const sampleComponents = [
     summary:
       "A precision digital temperature and humidity sensor with single-wire interface, offering ±0.5°C accuracy and 2–100% RH range for environmental monitoring.",
   },
+  {
+    "id": 16,
+    "title": "MPU-6050",
+    "manufacturer": "InvenSense",
+    "type": "Sensor / Motion",
+    "rating": 4.7,
+    "total_copies": 20,
+    "available_copies": 11,
+    "description": "A 6-axis motion tracking device that combines a 3-axis gyroscope and a 3-axis accelerometer on the same silicon die.",
+    "cover": "https://upload.wikimedia.org/wikipedia/commons/e/ea/MPU-6050_Module.jpg",
+    "summary": "The MPU-6050 is a popular 6-axis motion tracking sensor that integrates a 3-axis accelerometer and a 3-axis gyroscope. Communicating via I2C, it provides precise tracking of orientation, tilt, and acceleration, making it an essential component for drones, robotics, and self-balancing RC vehicles."
+  }
 ];
