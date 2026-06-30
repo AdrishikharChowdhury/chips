@@ -14,7 +14,10 @@ export default function ComponentList({
 }: ComponentListProps) {
   return (
     <section className={containerClassName}>
-      <h2 className="font-degular-display text-4xl">{title}</h2>
+      <section className="w-full flex justify-between items-center">
+        <h2 className="font-degular-display text-4xl">{title}</h2>
+        <p>Search</p>
+      </section>
       <ul className="book-list">
         {components.map((component) => (
           <ComponentCard key={component.id} {...component} />

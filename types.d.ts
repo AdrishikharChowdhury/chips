@@ -39,4 +39,5 @@ export interface ComponentParams {
 export interface BorrowComponentParams {
   componentId: string;
   dueDate: Date;
+  amount?: number;
 }

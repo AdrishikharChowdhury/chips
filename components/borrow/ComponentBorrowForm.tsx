@@ -16,6 +16,7 @@ import Image from "next/image";
 import { borrowComponent } from "@/lib/actions/component";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import { Input } from "../ui/input";
 
 export function ComponentBorrowForm({
   component,
@@ -25,6 +26,7 @@ export function ComponentBorrowForm({
   isBorrowerVerified?: boolean;
 }) {
   const [date, setDate] = React.useState<Date>();
+  const [amount, setAmount] = React.useState(1);
   const { id } = component;
   return (
     <div className="flex w-full justify-between items-center">
@@ -38,7 +40,7 @@ export function ComponentBorrowForm({
               <Button
                 variant="outline"
                 data-empty={!date}
-                className="w-53 justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+                className="w-45 justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
               >
                 {date ? format(date, "PPP") : <span>Pick a date</span>}
                 <ChevronDownIcon />
@@ -55,6 +57,20 @@ export function ComponentBorrowForm({
           </Popover>
         </span>
       </div>
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-semibold text-midnight-ink/40 uppercase tracking-wider">
+          Amount:
+        </span>
+        <span className="text-midnight-ink/60">
+          <Input
+            type="number"
+            min={1}
+            max={component.availableCopies}
+            value={amount}
+            onChange={(e) => setAmount(Number(e.target.value))}
+          />
+        </span>
+      </div>
       <Button
         onClick={async (e) => {
           e.preventDefault();
@@ -63,7 +79,7 @@ export function ComponentBorrowForm({
             toast.error("You must be verified to borrow a component");
             return;
           }
-          const result = await borrowComponent({ componentId: id, dueDate: date });
+          const result = await borrowComponent({ componentId: id, dueDate: date, amount });
           if (result.success) {
             toast.success(result.message);
             redirect("/components/borrow")

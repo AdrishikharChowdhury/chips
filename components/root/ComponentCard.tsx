@@ -1,91 +1,82 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { Components } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import { Star } from "@phosphor-icons/react";
 
 export default function ComponentCard({
   id,
   title,
+  manufacturer,
   type,
   cover,
+  rating,
+  availableCopies,
+  totalCopies,
 }: Components) {
   const router = useRouter();
-  const isLoaned = false;
   const typeArray = type.split("/");
+
   return (
-    <li className={cn(isLoaned && "w-full")}>
-      <Link
-        href={`/components/${id}`}
-        className={cn(
-          "group flex flex-col items-center rounded-t-4xl border-2 border-poppy-red/30 hover:border-poppy-red transition-colors duration-200 shadow-xl bg-cream-paper min-h-125 justify-center",
-          isLoaned && "w-full flex-col items-center overflow-hidden",
-        )}
-      >
-        <div className="flex w-full items-center justify-center rounded-t-4xl bg-midnight-ink/5 overflow-hidden">
-          <Image
-            src={cover}
-            alt={title}
-            width={280}
-            height={400}
-            className="h-80 w-full overflow-hidden object-center rounded-t-2xl"
-          />
-        </div>
-        <div className="py-6 flex flex-col items-center w-full justify-center">
-          <div
-            className={cn(
-              "w-full text-center flex flex-col gap-2",
-              !isLoaned && "xs:max-w-60 max-w-36",
-            )}
-          >
-            <p className="font-semibold text-midnight-ink text-lg w-max self-center">
-              {title}
-            </p>
-            <div className="text-sm flex gap-4 self-center">
-              {typeArray.map((typeItem, idx) => (
-                <span className="text-midnight-ink font-semibold border-2  border-marigold-yellow bg-marigold-yellow/50 px-3 py-1 w-max text-center " key={idx} >{typeItem}</span>
-              ))}
+    <li className="flex">
+      <div className="flex w-full flex-col overflow-hidden border-2 border-midnight-ink/10 bg-cream-paper transition-colors hover:border-cobalt-blue/40">
+        <Link
+          href={`/components/${id}`}
+          className="group flex flex-col"
+        >
+          <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden bg-midnight-ink/3">
+            <Image
+              src={cover}
+              alt={title}
+              width={320}
+              height={240}
+              className="size-full object-contain"
+            />
+            <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full border border-marigold-yellow/40 bg-cream-paper px-2.5 py-1 text-xs font-bold text-midnight-ink">
+              <Star weight="fill" className="size-3 text-marigold-yellow" />
+              {rating}
             </div>
           </div>
 
-          <div className="mt-3 w-full flex flex-col items-center space-y-3">
-            {isLoaned ? (
-              <>
-                <div className="book-loaned">
-                  <Image
-                    src="/icons/calendar.svg"
-                    alt="calendar"
-                    width={18}
-                    height={18}
-                    className="object-contain"
-                  />
-                  <p className="text-sm text-midnight-ink/60">
-                    11 days left to return
-                  </p>
-                </div>
-                <Button className="text-md py-6 px-8 bg-poppy-red text-cream-paper hover:bg-poppy-red/90 space-x-2 w-fit">
-                  <Image src="/icons/receipt.svg" alt="download" width={100} height={100} className="object-contain size-20" />
-                  <p>Download Receipt</p>
-                </Button>
-              </>
-            ) : (
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push(`/components/borrow/${id}`);
-                }}
-                className="text-md py-6 px-4 bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 space-x-2 w-fit"
-              >
-                <Image src="/icons/component.svg" alt="borrow" width={100} height={100} className="object-contain size-20 invert-100" />
-                <p>Borrow Now</p>
-              </Button>
-            )}
+          <div className="flex flex-1 flex-col gap-2 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-midnight-ink/40">
+              {manufacturer}
+            </p>
+            <h3 className="font-degular-display text-xl font-bold leading-tight text-midnight-ink">
+              {title}
+            </h3>
+            <div className="flex flex-wrap gap-1.5">
+              {typeArray.map((t, i) => (
+                <span
+                  key={i}
+                  className="rounded-full border border-poppy-red/30 bg-poppy-red/8 px-2.5 py-0.5 text-[11px] font-semibold text-poppy-red"
+                >
+                  {t.trim()}
+                </span>
+              ))}
+            </div>
+            <p className="mt-auto text-xs text-midnight-ink/40">
+              {availableCopies}/{totalCopies} available
+            </p>
           </div>
+        </Link>
+
+        <div className="border-t border-midnight-ink/10 px-4 py-3 flex justify-between">
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/components/borrow/${id}`);
+            }}
+            className="w-fit bg-cobalt-blue text-xs font-bold text-cream-paper hover:bg-cobalt-blue/90"
+          >
+            Borrow Component
+          </Button>
+          <Button className="w-fit bg-poppy-red text-xs font-bold text-cream-paper hover:bg-marigold-yellow/90" >Add To Cart</Button>
         </div>
-      </Link>
+      </div>
     </li>
   );
 }

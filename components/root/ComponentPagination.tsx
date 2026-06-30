@@ -34,24 +34,33 @@ export function ComponentPagination({ currentPage, totalPages, basePath = "/comp
 
   return (
     <Pagination>
-      <PaginationContent>
+      <PaginationContent className="gap-1">
         <PaginationItem>
           <PaginationPrevious
             href={buildHref(currentPage - 1)}
             aria-disabled={currentPage <= 1}
-            className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
+            className={`border-2 text-sm font-bold uppercase tracking-wider ${
+              currentPage <= 1
+                ? "pointer-events-none border-midnight-ink/10 text-midnight-ink/20"
+                : "border-midnight-ink/20 text-midnight-ink/60 hover:border-midnight-ink/40 hover:text-midnight-ink"
+            }`}
           />
         </PaginationItem>
         {pages.map((page, idx) =>
           page === "ellipsis" ? (
             <PaginationItem key={`e-${idx}`}>
-              <PaginationEllipsis />
+              <PaginationEllipsis className="text-midnight-ink/30" />
             </PaginationItem>
           ) : (
             <PaginationItem key={page}>
               <PaginationLink
                 href={buildHref(page)}
                 isActive={page === currentPage}
+                className={
+                  page === currentPage
+                    ? "border-2 border-cobalt-blue bg-cobalt-blue font-bold text-cream-paper hover:bg-cobalt-blue hover:text-cream-paper"
+                    : "border-2 border-midnight-ink/20 font-semibold text-midnight-ink/60 hover:border-midnight-ink/40 hover:text-midnight-ink"
+                }
               >
                 {page}
               </PaginationLink>
@@ -62,7 +71,11 @@ export function ComponentPagination({ currentPage, totalPages, basePath = "/comp
           <PaginationNext
             href={buildHref(currentPage + 1)}
             aria-disabled={currentPage >= totalPages}
-            className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
+            className={`border-2 text-sm font-bold uppercase tracking-wider ${
+              currentPage >= totalPages
+                ? "pointer-events-none border-midnight-ink/10 text-midnight-ink/20"
+                : "border-midnight-ink/20 text-midnight-ink/60 hover:border-midnight-ink/40 hover:text-midnight-ink"
+            }`}
           />
         </PaginationItem>
       </PaginationContent>

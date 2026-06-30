@@ -20,7 +20,7 @@ export const borrowComponent = async (params: BorrowComponentParams) => {
     return { success: false, message: "Unauthorized" };
   }
 
-  const { componentId, dueDate } = params;
+  const { componentId, dueDate, amount = 1 } = params;
   try {
     const component = await db
       .select({ availableCopies: componentsTable.availableCopies })
@@ -28,10 +28,10 @@ export const borrowComponent = async (params: BorrowComponentParams) => {
       .where(eq(componentsTable.id, componentId))
       .limit(1);
 
-    if (!component.length || component[0].availableCopies <= 0) {
+    if (!component.length || component[0].availableCopies < amount) {
       return {
         success: false,
-        message: "Component not available",
+        message: `Only ${component[0]?.availableCopies ?? 0} available`,
       };
     }
 
@@ -40,10 +40,11 @@ export const borrowComponent = async (params: BorrowComponentParams) => {
       componentId,
       dueDate: formatDate(dueDate, "yyyy-MM-dd"),
       status: "BORROWED",
+      amount,
     });
     await db
       .update(componentsTable)
-      .set({ availableCopies: component[0].availableCopies - 1 })
+      .set({ availableCopies: component[0].availableCopies - amount })
       .where(eq(componentsTable.id, componentId));
     
     return {

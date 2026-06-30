@@ -30,6 +30,7 @@ export default async function BorrowPage({
       borrowDate: borrowRecords.borrowDate,
       dueDate: borrowRecords.dueDate,
       status: borrowRecords.status,
+      amount: borrowRecords.amount,
       componentId: borrowRecords.componentId,
       componentTitle: componentsTable.title,
       componentManufacturer: componentsTable.manufacturer,
@@ -41,12 +42,12 @@ export default async function BorrowPage({
     .where(eq(borrowRecords.userId, userId))
     .orderBy(borrowRecords.createdAt);
 
-  const records = rows.reduce<Record<string, Omit<(typeof rows)[number], "borrowDate"> & { borrowDate: Date | null; count: number }>>((acc, row) => {
+  const records = rows.reduce<Record<string, Omit<(typeof rows)[number], "borrowDate" | "amount"> & { borrowDate: Date | null; amount: number }>>((acc, row) => {
     const key = row.componentId;
     if (!acc[key]) {
-      acc[key] = { ...row, count: 0 };
+      acc[key] = { ...row, amount: 0, borrowDate: row.borrowDate };
     }
-    acc[key].count += 1;
+    acc[key].amount += row.amount ?? 1;
     return acc;
   }, {});
 
@@ -62,7 +63,7 @@ export default async function BorrowPage({
           My Borrowed Components
         </h1>
         <span className="rounded-full border-2 border-midnight-ink/20 px-4 py-1.5 text-sm font-semibold text-midnight-ink/60">
-          {allUnique.length} {allUnique.length === 1 ? "component" : "components"}
+          {allUnique.length} {allUnique.length === 1 ? "type" : "types"}
         </span>
       </div>
 
@@ -169,9 +170,9 @@ export default async function BorrowPage({
                       {record.status}
                     </span>
                   </div>
-                  {record.count > 1 && (
+                  {record.amount > 1 && (
                     <span className="flex size-10 items-center justify-center rounded-full  bg-cobalt-blue text-xs font-bold text-white">
-                      {record.count}
+                      {record.amount}
                     </span>
                   )}
                 </div>

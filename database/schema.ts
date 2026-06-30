@@ -61,11 +61,16 @@ export const borrowRecords = pgTable("borrow_records", {
     .references(() => componentsTable.id),
   borrowDate: timestamp("borrow_date", {
     withTimezone: true,
-  }).defaultNow().notNull(),
+  })
+    .defaultNow()
+    .notNull(),
   dueDate: date("due_date").notNull(),
   returnDate: date("return_date"),
   status: BORROW_STATUS_ENUM("status").notNull().default("BORROWED").notNull(),
   createdAt: timestamp("created_at", {
     withTimezone: true,
-  }).defaultNow().notNull(),
+  })
+    .defaultNow()
+    .notNull(),
+  amount: integer("amount").notNull().default(1),
 });

@@ -30,7 +30,14 @@ export default async function BorrowComponentPage({
         href="/components"
         className="inline-flex items-center gap-2 text-sm text-midnight-ink/60 transition-colors hover:text-cobalt-blue"
       >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <path d="M10 12L6 8L10 4" />
         </svg>
         Back to Components
@@ -53,7 +60,7 @@ export default async function BorrowComponentPage({
             {component.title}
           </h1>
 
-          <div className="border-t-2 border-midnight-ink/10 pt-4">
+          <div className="pt-4">
             <p className="text-sm font-semibold text-midnight-ink/40 uppercase tracking-wider">
               Description
             </p>
@@ -68,7 +75,10 @@ export default async function BorrowComponentPage({
             </p>
             <p className="mt-1 text-midnight-ink/60">{component.summary}</p>
           </div>
-          <ComponentBorrowForm isBorrowerVerified={isBorrowVerified} component={component} />
+          <ComponentBorrowForm
+            isBorrowerVerified={isBorrowVerified}
+            component={component}
+          />
         </div>
       </section>
     </div>

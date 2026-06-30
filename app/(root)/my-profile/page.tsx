@@ -28,6 +28,7 @@ export default async function MyProfilePage() {
       borrowDate: borrowRecords.borrowDate,
       dueDate: borrowRecords.dueDate,
       status: borrowRecords.status,
+      amount: borrowRecords.amount,
       componentId: borrowRecords.componentId,
       componentTitle: componentsTable.title,
       componentManufacturer: componentsTable.manufacturer,
@@ -46,17 +47,17 @@ export default async function MyProfilePage() {
   const records = rows.reduce<
     Record<
       string,
-      Omit<(typeof rows)[number], "borrowDate"> & {
+      Omit<(typeof rows)[number], "borrowDate" | "amount"> & {
         borrowDate: Date | null;
-        count: number;
+        amount: number;
       }
     >
   >((acc, row) => {
     const key = row.componentId;
     if (!acc[key]) {
-      acc[key] = { ...row, count: 0 };
+      acc[key] = { ...row, amount: 0, borrowDate: row.borrowDate };
     }
-    acc[key].count += 1;
+    acc[key].amount += row.amount ?? 1;
     return acc;
   }, {});
 
@@ -206,7 +207,7 @@ export default async function MyProfilePage() {
               return (
                 <div
                   key={record.id}
-                  className="flex items-center gap-4 rounded-2xl border-2 border-midnight-ink/10 bg-cream-paper p-4"
+                  className="flex flex-col gap-4 rounded-2xl border-2 border-midnight-ink/10 bg-cream-paper p-4 md:flex-row md:items-center"
                 >
                   <div className="relative flex size-36 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-midnight-ink/5">
                     {record.componentCover ? (
@@ -215,19 +216,13 @@ export default async function MyProfilePage() {
                         alt={record.componentTitle ?? ""}
                         width={144}
                         height={144}
-                        className="size-full object-cover"
+                        className="size-full object-contain"
                       />
                     ) : (
-                      <div className="size-10 rounded-full bg-midnight-ink/10" />
-                    )}
-                    {record.count > 1 && (
-                      <span className="absolute -right-2 -top-2 flex size-7 items-center justify-center rounded-full border-2 border-cream-paper bg-cobalt-blue text-xs font-bold text-white">
-                        ×{record.count}
-                      </span>
+                      <div className="size-12 rounded-full bg-midnight-ink/10" />
                     )}
                   </div>
-
-                  <div className="flex flex-1 flex-col gap-0.5">
+                  <div className="flex flex-1 flex-col gap-1">
                     <Link
                       href={`/components/${record.componentId}`}
                       className="text-lg font-bold text-midnight-ink hover:text-cobalt-blue"
@@ -237,11 +232,11 @@ export default async function MyProfilePage() {
                     <p className="text-sm text-midnight-ink/60">
                       {record.componentManufacturer}
                     </p>
-                    <div className="flex flex-wrap gap-1.5 mt-0.5">
+                    <div className="flex flex-wrap gap-2 mt-1">
                       {typeArray.map((t, i) => (
                         <span
                           key={i}
-                          className="rounded-full border border-cobalt-blue/30 bg-cobalt-blue/10 px-2 py-0.5 text-xs font-semibold text-cobalt-blue"
+                          className="rounded-full border border-cobalt-blue/30 bg-cobalt-blue/10 px-2.5 py-0.5 text-xs font-semibold text-cobalt-blue"
                         >
                           {t.trim()}
                         </span>
@@ -249,7 +244,7 @@ export default async function MyProfilePage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-wrap gap-6 md:gap-8">
                     <div className="text-center">
                       <p className="text-xs font-semibold text-midnight-ink/40 uppercase tracking-wider">
                         Due
@@ -263,15 +258,25 @@ export default async function MyProfilePage() {
                           : "—"}
                       </p>
                     </div>
-                    <span
-                      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ${
-                        record.status === "BORROWED"
-                          ? "bg-marigold-yellow/30 text-midnight-ink"
-                          : "bg-emerald-100 text-emerald-800"
-                      }`}
-                    >
-                      {record.status}
-                    </span>
+                    <div className="text-center">
+                      <p className="text-xs font-semibold text-midnight-ink/40 uppercase tracking-wider">
+                        Status
+                      </p>
+                      <span
+                        className={`inline-block rounded-full px-3 py-0.5 text-xs font-bold ${
+                          record.status === "BORROWED"
+                            ? "bg-marigold-yellow/30 text-midnight-ink"
+                            : "bg-emerald-100 text-emerald-800"
+                        }`}
+                      >
+                        {record.status}
+                      </span>
+                    </div>
+                    {record.amount > 1 && (
+                      <span className="flex size-10 items-center justify-center rounded-full bg-cobalt-blue text-xs font-bold text-white">
+                        {record.amount}
+                      </span>
+                    )}
                   </div>
                 </div>
               );
