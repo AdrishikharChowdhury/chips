@@ -53,9 +53,7 @@ export function BorrowCard({
         >
           {componentTitle}
         </Link>
-        <p className="text-sm text-midnight-ink/60">
-          {componentManufacturer}
-        </p>
+        <p className="text-sm text-midnight-ink/60">{componentManufacturer}</p>
         <div className="flex flex-wrap gap-2 mt-1">
           {typeArray.map((t, i) => (
             <span
@@ -95,16 +93,18 @@ export function BorrowCard({
               : "—"}
           </p>
         </div>
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <p className="text-xs font-semibold text-midnight-ink/40 uppercase tracking-wider">
             Status
           </p>
           <span
-            className={`inline-block rounded-full px-3 py-0.5 text-xs font-bold ${
-              status === "BORROWED"
+            className={`inline-block rounded-full px-3 py-1.5 text-xs font-bold ${
+              status === "PENDING"
                 ? "bg-marigold-yellow/30 text-midnight-ink"
-                : "bg-emerald-100 text-emerald-800"
-            }`}
+                : status === "BORROWED"
+                  ? "bg-cobalt-blue text-white"
+                  : "bg-emerald-100 text-emerald-800"
+            }` }
           >
             {status}
           </span>

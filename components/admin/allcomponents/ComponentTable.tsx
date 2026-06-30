@@ -19,7 +19,7 @@ export async function ComponentTable() {
 
   return (
     <div className="bg-cream-paper">
-      <Table>
+      <Table className="[&_td]:p-4 [&_th]:p-4">
         <TableCaption className="text-sm text-midnight-ink/40 border-t border-midnight-ink/10 py-3">
           Total of {components.length} components
         </TableCaption>
@@ -36,6 +36,9 @@ export async function ComponentTable() {
             </TableHead>
             <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
               Type
+            </TableHead>
+            <TableHead className="text-right text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
+              Available
             </TableHead>
             <TableHead className="text-right text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
               Created
@@ -85,6 +88,9 @@ export async function ComponentTable() {
                     ))}
                   </div>
                 </TableCell>
+                <TableCell className="text-right text-sm font-semibold text-midnight-ink">
+                  {component.availableCopies}
+                </TableCell>
                 <TableCell className="text-right text-sm font-semibold text-midnight-ink/50">
                   {component.createdAt
                     ? new Date(component.createdAt).toLocaleDateString("en-US", {
@@ -115,7 +121,7 @@ export async function ComponentTable() {
         </TableBody>
         <TableFooter>
           <TableRow className="border-t-2 border-midnight-ink/10 bg-transparent hover:bg-transparent">
-            <TableCell colSpan={5} className="text-sm font-semibold text-midnight-ink/50">
+            <TableCell colSpan={6} className="text-sm font-semibold text-midnight-ink/50">
               Total
             </TableCell>
             <TableCell className="text-right font-bold text-midnight-ink">

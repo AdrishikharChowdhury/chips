@@ -12,7 +12,7 @@ import { BorrowComponentParams, CartItem, Components } from "@/types";
 import { formatDate } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { eq, count, desc } from "drizzle-orm";
+import { eq, count, desc, sql } from "drizzle-orm";
 
 export const borrowComponent = async (params: BorrowComponentParams) => {
   const session = await auth();
@@ -46,7 +46,7 @@ export const borrowComponent = async (params: BorrowComponentParams) => {
       userId,
       componentId,
       dueDate: formatDate(dueDate, "yyyy-MM-dd"),
-      status: "BORROWED",
+      status: "PENDING",
       amount,
     });
     await db
@@ -214,4 +214,97 @@ export const deleteComponent = async (componentId: string) => {
     console.log(error);
   }
   redirect("/admin/components");
+};
+
+export const approveRequest = async (requestId: string) => {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  try {
+    await db
+      .update(borrowRecords)
+      .set({ status: "BORROWED" })
+      .where(eq(borrowRecords.id, requestId));
+    revalidatePath("/admin/component-requests");
+  } catch (error) {
+    console.log(error);
+  }
+  redirect("/admin/component-requests");
+};
+
+export const rejectRequest = async (requestId: string) => {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  try {
+    await db
+      .update(borrowRecords)
+      .set({ status: "RETURNED" })
+      .where(eq(borrowRecords.id, requestId));
+    revalidatePath("/admin/component-requests");
+  } catch (error) {
+    console.log(error);
+  }
+  redirect("/admin/component-requests");
+};
+
+export const returnRequest = async (requestId: string) => {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  try {
+    const record = await db
+      .select({ componentId: borrowRecords.componentId, amount: borrowRecords.amount })
+      .from(borrowRecords)
+      .where(eq(borrowRecords.id, requestId))
+      .limit(1);
+
+    if (record.length) {
+      await db
+        .update(componentsTable)
+        .set({ availableCopies: sql`${componentsTable.availableCopies} + ${record[0].amount}` })
+        .where(eq(componentsTable.id, record[0].componentId));
+    }
+
+    await db
+      .update(borrowRecords)
+      .set({ status: "RETURNED", returnDate: new Date().toISOString().slice(0, 10) })
+      .where(eq(borrowRecords.id, requestId));
+    revalidatePath("/admin/component-requests");
+  } catch (error) {
+    console.log(error);
+  }
+  redirect("/admin/component-requests");
+};
+
+export const updateRequestStatus = async (requestId: string, formData: FormData) => {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  const newStatus = formData.get("status") as string;
+  if (!newStatus || !["BORROWED", "RETURNED"].includes(newStatus)) return;
+  try {
+    if (newStatus === "RETURNED") {
+      const record = await db
+        .select({ componentId: borrowRecords.componentId, amount: borrowRecords.amount })
+        .from(borrowRecords)
+        .where(eq(borrowRecords.id, requestId))
+        .limit(1);
+      if (record.length) {
+        await db
+          .update(componentsTable)
+          .set({ availableCopies: sql`${componentsTable.availableCopies} + ${record[0].amount}` })
+          .where(eq(componentsTable.id, record[0].componentId));
+      }
+      await db
+        .update(borrowRecords)
+        .set({ status: newStatus, returnDate: new Date().toISOString().slice(0, 10) })
+        .where(eq(borrowRecords.id, requestId));
+    } else {
+      await db
+        .update(borrowRecords)
+        .set({ status: newStatus })
+        .where(eq(borrowRecords.id, requestId));
+    }
+    revalidatePath("/admin/component-requests");
+  } catch (error) {
+    console.log(error);
+  }
+  redirect("/admin/component-requests");
 };
