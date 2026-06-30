@@ -64,7 +64,7 @@ export default function ComponentCard({
           </div>
         </Link>
 
-        <div className="border-t border-midnight-ink/10 px-4 py-3 flex justify-between">
+        <div className="border-t border-midnight-ink/10 px-4 py-3 flex justify-between flex-row-reverse">
           <Button
             onClick={(e) => {
               e.stopPropagation();

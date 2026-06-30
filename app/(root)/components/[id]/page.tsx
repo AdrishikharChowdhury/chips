@@ -6,6 +6,7 @@ import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import ComponentCard from "@/components/root/ComponentCard";
+import { ShoppingCart } from "lucide-react";
 
 export default async function ComponentPage({
   params,
@@ -106,20 +107,31 @@ export default async function ComponentPage({
             </p>
             <p className="mt-1 text-midnight-ink/60">{c.summary}</p>
           </div>
-          <Link href={`/components/borrow/${c.id}`}>
-            <Button className="bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 py-6 px-8 w-fit">
-              <Image
-                src="/icons/component.svg"
-                alt=""
-                width={20}
-                height={20}
-                className="invert-100"
-              />
-              <span className="font-degular-display text-lg">
-                Borrow Component
-              </span>
-            </Button>
-          </Link>
+          <div className="flex items-center justify-between flex-row-reverse" >
+            <Link href={`/components/borrow/${c.id}`}>
+              <Button className="bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 py-6 px-8 w-fit cursor-pointer">
+                <Image
+                  src="/icons/component.svg"
+                  alt=""
+                  width={20}
+                  height={20}
+                  className="invert-100"
+                />
+                <span className="font-degular-display text-lg">
+                  Borrow Component
+                </span>
+              </Button>
+            </Link>
+            <Link href={`/cart`}>
+              <Button className="bg-poppy-red text-cream-paper hover:bg-poppy-red/90 py-6 px-8 w-fit cursor-pointer">
+                <ShoppingCart />
+                <span className="font-degular-display text-lg">
+                  Add to Cart
+                </span>
+              </Button>
+            </Link>
+          </div>
+          
         </div>
       </div>
       <div className="space-y-8 mb-10">

@@ -11,6 +11,9 @@ export const navigationLinks = [
   {
     href: "/components/borrow",
     label: "Borrowed Components",
+  },{
+    href: "/cart",
+    label: "Cart",
   },
 ];
 
