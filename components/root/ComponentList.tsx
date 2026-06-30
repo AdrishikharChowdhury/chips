@@ -1,5 +1,5 @@
 import { Components } from "@/types"
-import BookCard from "./BookCard"
+import ComponentCard from "./ComponentCard"
 
 interface ComponentListProps {
   title: string
@@ -13,7 +13,7 @@ export default function ComponentList({title, components,containerClassName}:Com
       <h2 className='font-degular-display text-4xl' >{title}</h2>
       <ul className="book-list">
         {components.map((component) => (
-          <BookCard key={component.id} {...component} />
+          <ComponentCard key={component.id} {...component} />
         ))}
       </ul>
     </section>

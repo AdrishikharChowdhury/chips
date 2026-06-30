@@ -103,7 +103,7 @@ export default async function ComponentPage({
             </p>
             <p className="mt-1 text-midnight-ink/60">{c.summary}</p>
           </div>
-          <Link href={`/api/borrow/${c.id}`}>
+          <Link href={`/components/borrow/${c.id}`}>
             <Button className="bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 py-6 px-8 w-fit">
               <Image
                 src="/icons/component.svg"

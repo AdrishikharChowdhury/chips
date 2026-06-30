@@ -1,16 +1,20 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Components } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 
-export default function BookCard({
+export default function ComponentCard({
   id,
   title,
   type,
   cover,
-  isLoaned = false,
 }: Components) {
+  const router = useRouter();
+  const isLoaned = false;
   const typeArray = type.split("/");
   return (
     <li className={cn(isLoaned && "w-full")}>
@@ -30,7 +34,7 @@ export default function BookCard({
             className="h-80 w-full overflow-hidden object-center rounded-t-2xl"
           />
         </div>
-        <div className="py-4 flex flex-col items-center w-full justify-center">
+        <div className="py-6 flex flex-col items-center w-full justify-center">
           <div
             className={cn(
               "w-full text-center flex flex-col gap-2",
@@ -41,8 +45,8 @@ export default function BookCard({
               {title}
             </p>
             <div className="text-sm flex gap-4 self-center">
-              {typeArray.map((typeItem,idx:number) => (
-                <span className="text-midnight-ink font-semibold border-2  border-marigold-yellow bg-marigold-yellow/50 px-3 py-1 w-max text-center " key={idx} >{ typeItem}</span>
+              {typeArray.map((typeItem, idx) => (
+                <span className="text-midnight-ink font-semibold border-2  border-marigold-yellow bg-marigold-yellow/50 px-3 py-1 w-max text-center " key={idx} >{typeItem}</span>
               ))}
             </div>
           </div>
@@ -62,14 +66,20 @@ export default function BookCard({
                     11 days left to return
                   </p>
                 </div>
-                <Button className="text-md py-6 px-8 bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 space-x-2 w-fit">
+                <Button className="text-md py-6 px-8 bg-poppy-red text-cream-paper hover:bg-poppy-red/90 space-x-2 w-fit">
                   <Image src="/icons/receipt.svg" alt="download" width={100} height={100} className="object-contain size-20" />
                   <p>Download Receipt</p>
                 </Button>
               </>
             ) : (
-                <Button className="text-md py-6 px-8 bg-poppy-red text-cream-paper hover:bg-poppy-red/90 mt-3 mb-5">
-                  <Image src="/icons/component.svg" alt="borrow" width={100} height={100} className="object-contain size-20 invert-100" />
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/components/borrow/${id}`);
+                }}
+                className="text-md py-6 px-4 bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 space-x-2 w-fit"
+              >
+                <Image src="/icons/component.svg" alt="borrow" width={100} height={100} className="object-contain size-20 invert-100" />
                 <p>Borrow Now</p>
               </Button>
             )}

@@ -15,6 +15,20 @@
       "when": 1782590506353,
       "tag": "0001_safe_the_hood",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782767119900,
+      "tag": "0002_blushing_jubilee",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782798556957,
+      "tag": "0003_bumpy_malice",
+      "breakpoints": true
     }
   ]
 }

@@ -1,14 +1,16 @@
 export const navigationLinks = [
   {
-    href: "/library",
-    label: "Library",
+    href: "/",
+    label: "Home",
   },
 
   {
-    img: "/icons/user.svg",
-    selectedImg: "/icons/user-fill.svg",
-    href: "/my-profile",
-    label: "My Profile",
+    href: "/components",
+    label: "Components",
+  },
+  {
+    href: "/components/borrow",
+    label: "Borrowed Components",
   },
 ];
 

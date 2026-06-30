@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SignOutIcon, UserIcon } from "@phosphor-icons/react";
+import { navigationLinks } from "@/constants";
 
 export default function Header({ session }: { session: Session }) {
   const pathname = usePathname();
@@ -35,32 +36,21 @@ export default function Header({ session }: { session: Session }) {
       </Link>
       <nav>
         <ul className="flex flex-row items-center gap-8">
-          <li>
-            <Link
-              href="/"
-              className={cn(
-                "text-xl cursor-pointer capitalize",
-                pathname === "/"
-                  ? "text-cobalt-blue font-extrabold underline underline-offset-4 decoration-2 decoration-wavy"
-                  : "text-poppy-red",
-              )}
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/components"
-              className={cn(
-                "text-xl cursor-pointer capitalize",
-                pathname === "/components"
-                  ? "text-cobalt-blue font-extrabold underline underline-offset-4 decoration-2 decoration-wavy"
-                  : "text-poppy-red",
-              )}
-            >
-              Components
-            </Link>
-          </li>
+          {navigationLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className={cn(
+                  "text-xl cursor-pointer capitalize",
+                  pathname === link.href
+                    ? "text-cobalt-blue font-extrabold underline underline-offset-4 decoration-2 decoration-wavy"
+                    : "text-poppy-red",
+                )}
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
           <li>
             {isSignIn && (
               <>
@@ -85,12 +75,18 @@ export default function Header({ session }: { session: Session }) {
                   <DropdownMenuContent className="border-2 border-midnight-ink/10 bg-cream-paper p-2 min-w-50">
                     <DropdownMenuGroup>
                       <DropdownMenuItem className="cursor-pointer rounded-none px-3 py-2.5 text-base transition-colors hover:bg-cobalt-blue/20">
-                        <Link href="/my-profile" className="flex w-full items-center gap-2 text-midnight-ink transition-colors hover:text-cobalt-blue">
+                        <Link
+                          href="/my-profile"
+                          className="flex w-full items-center gap-2 text-midnight-ink transition-colors hover:text-cobalt-blue"
+                        >
                           <UserIcon size={18} />
                           My Profile
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer rounded-none px-3 py-2.5 text-base text-midnight-ink transition-colors hover:bg-poppy-red/20 hover:text-poppy-red">
+                      <DropdownMenuItem
+                        onClick={() => signOut()}
+                        className="cursor-pointer rounded-none px-3 py-2.5 text-base text-midnight-ink transition-colors hover:bg-poppy-red/20 hover:text-poppy-red"
+                      >
                         <SignOutIcon size={18} />
                         Sign Out
                       </DropdownMenuItem>

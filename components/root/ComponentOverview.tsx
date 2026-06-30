@@ -12,8 +12,8 @@ export default function ComponentOverview({
   totalCopies,
   availableCopies,
   cover,
-  userId,
-}: Components & { userId: string }) {
+  id,
+}: Components) {
   return (
     <section className="book-overview">
       <div className="flex flex-1 flex-col gap-5">
@@ -45,7 +45,7 @@ export default function ComponentOverview({
           </p>
         </div>
         <p className="book-description">{description}</p>
-        <Link href={`/api/borrow/${userId}`}>
+        <Link href={`/components/borrow/${id}`}>
           <Button className="book-overview_btn">
             <Image
               src="/icons/component.svg"

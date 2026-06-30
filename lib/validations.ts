@@ -24,3 +24,4 @@ export const componentSchema = z.object({
   cover: z.string().nonempty(),
   summary: z.string().trim().min(10),
 });
+

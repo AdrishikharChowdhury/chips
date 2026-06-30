@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import Banner from "@/components/root/Banner";
 import ComponentList from "@/components/root/ComponentList";
 import { db } from "@/database";
@@ -7,17 +6,15 @@ import { Components } from "@/types";
 import { desc } from "drizzle-orm";
 
 export default async function Home() {
-  const session = await auth();
-  const { id } = session?.user ?? {};
 
   const latestComponents = (await db
     .select()
     .from(componentsTable)
-    .limit(12)
+    .limit(9)
     .orderBy(desc(componentsTable.createdAt))) as Components[];
   return (
     <div>
-      <Banner components={latestComponents} userId={id as string} />
+      <Banner components={latestComponents} />
       <ComponentList
         title="Latest Components"
         components={latestComponents}

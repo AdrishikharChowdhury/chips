@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import ComponentOverview from "./ComponentOverview";
 import { Components } from "@/types";
 
-export default function Banner({ userId, components }: { userId: string; components: Components[] }) {
+export default function Banner({ components }: { components: Components[] }) {
   const [current, setCurrent] = useState(0);
   const total = components.length;
 
@@ -21,7 +21,7 @@ export default function Banner({ userId, components }: { userId: string; compone
 
   return (
     <div className="w-full h-max">
-      <ComponentOverview userId={userId} {...components[current]} />
+      <ComponentOverview {...components[current]} />
       <div className="mt-6 flex items-center justify-center gap-4">
         <button
           onClick={prev}

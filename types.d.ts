@@ -10,7 +10,6 @@ export interface Components {
   id: string;
   summary: string;
   createdAt: Date | null;
-  isLoaned: boolean;
 }
 
 export interface AuthCredentials {
@@ -36,4 +35,8 @@ export interface ComponentParams {
   availableCopies: number;
   cover: string;
   summary: string;
+}
+export interface BorrowComponentParams {
+  componentId: string;
+  dueDate: Date;
 }
