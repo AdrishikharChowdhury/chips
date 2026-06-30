@@ -1,8 +1,9 @@
 import { auth, signOut } from "@/auth";
 import { db } from "@/database";
-import { usersTable } from "@/database/schema";
+import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CalendarDays, IdCard, Activity, User, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,8 +20,48 @@ export default async function MyProfilePage() {
 
   const u = user[0];
 
+  const { id: userId } = session.user;
+
+  const rows = await db
+    .select({
+      id: borrowRecords.id,
+      borrowDate: borrowRecords.borrowDate,
+      dueDate: borrowRecords.dueDate,
+      status: borrowRecords.status,
+      componentId: borrowRecords.componentId,
+      componentTitle: componentsTable.title,
+      componentManufacturer: componentsTable.manufacturer,
+      componentCover: componentsTable.cover,
+      componentType: componentsTable.type,
+    })
+    .from(borrowRecords)
+    .innerJoin(
+      componentsTable,
+      eq(borrowRecords.componentId, componentsTable.id),
+    )
+    .where(eq(borrowRecords.userId, userId))
+    .orderBy(borrowRecords.createdAt)
+    .limit(3);
+
+  const records = rows.reduce<
+    Record<
+      string,
+      Omit<(typeof rows)[number], "borrowDate"> & {
+        borrowDate: Date | null;
+        count: number;
+      }
+    >
+  >((acc, row) => {
+    const key = row.componentId;
+    if (!acc[key]) {
+      acc[key] = { ...row, count: 0 };
+    }
+    acc[key].count += 1;
+    return acc;
+  }, {});
+
   return (
-    <div className="mx-auto max-w-4xl space-y-10 py-10">
+    <div className="mx-auto max-w-7xl space-y-10 py-10">
       <div className="flex items-center gap-4">
         <div className="flex size-20 items-center justify-center rounded-full bg-cobalt-blue text-3xl font-bold text-cream-paper p-8">
           {u.fullName.charAt(0).toUpperCase()}
@@ -118,33 +159,125 @@ export default async function MyProfilePage() {
             </div>
           </div>
           <div className="flex self-center gap-6">
-            <form action={async () => {
-              "use server"
-              redirect("/my-profile/edit")
-            }} >
-              <Button  className="font-degular-display text-xl py-6 w-fit px-4">
+            <form
+              action={async () => {
+                "use server";
+                redirect("/my-profile/edit");
+              }}
+            >
+              <Button className="font-degular-display text-xl py-6 w-fit px-4">
                 {" "}
                 <Edit /> Edit
               </Button>
             </form>
-            <form action={async () => {
-              "use server"
-              await signOut()
-            }} >
-            <Button
-              className="font-degular-display text-xl py-6 w-fit px-4 bg-poppy-red hover:bg-poppy-red/80"
+            <form
+              action={async () => {
+                "use server";
+                await signOut();
+              }}
             >
-              Sign out
+              <Button className="font-degular-display text-xl py-6 w-fit px-4 bg-poppy-red hover:bg-poppy-red/80">
+                Sign out
               </Button>
             </form>
           </div>
         </div>
       </div>
-      <section className="w-full">
-        <p className="text-3xl font-semibold">Your Components:</p>
-        <p className="text-center text-4xl text-midnight-ink/20 mt-6">
-          No Borrowed Components Yet
-        </p>
+      <section className="w-full space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-semibold">Your Components</h2>
+          {Object.keys(records).length > 0 && (
+            <Link
+              href="/components/borrow"
+              className="text-sm font-semibold text-cobalt-blue hover:underline"
+            >
+              View all
+            </Link>
+          )}
+        </div>
+        {Object.keys(records).length === 0 ? (
+          <p className="text-center text-4xl text-midnight-ink/20 mt-6">
+            No Borrowed Components Yet
+          </p>
+        ) : (
+          <div className="grid gap-4">
+            {Object.values(records).map((record) => {
+              const typeArray = record.componentType?.split("/") ?? [];
+              return (
+                <div
+                  key={record.id}
+                  className="flex items-center gap-4 rounded-2xl border-2 border-midnight-ink/10 bg-cream-paper p-4"
+                >
+                  <div className="relative flex size-36 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-midnight-ink/5">
+                    {record.componentCover ? (
+                      <Image
+                        src={record.componentCover}
+                        alt={record.componentTitle ?? ""}
+                        width={144}
+                        height={144}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <div className="size-10 rounded-full bg-midnight-ink/10" />
+                    )}
+                    {record.count > 1 && (
+                      <span className="absolute -right-2 -top-2 flex size-7 items-center justify-center rounded-full border-2 border-cream-paper bg-cobalt-blue text-xs font-bold text-white">
+                        ×{record.count}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex flex-1 flex-col gap-0.5">
+                    <Link
+                      href={`/components/${record.componentId}`}
+                      className="text-lg font-bold text-midnight-ink hover:text-cobalt-blue"
+                    >
+                      {record.componentTitle}
+                    </Link>
+                    <p className="text-sm text-midnight-ink/60">
+                      {record.componentManufacturer}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 mt-0.5">
+                      {typeArray.map((t, i) => (
+                        <span
+                          key={i}
+                          className="rounded-full border border-cobalt-blue/30 bg-cobalt-blue/10 px-2 py-0.5 text-xs font-semibold text-cobalt-blue"
+                        >
+                          {t.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="text-center">
+                      <p className="text-xs font-semibold text-midnight-ink/40 uppercase tracking-wider">
+                        Due
+                      </p>
+                      <p className="text-sm font-bold text-midnight-ink">
+                        {record.dueDate
+                          ? new Date(record.dueDate).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                            })
+                          : "—"}
+                      </p>
+                    </div>
+                    <span
+                      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                        record.status === "BORROWED"
+                          ? "bg-marigold-yellow/30 text-midnight-ink"
+                          : "bg-emerald-100 text-emerald-800"
+                      }`}
+                    >
+                      {record.status}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
     </div>
   );
