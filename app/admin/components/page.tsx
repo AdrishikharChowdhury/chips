@@ -1,3 +1,4 @@
+import { ComponentTable } from "@/components/admin/allcomponents/ComponentTable";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +19,7 @@ export default function ComponentsPage() {
         </Button>
       </div>
       <div className="mt-7 w-full overflow-hidden">
-        <p>Table</p>
+        <ComponentTable />
       </div>
     </section>
   );

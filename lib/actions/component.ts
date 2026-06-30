@@ -201,3 +201,17 @@ export const fetchBorrowedComponents = async () => {
     .orderBy(desc(borrowRecords.createdAt))
   return rows;
 };
+
+export const deleteComponent = async (componentId: string) => {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  try {
+    await db
+      .delete(componentsTable)
+      .where(eq(componentsTable.id, componentId));
+    revalidatePath("/admin/components");
+  } catch (error) {
+    console.log(error);
+  }
+  redirect("/admin/components");
+};
