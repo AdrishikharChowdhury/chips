@@ -10,7 +10,7 @@ export default async function Home() {
   const latestComponents = (await db
     .select()
     .from(componentsTable)
-    .limit(9)
+    .limit(3)
     .orderBy(desc(componentsTable.createdAt))) as Components[];
   return (
     <div>

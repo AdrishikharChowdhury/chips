@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
+import ComponentCard from "@/components/root/ComponentCard";
 
 export default async function ComponentPage({
   params,
@@ -16,11 +17,13 @@ export default async function ComponentPage({
     await db.select().from(componentsTable).where(eq(componentsTable.id, id))
   )[0];
 
+  const relatedComponents = await db.select().from(componentsTable).limit(3);
+
   if (!c) notFound();
   const typeArray = c.type.split("/");
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       <Link
         href="/"
         className="inline-flex items-center gap-2 text-sm text-midnight-ink/60 transition-colors hover:text-cobalt-blue"
@@ -56,7 +59,7 @@ export default async function ComponentPage({
               {c.title}
             </h1>
             <span className="border-2 border-poppy-red px-4 py-1.5 font-semibold text-poppy-red capitalize w-fit">
-              by {c.manufacturer}
+              {c.manufacturer}
             </span>
           </div>
           <div className="flex flex-wrap gap-4 text-sm">
@@ -118,6 +121,20 @@ export default async function ComponentPage({
             </Button>
           </Link>
         </div>
+      </div>
+      <div className="space-y-8 mb-10">
+        <section className="w-full flex justify-between items-center">
+          <h1 className="text-3xl font-extrabold">More Components</h1>
+          <Link href="/components" className="text-midnight-ink/60">View All</Link>
+        </section>
+        
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {relatedComponents.map((component) => (
+            <li key={component.id}>
+              <ComponentCard {...component} />
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

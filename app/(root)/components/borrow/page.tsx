@@ -4,8 +4,16 @@ import { eq } from "drizzle-orm";
 import { borrowRecords, componentsTable } from "@/database/schema";
 import Image from "next/image";
 import Link from "next/link";
+import { ComponentPagination } from "@/components/root/ComponentPagination";
 
-export default async function BorrowPage() {
+export default async function BorrowPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const params = await searchParams;
+  const currentPage = Math.max(1, Number(params.page) || 1);
+  const perPage = 3;
   const session = await auth();
   if (!session?.user?.id) {
     return (
@@ -42,6 +50,11 @@ export default async function BorrowPage() {
     return acc;
   }, {});
 
+  const allUnique = Object.values(records);
+  const totalPages = Math.ceil(allUnique.length / perPage);
+  const start = (currentPage - 1) * perPage;
+  const paginatedRecords = allUnique.slice(start, start + perPage);
+
   return (
     <div className="mx-auto max-w-8xl w-7xl min-w-full space-y-10 py-10">
       <div className="flex items-center justify-between">
@@ -49,11 +62,11 @@ export default async function BorrowPage() {
           My Borrowed Components
         </h1>
         <span className="rounded-full border-2 border-midnight-ink/20 px-4 py-1.5 text-sm font-semibold text-midnight-ink/60">
-          {Object.keys(records).length} {Object.keys(records).length === 1 ? "component" : "components"}
+          {allUnique.length} {allUnique.length === 1 ? "component" : "components"}
         </span>
       </div>
 
-      {Object.keys(records).length === 0 ? (
+      {allUnique.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="size-24 rounded-full bg-midnight-ink/5 flex items-center justify-center mb-6">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-midnight-ink/30">
@@ -73,7 +86,7 @@ export default async function BorrowPage() {
         </div>
       ) : (
         <div className="grid w-full gap-6">
-          {Object.values(records).map((record) => {
+          {paginatedRecords.map((record) => {
             const typeArray = record.componentType?.split("/") ?? [];
             return (
               <div
@@ -167,6 +180,11 @@ export default async function BorrowPage() {
           })}
         </div>
       )}
+      <ComponentPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        basePath="/components/borrow"
+      />
     </div>
   );
 }

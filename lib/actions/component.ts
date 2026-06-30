@@ -3,9 +3,9 @@
 import { auth } from "@/auth";
 import { db } from "@/database";
 import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
-import { BorrowComponentParams } from "@/types";
+import { BorrowComponentParams, Components } from "@/types";
 import { formatDate } from "date-fns";
-import { eq } from "drizzle-orm";
+import { eq, count } from "drizzle-orm";
 
 export const borrowComponent = async (params: BorrowComponentParams) => {
   const session = await auth();
@@ -74,4 +74,16 @@ export const isVerified = async () => {
     return false;
   }
   return true;
+};
+
+export const fetchComponents = async (page: number = 1, perPage: number = 6) => {
+  const offset = (page - 1) * perPage;
+  const [components, countResult] = await Promise.all([
+    db.select().from(componentsTable).limit(perPage).offset(offset),
+    db.select({ total: count() }).from(componentsTable),
+  ]);
+  return {
+    components: components as Components[],
+    totalCount: countResult[0]?.total ?? 0,
+  };
 };
