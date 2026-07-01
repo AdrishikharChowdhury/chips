@@ -12,7 +12,7 @@ import { BorrowComponentParams, CartItem, Components } from "@/types";
 import { formatDate } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { eq, count, desc, sql } from "drizzle-orm";
+import { eq, count, desc, inArray, sql } from "drizzle-orm";
 
 export const borrowComponent = async (params: BorrowComponentParams) => {
   const session = await auth();
@@ -213,7 +213,45 @@ export const deleteComponent = async (componentId: string) => {
   } catch (error) {
     console.log(error);
   }
-  redirect("/admin/components");
+  redirect("/admin/component-requests");
+};
+
+export const updateGroupStatus = async (formData: FormData) => {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  const requestIdsStr = formData.get("requestIds") as string;
+  const newStatus = formData.get("status") as string;
+  if (!requestIdsStr || !newStatus || !["BORROWED", "RETURNED"].includes(newStatus)) return;
+  const requestIds = requestIdsStr.split(",");
+
+  try {
+    if (newStatus === "RETURNED") {
+      const records = await db
+        .select({ componentId: borrowRecords.componentId, amount: borrowRecords.amount })
+        .from(borrowRecords)
+        .where(inArray(borrowRecords.id, requestIds));
+      if (records.length) {
+        const totalAmount = records.reduce((sum, r) => sum + r.amount, 0);
+        await db
+          .update(componentsTable)
+          .set({ availableCopies: sql`${componentsTable.availableCopies} + ${totalAmount}` })
+          .where(eq(componentsTable.id, records[0].componentId));
+      }
+      await db
+        .update(borrowRecords)
+        .set({ status: newStatus, returnDate: new Date().toISOString().slice(0, 10) })
+        .where(inArray(borrowRecords.id, requestIds));
+    } else {
+      await db
+        .update(borrowRecords)
+        .set({ status: newStatus })
+        .where(inArray(borrowRecords.id, requestIds));
+    }
+    revalidatePath("/admin/component-requests");
+  } catch (error) {
+    console.log(error);
+  }
+  redirect("/admin/component-requests");
 };
 
 export const approveRequest = async (requestId: string) => {

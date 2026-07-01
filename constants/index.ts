@@ -350,5 +350,5 @@ export const sampleComponents = [
     "description": "A 6-axis motion tracking device that combines a 3-axis gyroscope and a 3-axis accelerometer on the same silicon die.",
     "cover": "https://upload.wikimedia.org/wikipedia/commons/e/ea/MPU-6050_Module.jpg",
     "summary": "The MPU-6050 is a popular 6-axis motion tracking sensor that integrates a 3-axis accelerometer and a 3-axis gyroscope. Communicating via I2C, it provides precise tracking of orientation, tilt, and acceleration, making it an essential component for drones, robotics, and self-balancing RC vehicles."
-  }
+  },
 ];
