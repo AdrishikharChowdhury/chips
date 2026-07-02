@@ -7,25 +7,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { db } from "@/database"
-import { borrowRecords, componentsTable, usersTable } from "@/database/schema"
-import { eq, inArray } from "drizzle-orm"
-import { GroupStatusDropdown } from "./GroupStatusDropdown"
+} from "@/components/ui/table";
+import { db } from "@/database";
+import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
+import { eq } from "drizzle-orm";
+import { GroupStatusDropdown } from "./GroupStatusDropdown";
+import DeleteRecordButton from "./DeleteRecordButton";
 
 interface GroupedRequest {
-  id: string
-  userId: string
-  componentId: string
-  amount: number
-  borrowDate: Date | null
-  dueDate: string | null
-  returnDate: string | null
-  status: string
-  userFullName: string
-  userEmail: string
-  componentTitle: string
-  recordIds: string[]
+  id: string;
+  userId: string;
+  componentId: string;
+  amount: number;
+  borrowDate: Date | null;
+  dueDate: string | null;
+  returnDate: string | null;
+  status: string;
+  userFullName: string;
+  userEmail: string;
+  componentTitle: string;
+  recordIds: string[];
 }
 
 export async function RequestTable() {
@@ -48,66 +49,64 @@ export async function RequestTable() {
     })
     .from(borrowRecords)
     .innerJoin(usersTable, eq(borrowRecords.userId, usersTable.id))
-    .innerJoin(componentsTable, eq(borrowRecords.componentId, componentsTable.id))
-    .orderBy(borrowRecords.createdAt)
+    .innerJoin(
+      componentsTable,
+      eq(borrowRecords.componentId, componentsTable.id),
+    )
+    .orderBy(borrowRecords.createdAt);
 
-  const groups = new Map<string, typeof rawRecords>()
+  const groups = new Map<string, typeof rawRecords>();
 
   for (const record of rawRecords) {
-    const key = `${record.componentId}|${record.userId}`
-    if (!groups.has(key)) groups.set(key, [])
-    groups.get(key)!.push(record)
+    const key = `${record.componentId}|${record.userId}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(record);
   }
 
-  const toUpdate: string[] = []
+  const aggregated: GroupedRequest[] = Array.from(groups.entries()).map(
+    ([, records]) => {
+      const first = records[0];
+      const totalAmount = records.reduce((sum, r) => sum + r.amount, 0);
+      const hasNonReturned = records.some((r) => r.status !== "RETURNED");
+      const status = hasNonReturned
+        ? records.find((r) => r.status !== "RETURNED")!.status
+        : "RETURNED";
+      const borrowDates = records
+        .map((r) => r.borrowDate)
+        .filter(Boolean) as Date[];
+      const dueDates = records
+        .map((r) => r.dueDate)
+        .filter(Boolean) as string[];
+      const returnDates = records
+        .map((r) => r.returnDate)
+        .filter(Boolean) as string[];
 
-  for (const [, group] of groups) {
-    const returnedCount = group.filter((r) => r.status === "RETURNED").length
-    if (returnedCount >= 2) {
-      const nonReturned = group.filter((r) => r.status !== "RETURNED").map((r) => r.id)
-      toUpdate.push(...nonReturned)
-    }
-  }
-
-  if (toUpdate.length > 0) {
-    await db
-      .update(borrowRecords)
-      .set({ status: "RETURNED", returnDate: new Date().toISOString().slice(0, 10) })
-      .where(inArray(borrowRecords.id, toUpdate))
-  }
-
-  const aggregated: GroupedRequest[] = Array.from(groups.entries()).map(([, records]) => {
-    const first = records[0]
-    const totalAmount = records.reduce((sum, r) => sum + r.amount, 0)
-    const hasNonReturned = records.some((r) => r.status !== "RETURNED")
-    const status = hasNonReturned
-      ? records.find((r) => r.status !== "RETURNED")!.status
-      : "RETURNED"
-    const borrowDates = records.map((r) => r.borrowDate).filter(Boolean) as Date[]
-    const dueDates = records.map((r) => r.dueDate).filter(Boolean) as string[]
-    const returnDates = records.map((r) => r.returnDate).filter(Boolean) as string[]
-
-    return {
-      id: first.id,
-      userId: first.userId,
-      componentId: first.componentId,
-      amount: totalAmount,
-      borrowDate: borrowDates.length > 0 ? borrowDates.sort((a, b) => a.getTime() - b.getTime())[0] : null,
-      dueDate: dueDates.length > 0 ? dueDates.sort().reverse()[0] : null,
-      returnDate: returnDates.length > 0 ? returnDates.sort().reverse()[0] : null,
-      status,
-      userFullName: first.userFullName,
-      userEmail: first.userEmail,
-      componentTitle: first.componentTitle,
-      recordIds: records.map((r) => r.id),
-    }
-  })
+      return {
+        id: first.id,
+        userId: first.userId,
+        componentId: first.componentId,
+        amount: totalAmount,
+        borrowDate:
+          borrowDates.length > 0
+            ? borrowDates.sort((a, b) => a.getTime() - b.getTime())[0]
+            : null,
+        dueDate: dueDates.length > 0 ? dueDates.sort().reverse()[0] : null,
+        returnDate:
+          returnDates.length > 0 ? returnDates.sort().reverse()[0] : null,
+        status,
+        userFullName: first.userFullName,
+        userEmail: first.userEmail,
+        componentTitle: first.componentTitle,
+        recordIds: records.map((r) => r.id),
+      };
+    },
+  );
 
   aggregated.sort((a, b) => {
-    if (!a.borrowDate) return 1
-    if (!b.borrowDate) return -1
-    return b.borrowDate.getTime() - a.borrowDate.getTime()
-  })
+    if (!a.borrowDate) return 1;
+    if (!b.borrowDate) return -1;
+    return b.borrowDate.getTime() - a.borrowDate.getTime();
+  });
 
   return (
     <div className="bg-cream-paper">
@@ -126,20 +125,23 @@ export async function RequestTable() {
             <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
               Component
             </TableHead>
-            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
+            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50 text-center">
               Amount
             </TableHead>
-            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
+            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50 text-center">
               Borrow Date
             </TableHead>
-            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
+            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50 text-center">
               Due Date
             </TableHead>
-            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
+            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50 text-center">
               Return Date
             </TableHead>
-            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
+            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50 text-center">
               Status
+            </TableHead>
+            <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50 text-center">
+              Action
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -154,19 +156,25 @@ export async function RequestTable() {
               </TableCell>
               <TableCell>
                 <div>
-                  <p className="text-sm font-bold text-midnight-ink">{req.userFullName}</p>
-                  <p className="text-xs text-midnight-ink/50">{req.userEmail}</p>
+                  <p className="text-sm font-bold text-midnight-ink">
+                    {req.userFullName}
+                  </p>
+                  <p className="text-xs text-midnight-ink/50">
+                    {req.userEmail}
+                  </p>
                 </div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-semibold text-midnight-ink">{req.componentTitle}</p>
+                  <p className="text-sm font-semibold text-midnight-ink">
+                    {req.componentTitle}
+                  </p>
                 </div>
               </TableCell>
-              <TableCell className="text-sm font-semibold text-midnight-ink">
+              <TableCell className="text-sm font-semibold text-midnight-ink text-center">
                 {req.amount}
               </TableCell>
-              <TableCell className="text-sm text-midnight-ink/70">
+              <TableCell className="text-sm text-midnight-ink/70 text-center">
                 {req.borrowDate
                   ? new Date(req.borrowDate).toLocaleDateString("en-US", {
                       month: "short",
@@ -174,7 +182,7 @@ export async function RequestTable() {
                     })
                   : "—"}
               </TableCell>
-              <TableCell className="text-sm text-midnight-ink/70">
+              <TableCell className="text-sm text-midnight-ink/70 text-center">
                 {req.dueDate
                   ? new Date(req.dueDate).toLocaleDateString("en-US", {
                       month: "short",
@@ -182,7 +190,7 @@ export async function RequestTable() {
                     })
                   : "—"}
               </TableCell>
-              <TableCell className="text-sm text-midnight-ink/70">
+              <TableCell className="text-sm text-midnight-ink/70 text-center">
                 {req.returnDate
                   ? new Date(req.returnDate).toLocaleDateString("en-US", {
                       month: "short",
@@ -190,13 +198,23 @@ export async function RequestTable() {
                     })
                   : "—"}
               </TableCell>
-              <TableCell>
+              <TableCell >
                 {req.status === "RETURNED" ? (
-                  <span className="inline-block border border-emerald-400 bg-emerald-50 px-2 py-0.5 text-sm font-bold text-emerald-700">
+                  <span className="inline-block border border-emerald-400 bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700">
                     RETURNED
                   </span>
                 ) : (
-                  <GroupStatusDropdown requestIds={req.recordIds} currentStatus={req.status} />
+                  <GroupStatusDropdown
+                    requestIds={req.recordIds}
+                    currentStatus={req.status}
+                  />
+                )}
+              </TableCell>
+              <TableCell className="text-center text-sm text-midnight-ink/80 font-bold">
+                {req.status === "RETURNED" ? (
+                  <DeleteRecordButton id={req.id} />
+                ) : (
+                  "N/A"
                 )}
               </TableCell>
             </TableRow>
@@ -204,7 +222,10 @@ export async function RequestTable() {
         </TableBody>
         <TableFooter>
           <TableRow className="border-t-2 border-midnight-ink/10 bg-transparent hover:bg-transparent">
-            <TableCell colSpan={7} className="text-sm font-semibold text-midnight-ink/50">
+            <TableCell
+              colSpan={7}
+              className="text-sm font-semibold text-midnight-ink/50"
+            >
               Total
             </TableCell>
             <TableCell className="text-right font-bold text-midnight-ink">
@@ -214,5 +235,5 @@ export async function RequestTable() {
         </TableFooter>
       </Table>
     </div>
-  )
+  );
 }

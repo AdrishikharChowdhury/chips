@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import DeleteBorrowRecord from "./DeleteBorrowRecord";
 
 interface BorrowCardProps {
   id: string;
@@ -113,6 +114,9 @@ export function BorrowCard({
           <span className="flex size-10 items-center justify-center rounded-full  bg-cobalt-blue text-xs font-bold text-white">
             {amount}
           </span>
+        )}
+        {status === "RETURNED" && (
+          <DeleteBorrowRecord id={id} />
         )}
       </div>
     </div>

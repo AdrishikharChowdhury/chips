@@ -7,7 +7,7 @@ import React from "react";
 export default function ComponentsPage() {
   return (
     <section className="w-full rounded-2xl bg-cream-paper p-7">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between">
         <h2 className="text-xl font-semibold">All Components</h2>
         <Button
           className="bg-primary text-xl py-8 px-6 font-degular-display"

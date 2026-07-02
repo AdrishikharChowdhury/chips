@@ -30,7 +30,7 @@ export function GroupStatusDropdown({ requestIds, currentStatus }: GroupStatusDr
         }}
       >
         <SelectTrigger
-          className={`border text-xs font-bold ${
+          className={`border text-sm font-bold ${
             currentStatus === "BORROWED"
               ? "border-poppy-red/40 bg-poppy-red/10 text-poppy-red"
               : currentStatus === "PENDING"
