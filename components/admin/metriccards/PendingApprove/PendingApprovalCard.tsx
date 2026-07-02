@@ -30,14 +30,18 @@ export default async function PendingApprovalCard() {
   const chartData = pending.map((p, i) => ({
     label: p.componentTitle,
     value: Number(p.totalAmount) || 0,
-    maxValue: p.availableCopies+Number(p.totalAmount),
+    maxValue: p.availableCopies,
     color: CHART_COLORS[i % CHART_COLORS.length],
   }));
 
   return (
-    <div className="bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center">
+    <div className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center ${chartData.length === 0 ? ' h-fit' : ''}`} suppressHydrationWarning>
       <h2 className="text-2xl font-semibold mb-2 self-start">Pending for Approval</h2>
-      <PendingApprovalChart data={chartData} />
+      {chartData.length === 0 ? (
+        <span className="text-midnight-ink/50 text-xl capitalize font-degular-display mt-8">No Components is pending approval</span>
+      ) : (
+        <PendingApprovalChart data={chartData} />
+      )}
     </div>
   );
 }

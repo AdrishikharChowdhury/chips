@@ -16,6 +16,7 @@ interface PendingApprovalChartProps {
 
 export default function PendingApprovalChart({ data }: PendingApprovalChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [legendOpen, setLegendOpen] = useState(true);
 
   return (
     <div className="flex flex-col items-center">
@@ -35,7 +36,7 @@ export default function PendingApprovalChart({ data }: PendingApprovalChartProps
           {({ value, label, data }) => {
             const pct = data.maxValue > 0 ? ((value / data.maxValue) * 100).toFixed(1) : "0";
             return (
-              <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center" suppressHydrationWarning>
                 <span className="text-2xl font-bold text-midnight-ink tabular-nums">{pct}%</span>
                 <span className="text-xs text-midnight-ink/50 mt-0.5">{label}</span>
               </div>
@@ -43,25 +44,42 @@ export default function PendingApprovalChart({ data }: PendingApprovalChartProps
           }}
         </RingCenter>
       </RingChart>
-      <Legend
-        items={data}
-        hoveredIndex={hoveredIndex}
-        onHoverChange={setHoveredIndex}
-        className="w-full mt-3"
-      >
-        <LegendItem>
-          <div className="flex items-center gap-2">
-            <LegendMarker />
-            <LegendLabel className="text-base font-medium truncate" />
-            <LegendValue
-              className="text-sm tabular-nums ml-auto gap-1 shrink-0"
-              showPercentage
-              formatValue={(v) => `x${v}`}
-              formatPercentage={(p) => `${p.toFixed(1)}%`}
-            />
-          </div>
-        </LegendItem>
-      </Legend>
+      <div className="w-full mt-3">
+        <button
+          onClick={() => setLegendOpen((o) => !o)}
+          className="flex items-center gap-2 text-xs text-midnight-ink/50 hover:text-midnight-ink/80 transition-colors mb-1"
+        >
+          <svg
+            className={`size-3 transition-transform ${legendOpen ? "rotate-90" : ""}`}
+            viewBox="0 0 16 16"
+            fill="none"
+          >
+            <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Legend
+        </button>
+        {legendOpen && (
+          <Legend
+            items={data}
+            hoveredIndex={hoveredIndex}
+            onHoverChange={setHoveredIndex}
+            className="w-full"
+          >
+            <LegendItem>
+              <div className="flex items-center gap-2">
+                <LegendMarker />
+                <LegendLabel className="text-base font-medium truncate" />
+                <LegendValue
+                  className="text-sm tabular-nums ml-auto gap-1 shrink-0"
+                  showPercentage
+                  formatValue={(v) => `x${v}`}
+                  formatPercentage={(p) => `${p.toFixed(1)}%`}
+                />
+              </div>
+            </LegendItem>
+          </Legend>
+        )}
+      </div>
     </div>
   );
 }

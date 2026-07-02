@@ -63,9 +63,13 @@ export default async function UsedCard() {
   }));
 
   return (
-    <div className="bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center">
+    <div className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center ${data.length === 0 ? ' h-fit' : ''}`}>
       <h2 className="text-2xl font-semibold mb-2 self-start">Used</h2>
-      <UsedChart metrics={metrics} data={data} />
+      {data.length === 0 ? (
+        <span className="text-midnight-ink/50 text-xl capitalize font-degular-display mt-8">No Components is being used</span>
+      ) : (
+        <UsedChart metrics={metrics} data={data} />
+      )}
     </div>
   );
 }
