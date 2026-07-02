@@ -5,15 +5,6 @@ import { borrowRecords, cartItemsTable, usersTable } from "@/database/schema";
 import { and, eq, inArray, sum } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-export const fetchAllUsers = async () => {
-  try {
-    const users = await db.select().from(usersTable);
-    return users;
-  } catch (error) {
-    throw new Error("Failed to fetch users");
-  }
-};
-
 export const fetchPendingAccountRequests = async () => {
   try {
     const users = await db
