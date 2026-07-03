@@ -27,16 +27,18 @@ export default function AvailableCopiesChart({
   data
 }: AvailableCopiesChartProps) {
   return (
-    <BarChart data={data} xDataKey="title">
-      <Grid horizontal />
-      <Bar dataKey="available" fill="var(--chart-line-primary)" lineCap="round" />
-      <Bar
-        dataKey="unavailable"
-        fill="var(--chart-line-secondary)"
-        lineCap="round"
-      />
-      <BarXAxis />
-      <ChartTooltip rows={tooltipRows} />
-    </BarChart>
+    <div className="w-full overflow-x-scroll">
+      <BarChart data={data} xDataKey="title">
+        <Grid horizontal />
+        <Bar dataKey="available" fill="var(--chart-line-primary)" lineCap="round" />
+        <Bar
+          dataKey="unavailable"
+          fill="var(--chart-line-secondary)"
+          lineCap="round"
+        />
+        <BarXAxis />
+        <ChartTooltip rows={tooltipRows} />
+      </BarChart>
+    </div>
   );
 }

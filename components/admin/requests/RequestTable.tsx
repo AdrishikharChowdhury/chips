@@ -13,6 +13,7 @@ import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { GroupStatusDropdown } from "./GroupStatusDropdown";
 import DeleteRecordButton from "./DeleteRecordButton";
+import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 
 interface GroupedRequest {
   id: string;
@@ -110,6 +111,12 @@ export async function RequestTable() {
 
   return (
     <div className="bg-cream-paper">
+      {aggregated.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-full" >
+          <ApprovalAnimation label="approval" />
+          <p className="text-midnight-ink/50 text-xl capitalize font-degular-display mb-4" >No Requests Found</p>
+        </div>
+      ) : (
       <Table className="[&_td]:p-4 [&_th]:p-4">
         <TableCaption className="text-sm text-midnight-ink/40 border-t border-midnight-ink/10 py-3">
           Total of {aggregated.length} groups
@@ -234,6 +241,8 @@ export async function RequestTable() {
           </TableRow>
         </TableFooter>
       </Table>
+      )}
+      
     </div>
   );
 }

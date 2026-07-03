@@ -13,6 +13,7 @@ import { formatDate } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { eq, count, desc, inArray, sql } from "drizzle-orm";
+import { toast } from "sonner";
 
 export const borrowComponent = async (params: BorrowComponentParams) => {
   const session = await auth();
@@ -25,6 +26,21 @@ export const borrowComponent = async (params: BorrowComponentParams) => {
   const userId = session?.user?.id;
   if (!userId) {
     return { success: false, message: "Unauthorized" };
+  }
+
+  const isApproved = await db
+    .select({ status: usersTable.status })
+    .from(usersTable)
+    .where(eq(usersTable.id, userId));
+
+  if (!isApproved) redirect("/");
+
+  if (isApproved[0].status !== "APPROVED") {
+    toast.error("You are not approved to borrow components");
+    return {
+      success: false,
+      message: "You are not approved to borrow components",
+    };
   }
 
   const { componentId, dueDate, amount = 1 } = params;

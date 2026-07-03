@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import ComponentCard from "@/components/root/ComponentCard";
 import { ShoppingCart } from "lucide-react";
+import { auth } from "@/auth";
 
 export default async function ComponentPage({
   params,
@@ -22,6 +23,11 @@ export default async function ComponentPage({
 
   if (!c) notFound();
   const typeArray = c.type.split("/");
+
+  const session = await auth();
+  if (!session) redirect("/");
+
+  
 
   return (
     <div className="space-y-12">

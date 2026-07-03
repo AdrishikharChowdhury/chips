@@ -2,6 +2,7 @@ import { db } from "@/database";
 import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
 import { eq, sum } from "drizzle-orm";
 import UsedChart from "./UsedChart";
+import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 
 const CHART_COLORS = [
   "#1457d8",
@@ -22,10 +23,18 @@ export default async function UsedCard() {
       totalAmount: sum(borrowRecords.amount),
     })
     .from(borrowRecords)
-    .innerJoin(componentsTable, eq(borrowRecords.componentId, componentsTable.id))
+    .innerJoin(
+      componentsTable,
+      eq(borrowRecords.componentId, componentsTable.id),
+    )
     .innerJoin(usersTable, eq(borrowRecords.userId, usersTable.id))
     .where(eq(borrowRecords.status, "BORROWED"))
-    .groupBy(borrowRecords.componentId, componentsTable.title, borrowRecords.userId, usersTable.fullName)
+    .groupBy(
+      borrowRecords.componentId,
+      componentsTable.title,
+      borrowRecords.userId,
+      usersTable.fullName,
+    )
     .orderBy(sum(borrowRecords.amount));
 
   // Build metrics (distinct components)
@@ -58,15 +67,25 @@ export default async function UsedCard() {
     label: name,
     color: CHART_COLORS[i % CHART_COLORS.length],
     values: Object.fromEntries(
-      Object.entries(userMap.get(name)!).map(([k, v]) => [k, Math.round((v / maxVal) * 100)])
+      Object.entries(userMap.get(name)!).map(([k, v]) => [
+        k,
+        Math.round((v / maxVal) * 100),
+      ]),
     ),
   }));
 
   return (
-    <div className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center ${data.length === 0 ? ' h-fit' : ''}`}>
+    <div
+      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-between`}
+    >
       <h2 className="text-2xl font-semibold mb-2 self-start">Used</h2>
       {data.length === 0 ? (
-        <span className="text-midnight-ink/50 text-xl capitalize font-degular-display mt-8">No Components is being used</span>
+        <div className="flex flex-col items-center justify-center h-full">
+          <ApprovalAnimation label="used" />
+          <span className="text-midnight-ink/50 text-xl capitalize font-degular-display mt-8">
+            No Components is being used
+          </span>
+        </div>
       ) : (
         <UsedChart metrics={metrics} data={data} />
       )}
