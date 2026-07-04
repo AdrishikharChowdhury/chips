@@ -34,7 +34,7 @@ export default function PendingUserCard({id, fullName,email, universityCard}: Pe
           </button>
         </ImagePopover>
         <div className='flex items-center gap-2'>
-          <form action={approveAccountRequest.bind(null,)}>
+          <form action={approveAccountRequest.bind(null,id)}>
             <button
               type="submit"
               className="flex size-9 items-center justify-center border-2 border-emerald-400/30 text-emerald-600 hover:bg-emerald-600 hover:text-cream-paper transition-colors"

@@ -87,12 +87,6 @@ export function ChartStatFlow({
   labelClassName = "text-xs",
   icon,
 }: ChartStatFlowProps) {
-  const numberFlowReady = useNumberFlowElementReady();
-  const staticValue = useMemo(
-    () => formatStatValue(value, formatOptions, prefix, suffix),
-    [value, formatOptions, prefix, suffix]
-  );
-
   return (
     <>
       {icon ? (
@@ -101,18 +95,14 @@ export function ChartStatFlow({
         </div>
       ) : null}
       <span className={cn("text-foreground tabular-nums", valueClassName)}>
-        {numberFlowReady ? (
-          <NumberFlow
-            format={formatOptions}
-            isolate
-            prefix={prefix}
-            suffix={suffix}
-            value={value}
-            willChange
-          />
-        ) : (
-          staticValue
-        )}
+        <NumberFlow
+          format={formatOptions}
+          isolate
+          prefix={prefix}
+          suffix={suffix}
+          value={value}
+          willChange
+        />
       </span>
       <span className={cn("mt-0.5 text-chart-label", labelClassName)}>
         {label}

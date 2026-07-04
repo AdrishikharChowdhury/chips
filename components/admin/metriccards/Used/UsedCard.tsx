@@ -1,9 +1,11 @@
 import { db } from "@/database";
 import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
-import { eq, sum } from "drizzle-orm";
+import { desc, eq, sql, sum } from "drizzle-orm";
 import UsedChart from "./UsedChart";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 import Link from "next/link";
+import { getInitials } from "@/lib/utils";
+import { GroupStatusDropdown } from "@/components/admin/requests/GroupStatusDropdown";
 
 const CHART_COLORS = [
   "#1457d8",
@@ -22,6 +24,7 @@ export default async function UsedCard() {
       componentTitle: componentsTable.title,
       userFullName: usersTable.fullName,
       totalAmount: sum(borrowRecords.amount),
+      recordIds: sql<string[]>`array_agg(${borrowRecords.id})`,
     })
     .from(borrowRecords)
     .innerJoin(
@@ -35,10 +38,11 @@ export default async function UsedCard() {
       componentsTable.title,
       borrowRecords.userId,
       usersTable.fullName,
+      borrowRecords.createdAt,
     )
-    .orderBy(sum(borrowRecords.amount));
+    .orderBy(desc(borrowRecords.createdAt));
 
-  // Build metrics (distinct components)
+  // Build metrics (distinct components) for the radar chart
   const componentSet = new Set<string>();
   for (const r of rows) {
     componentSet.add(r.componentTitle);
@@ -48,7 +52,7 @@ export default async function UsedCard() {
     label: title,
   }));
 
-  // Build data (per user, values per component)
+  // Build data (per user, values per component) for the radar chart
   const userMap = new Map<string, Record<string, number>>();
   const userOrder: string[] = [];
   for (const r of rows) {
@@ -60,7 +64,6 @@ export default async function UsedCard() {
     vals[r.componentTitle] = Number(r.totalAmount) || 0;
   }
 
-  // Normalize values to 0-100
   const allValues = rows.map((r) => Number(r.totalAmount) || 0);
   const maxVal = Math.max(...allValues, 1);
 
@@ -77,7 +80,7 @@ export default async function UsedCard() {
 
   return (
     <div
-      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-between`}
+      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-start`}
     >
       <div className="flex justify-between items-center w-full">
         <h2 className="text-2xl font-semibold">Used</h2>
@@ -96,7 +99,40 @@ export default async function UsedCard() {
           </span>
         </div>
       ) : (
-        <UsedChart metrics={metrics} data={data} />
+        <>
+          <UsedChart metrics={metrics} data={data} />
+          <div className="w-full overflow-y-scroll flex flex-col gap-4">
+            {rows.slice(0, 3).map((r, idx: number) => (
+              <section
+                key={idx}
+                className="bg-marigold-yellow/10 p-4 w-full border-cobalt-blue border-2 rounded-2xl flex justify-between items-center"
+              >
+                <aside className="flex items-center gap-2">
+                  <figure className="bg-cobalt-blue text-white rounded-full size-12 flex items-center justify-center font-degular-display text-lg">
+                    {getInitials(r.userFullName)}
+                  </figure>
+                  <article className="flex flex-col items-start">
+                    <p className="font-degular-display text-lg">
+                      {r.componentTitle}
+                    </p>
+                    <p className="text-sm text-midnight-ink/60">
+                      By {r.userFullName}
+                    </p>
+                  </article>
+                </aside>
+                <aside className="flex items-center gap-3">
+                  <span className="text-sm font-bold text-midnight-ink/70">
+                    x{Number(r.totalAmount) || 0}
+                  </span>
+                  <GroupStatusDropdown
+                    requestIds={r.recordIds}
+                    currentStatus="BORROWED"
+                  />
+                </aside>
+              </section>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

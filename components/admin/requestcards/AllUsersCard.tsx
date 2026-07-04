@@ -1,9 +1,12 @@
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 import { db } from "@/database";
 import { usersTable } from "@/database/schema";
+import { deleteUser } from "@/lib/actions/user";
 import { desc, eq } from "drizzle-orm";
+import { Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { ImagePopover } from "../accountrequests/ImagePopover";
 
 export default async function AllUsersCard() {
   const allUsers = await db
@@ -35,15 +38,17 @@ export default async function AllUsersCard() {
           {allUsers.map((user, index) => (
             <div
               key={index}
-              className="bg-marigold-yellow/10 py-8 px-4 flex flex-col items-center gap-8 rounded-2xl border-2 border-cobalt-blue"
+              className="bg-marigold-yellow/10 pt-8 pb-4 px-4 flex flex-col items-center gap-8 rounded-2xl border-2 border-cobalt-blue"
             >
-              <Image
-                src={user.universityCard}
-                alt={user.fullName}
-                width={100}
-                height={100}
-                className="rounded-full aspect-square object-cover border-4 border-poppy-red"
-              />
+              <ImagePopover src={user.universityCard} alt={user.fullName} >
+                <Image
+                  src={user.universityCard}
+                  alt={user.fullName}
+                  width={100}
+                  height={100}
+                  className="rounded-full aspect-square object-cover border-4 border-poppy-red"
+                />
+              </ImagePopover>
               <div className="flex flex-col items-center gap-2">
                 <span className="text-midnight-ink text-xl capitalize font-degular-display w-full text-center">
                   {user.fullName.split(" ")[0]} {user.fullName.split(" ")[1].split("")[0]}.
@@ -57,7 +62,14 @@ export default async function AllUsersCard() {
                   <span className="text-cobalt-blue" >Created At:</span>{" "}
                   <span>{user.createdAt?.toISOString().slice(0, 10)}</span>
                 </article>
-                
+                <form action={deleteUser.bind(null, user.id)}>
+                  <button
+                    type="submit"
+                    className="flex size-9 items-center justify-center border-2 border-poppy-red/30 text-poppy-red hover:bg-poppy-red hover:text-cream-paper transition-colors"
+                  >
+                    <Trash size={16} />
+                  </button>
+                </form>
               </div>
             </div>
           ))}

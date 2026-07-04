@@ -273,11 +273,12 @@ export const updateGroupStatus = async (formData: FormData) => {
         .set({ status: newStatus })
         .where(inArray(borrowRecords.id, requestIds));
     }
+    revalidatePath("/admin");
     revalidatePath("/admin/component-requests");
+    toast.success(`Status updated to ${newStatus}`);
   } catch (error) {
     console.log(error);
   }
-  redirect("/admin/component-requests");
 };
 
 export const approveRequest = async (requestId: string) => {
