@@ -35,7 +35,7 @@ export default async function AllUsersCard() {
           {allUsers.map((user, index) => (
             <div
               key={index}
-              className="bg-midnight-ink/10 py-8 px-4 flex flex-col items-center gap-8 rounded-2xl border-2 border-cobalt-blue"
+              className="bg-marigold-yellow/10 py-8 px-4 flex flex-col items-center gap-8 rounded-2xl border-2 border-cobalt-blue"
             >
               <Image
                 src={user.universityCard}

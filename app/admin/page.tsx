@@ -3,6 +3,7 @@ import AvailableCopiesCard from "@/components/admin/metriccards/AvailableCopies/
 import PendingApprovalCard from "@/components/admin/metriccards/PendingApprove/PendingApprovalCard";
 import UsedCard from "@/components/admin/metriccards/Used/UsedCard";
 import AllUsersCard from "@/components/admin/requestcards/AllUsersCard";
+import PendingUsers from "@/components/admin/requestcards/PendingUsers";
 import Link from "next/link";
 
 export default async function AdminPage() {
@@ -37,7 +38,7 @@ export default async function AdminPage() {
         </article>
         <article className="grid grid-cols-2 gap-4">
           <AllUsersCard />
-          <div className="bg-cream-paper p-4"></div>
+          <PendingUsers />
         </article>
       </section>
     </div>
