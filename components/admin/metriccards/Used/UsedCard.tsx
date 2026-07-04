@@ -3,6 +3,7 @@ import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
 import { eq, sum } from "drizzle-orm";
 import UsedChart from "./UsedChart";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
+import Link from "next/link";
 
 const CHART_COLORS = [
   "#1457d8",
@@ -78,7 +79,15 @@ export default async function UsedCard() {
     <div
       className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-between`}
     >
-      <h2 className="text-2xl font-semibold mb-2 self-start">Used</h2>
+      <div className="flex justify-between items-center w-full">
+        <h2 className="text-2xl font-semibold">Used</h2>
+        <Link
+          href="/admin/component-requests"
+          className="text-cobalt-blue font-semibold underline hover:text-cobalt-blue/80"
+        >
+          View All
+        </Link>
+      </div>
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <ApprovalAnimation label="used" />

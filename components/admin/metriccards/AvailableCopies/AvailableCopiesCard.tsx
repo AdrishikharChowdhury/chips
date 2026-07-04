@@ -3,6 +3,7 @@ import { componentsTable } from "@/database/schema";
 import { sql } from "drizzle-orm";
 import AvailableCopiesChart from "./AvailableCopiesChart";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
+import Link from "next/link";
 
 export default async function AvailableCopiesCard() {
   const components = await db

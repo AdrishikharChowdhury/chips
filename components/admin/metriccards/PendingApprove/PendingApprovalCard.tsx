@@ -3,6 +3,7 @@ import { borrowRecords, componentsTable } from "@/database/schema";
 import { eq, sum } from "drizzle-orm";
 import PendingApprovalChart from "./PendingApprovalChart";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
+import Link from "next/link";
 
 const CHART_COLORS = [
   "#1457d8",
@@ -47,9 +48,18 @@ export default async function PendingApprovalCard() {
       className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-between`}
       suppressHydrationWarning
     >
-      <h2 className="text-2xl font-semibold mb-2 self-start">
-        Pending for Approval
-      </h2>
+      <div className="flex justify-between items-center w-full">
+        <h2 className="text-2xl font-semibold">
+          Pending for Approval
+        </h2>
+        <Link
+          href="/admin/component-requests"
+          className="text-cobalt-blue font-semibold underline hover:text-cobalt-blue/80"
+        >
+          View All
+        </Link>
+      </div>
+
       {chartData.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">
           <ApprovalAnimation label="approval" />
