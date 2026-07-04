@@ -29,7 +29,7 @@ export default async function RecentComponents() {
       {recentComponents.map((component, idx: number) => (
         <div
           key={idx}
-          className="bg-marigold-yellow/30 p-4 w-full border-marigold-yellow border-2 rounded-2xl flex justify-between items-center"
+          className="bg-marigold-yellow/30 p-4 w-full border-marigold-yellow border-2 rounded-2xl flex justify-between items-center hover:bg-marigold-yellow/20"
         >
           <aside className="flex items-center gap-3">
             <figure className="size-18 rounded-2xl overflow-hidden shrink-0 border-2 border-midnight-ink/10">

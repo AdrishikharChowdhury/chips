@@ -15,8 +15,14 @@ import { ImagePopover } from "../accountrequests/ImagePopover";
 import { Trash } from "lucide-react";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 
-export async function AccountsTable() {
-  const accounts =  await fetchNonPendingAccounts();
+export async function AccountsTable({ searchQuery }: { searchQuery?: string }) {
+  const allAccounts =  await fetchNonPendingAccounts();
+  const accounts = searchQuery
+    ? allAccounts.filter((a) =>
+        a.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        a.email.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : allAccounts;
 
   return (
     <div className="bg-cream-paper flex flex-col items-center justify-between">

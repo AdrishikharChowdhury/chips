@@ -17,8 +17,14 @@ import { ImagePopover } from "./ImagePopover";
 import { Check, X } from "lucide-react";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 
-export async function AccountRequestTable() {
-  const requests = await fetchPendingAccountRequests();
+export async function AccountRequestTable({ searchQuery }: { searchQuery?: string }) {
+  const allRequests = await fetchPendingAccountRequests();
+  const requests = searchQuery
+    ? allRequests.filter((r) =>
+        r.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.email.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : allRequests;
 
   return (
     <div className="bg-cream-paper">

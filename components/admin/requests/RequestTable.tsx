@@ -30,7 +30,7 @@ interface GroupedRequest {
   recordIds: string[];
 }
 
-export async function RequestTable() {
+export async function RequestTable({ searchQuery }: { searchQuery?: string }) {
   const rawRecords = await db
     .select({
       id: borrowRecords.id,
@@ -56,9 +56,17 @@ export async function RequestTable() {
     )
     .orderBy(borrowRecords.createdAt);
 
+  const filteredRawRecords = searchQuery
+    ? rawRecords.filter(
+        (r) =>
+          r.componentTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          r.userFullName.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : rawRecords;
+
   const groups = new Map<string, typeof rawRecords>();
 
-  for (const record of rawRecords) {
+  for (const record of filteredRawRecords) {
     const key = `${record.componentId}|${record.userId}`;
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key)!.push(record);
