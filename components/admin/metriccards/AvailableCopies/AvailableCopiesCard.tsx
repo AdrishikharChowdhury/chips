@@ -3,7 +3,6 @@ import { componentsTable } from "@/database/schema";
 import { sql } from "drizzle-orm";
 import AvailableCopiesChart from "./AvailableCopiesChart";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
-import Link from "next/link";
 
 export default async function AvailableCopiesCard() {
   const components = await db
@@ -27,7 +26,7 @@ export default async function AvailableCopiesCard() {
     });
 
   return (
-    <div className="bg-cream-paper py-10 px-12 rounded-2xl flex flex-col col-span-2 items-center justify-between">
+    <div className="bg-cream-paper py-10 px-12 rounded-2xl flex flex-col col-span-2 items-center justify-start">
       <h2 className="text-left text-2xl font-semibold mb-2 w-full">Available</h2>
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">

@@ -80,7 +80,7 @@ export default async function UsedCard() {
 
   return (
     <div
-      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-start`}
+      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-start h-fit`}
     >
       <div className="flex justify-between items-center w-full">
         <h2 className="text-2xl font-semibold">Used</h2>

@@ -21,7 +21,7 @@ export default async function AdminPage() {
             View All
           </Link>
         </article>
-        <article className="grid grid-cols-2 grid-rows-2 gap-4">
+        <article className="grid grid-cols-2 gap-4">
           <AvailableCopiesCard />
           <PendingApprovalCard />
           <UsedCard />

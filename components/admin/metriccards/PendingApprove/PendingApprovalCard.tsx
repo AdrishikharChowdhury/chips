@@ -52,7 +52,7 @@ export default async function PendingApprovalCard() {
 
   return (
     <div
-      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-start`}
+      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-start h-fit`}
       suppressHydrationWarning
     >
       <div className="flex justify-between items-center w-full">
