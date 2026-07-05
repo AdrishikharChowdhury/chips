@@ -79,7 +79,7 @@ export default async function PendingApprovalCard() {
             <PendingApprovalChart data={chartData} />
             <div className="w-full flex flex-col gap-4">
               {pending.slice(0,3).map((p, idx: number) => (
-                <section key={idx} className="bg-marigold-yellow/10 p-4 w-full border-poppy-red border-2 rounded-2xl flex justify-between items-center">
+                <section key={p.recordIds[0]} className="bg-marigold-yellow/10 p-4 w-full border-poppy-red border-2 rounded-2xl flex justify-between items-center">
                   <aside className="flex items-center gap-2">
                     <figure className="bg-poppy-red text-white rounded-full size-12 flex items-center justify-center font-degular-display text-lg">
                       {getInitials(p.fullName)}

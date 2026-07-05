@@ -104,7 +104,7 @@ export default async function UsedCard() {
           <div className="w-full overflow-y-scroll flex flex-col gap-4">
             {rows.slice(0, 3).map((r, idx: number) => (
               <section
-                key={idx}
+                key={r.recordIds[0]}
                 className="bg-marigold-yellow/10 p-4 w-full border-cobalt-blue border-2 rounded-2xl flex justify-between items-center"
               >
                 <aside className="flex items-center gap-2">
