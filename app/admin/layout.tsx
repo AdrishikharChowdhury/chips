@@ -18,14 +18,15 @@ export default async function AdminLayout({
     redirect("/sign-in");
   }
 
-  const { id } = session?.user;
+  const id = session?.user?.id;
+  if (!id) redirect("/sign-in");
 
-  const isAdmin = await db
-    .select({ isAdmin: usersTable.role })
+  const [user] = await db
+    .select({ role: usersTable.role })
     .from(usersTable)
     .where(eq(usersTable.id, id)).limit(1);
 
-  if (isAdmin[0]?.isAdmin !== "ADMIN") {
+  if (user?.role !== "ADMIN" && user?.role !== "OWNER") {
     redirect("/");
   }
 

@@ -40,6 +40,7 @@ export function RoleDropdown({ userId, currentRole }: RoleDropdownProps) {
         <SelectContent>
           <SelectItem value="USER">USER</SelectItem>
           <SelectItem value="ADMIN">ADMIN</SelectItem>
+          <SelectItem value="OWNER">OWNER</SelectItem>
         </SelectContent>
       </Select>
     </form>

@@ -45,10 +45,7 @@ export async function AccountsTable({ searchQuery }: { searchQuery?: string }) {
                 Name
               </TableHead>
               <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
-                University Name
-              </TableHead>
-              <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
-                University Logo
+                Photo Proof
               </TableHead>
               <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
                 Role
@@ -82,22 +79,19 @@ export async function AccountsTable({ searchQuery }: { searchQuery?: string }) {
                     alt={`${acc.fullName}'s university logo`}
                     width={56}
                     height={56}
-                    className="size-14 rounded-full"
+                    className="size-14 rounded-full object-cover"
                   />
                   <p className="text-sm font-bold text-midnight-ink">
                     {acc.fullName}
                   </p>
                 </TableCell>
-                <TableCell className="text-sm text-midnight-ink/70">
-                  {acc.universityName}
-                </TableCell>
-                <TableCell>
+                <TableCell className="text-center text-sm font-semibold text-midnight-ink">
                   <ImagePopover
                     src={acc.universityCard}
                     alt={`${acc.fullName}'s university logo`}
                   >
-                    <button className="text-sm font-semibold text-cobalt-blue underline underline-offset-2 hover:text-cobalt-blue/70 transition-colors cursor-pointer">
-                      View Logo
+                    <button className="text-sm font-semibold text-cobalt-blue underline underline-offset-2 hover:text-cobalt-blue/70 transition-colors cursor-pointer text-center">
+                      View
                     </button>
                   </ImagePopover>
                 </TableCell>

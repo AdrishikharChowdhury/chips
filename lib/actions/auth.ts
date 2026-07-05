@@ -2,7 +2,7 @@
 
 import { signIn } from "@/auth";
 import { db } from "@/database";
-import { usersTable } from "@/database/schema";
+import { universitiesTable, usersTable } from "@/database/schema";
 import crypto from "crypto";
 import { AuthCredentials } from "@/types";
 import { hash } from "bcryptjs";
@@ -34,13 +34,21 @@ function verifyOtpInternal(
   return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(hmac));
 }
 
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 255);
+}
+
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">,
 ) => {
   const { email, password } = params;
-  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1"
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
 
-  const { success: rateLimited } = await ratelimit.limit(ip)
+  const { success: rateLimited } = await ratelimit.limit(ip);
   if (!rateLimited) {
     redirect("/too-fast");
   }
@@ -60,6 +68,13 @@ export const signInWithCredentials = async (
       .set({ lastActivityDate: new Date().toISOString().slice(0, 10) })
       .where(eq(usersTable.email, email));
 
+    if (result?.user?.role) {
+      if (result.user.role === "ADMIN" || result.user.role === "OWNER") {
+        redirect("/admin");
+      } else {
+        redirect("/");
+      }
+    }
     return { success: true, message: "User signed in successfully" };
   } catch (error) {
     console.log(error, "Sign In Error");
@@ -74,18 +89,33 @@ export const signUp = async (
     otpHmac: string;
   },
 ) => {
-  const { fullName, email, password, universityName, organizationLogo, universityCard, universityId, otp, otpExpiry, otpHmac } = params;
+  const {
+    fullName,
+    email,
+    password,
+    universityName = "",
+    universityLogo,
+    universityCard,
+    universityId: rawUniversityId,
+    otp,
+    otpExpiry,
+    otpHmac,
+  } = params;
+  const universityId = rawUniversityId ? Number(rawUniversityId) : undefined;
 
-  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1"
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
 
-  const { success: rateLimited } = await ratelimit.limit(ip)
+  const { success: rateLimited } = await ratelimit.limit(ip);
   if (!rateLimited) {
     redirect("/too-fast");
   }
 
   const otpValid = verifyOtpInternal(email, otp, otpExpiry, otpHmac);
   if (!otpValid) {
-    return { success: false, message: "Email verification failed. Please try again." };
+    return {
+      success: false,
+      message: "Email verification failed. Please try again.",
+    };
   }
 
   const existingUser = await db
@@ -96,17 +126,28 @@ export const signUp = async (
   if (existingUser.length > 0) {
     return { success: false, message: "User already exists" };
   }
+
   const hashedPassword = await hash(password, 10);
+
   try {
-    await db.insert(usersTable).values({
-      fullName,
-      email,
-      password: hashedPassword,
-      universityName,
-      organizationLogo,
-      universityCard,
-      universityId,
-    });
+    if (universityId) {
+      await joinOrg({
+        fullName,
+        email,
+        password: hashedPassword,
+        universityName,
+        universityCard: universityCard || "",
+        universityId,
+      });
+    } else {
+      await createOrg({
+        fullName,
+        email,
+        password: hashedPassword,
+        universityName,
+        universityLogo: universityLogo || "",
+      });
+    }
 
     await signInWithCredentials({ email, password });
 
@@ -119,16 +160,86 @@ export const signUp = async (
       console.warn("Workflow trigger failed:", e);
     }
 
-    return { success: true, message: "User signed up successfully" };
+    if (Number(universityId)) {
+      redirect("/");
+    } else {
+      redirect("/admin");
+    }
   } catch (error) {
     console.log(error, "Sign Up Error");
     return { success: false, message: "Sign Up Error" };
   }
 };
 
+async function createOrg({
+  fullName,
+  email,
+  password,
+  universityName,
+  universityLogo,
+}: {
+  fullName: string;
+  email: string;
+  password: string;
+  universityName: string;
+  universityLogo: string;
+}) {
+  const slug = slugify(universityName);
+
+  await db.insert(universitiesTable).values({
+    fullName: universityName,
+    slug,
+    universityLogo,
+    universityRole: "OWNER",
+  });
+
+  await db.insert(usersTable).values({
+    fullName,
+    email,
+    password,
+    universityName,
+    universityCard: universityLogo,
+    universitySlug: slug,
+    role: "OWNER",
+    universityId: 0,
+    status: "APPROVED",
+  });
+}
+
+async function joinOrg({
+  fullName,
+  email,
+  password,
+  universityName,
+  universityCard,
+  universityId,
+}: {
+  fullName: string;
+  email: string;
+  password: string;
+  universityName: string;
+  universityCard: string;
+  universityId: number;
+}) {
+  await db.insert(usersTable).values({
+    fullName,
+    email,
+    password,
+    universityName,
+    universityCard,
+    universityId,
+    role: "USER",
+  });
+}
+
 export const updateProfile = async (
   userId: string,
-  data: { fullName?: string; universityName?: string; organizationLogo?: string; universityCard?: string },
+  data: {
+    fullName?: string;
+    universityName?: string;
+    universityLogo?: string;
+    universityCard?: string;
+  },
 ) => {
   try {
     await db

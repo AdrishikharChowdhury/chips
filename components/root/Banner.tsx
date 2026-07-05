@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import ComponentOverview from "./ComponentOverview";
+import EmptyComponents from "./EmptyComponents";
 import { Components } from "@/types";
 
 export default function Banner({ components }: { components: Components[] }) {
@@ -18,6 +19,8 @@ export default function Banner({ components }: { components: Components[] }) {
     const id = setInterval(next, 5000);
     return () => clearInterval(id);
   }, [next]);
+
+  if (total === 0) return <EmptyComponents />;
 
   return (
     <div className="w-full h-max">

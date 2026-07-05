@@ -199,6 +199,7 @@ export default function AuthForm({
                 orientation="horizontal"
                 className="flex-row items-center gap-2 w-auto"
               >
+                  <FieldLabel className="cursor-pointer">Create University
                 <Input
                   type="radio"
                   name="orgMode"
@@ -207,12 +208,13 @@ export default function AuthForm({
                   onChange={() => setOrgMode("CREATE")}
                   className="size-4 accent-cobalt-blue border-0 p-0 h-auto w-auto"
                 />
-                <FieldLabel className="cursor-pointer">Create University</FieldLabel>
+                </FieldLabel>
               </Field>
               <Field
                 orientation="horizontal"
                 className="flex-row items-center gap-2 w-auto"
-              >
+                >
+                  <FieldLabel className="cursor-pointer">Join University
                 <Input
                   type="radio"
                   name="orgMode"
@@ -221,7 +223,7 @@ export default function AuthForm({
                   onChange={() => setOrgMode("JOIN")}
                   className="size-4 accent-cobalt-blue border-0 p-0 h-auto w-auto"
                 />
-                <FieldLabel className="cursor-pointer">Join University</FieldLabel>
+                </FieldLabel>
               </Field>
             </FieldGroup>
           )}
@@ -241,7 +243,7 @@ export default function AuthForm({
             <>
               <FieldGroup>
                 <Field>
-                  <FieldLabel>Organization Logo:</FieldLabel>
+                  <FieldLabel>University Logo:</FieldLabel>
                   <ImageUpload
                     onUpload={(url) => setOrgLogo(url)}
                     value={orgLogo}

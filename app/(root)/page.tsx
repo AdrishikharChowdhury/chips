@@ -15,11 +15,13 @@ export default async function Home() {
   return (
     <div>
       <Banner components={latestComponents} />
-      <ComponentList
-        title="Latest Components"
-        components={latestComponents}
-        containerClassName="my-28"
-      />
+      {latestComponents.length > 0 && (
+        <ComponentList
+          title="Latest Components"
+          components={latestComponents}
+          containerClassName="my-28"
+        />
+      )}
     </div>
   );
 }

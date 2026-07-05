@@ -17,7 +17,7 @@ export interface AuthCredentials {
   email: string;
   password: string;
   universityName: string;
-  organizationLogo?: string;
+  universityLogo?: string;
   universityCard?: string;
   universityId?: string;
 }

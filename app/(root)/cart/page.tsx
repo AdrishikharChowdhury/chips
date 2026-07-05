@@ -2,8 +2,8 @@ import { auth } from "@/auth";
 import { db } from "@/database";
 import { cartItemsTable, componentsTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
-import Link from "next/link";
 import CartSection from "@/components/cart/CartSection";
+import EmptyCart from "@/components/cart/EmptyCart";
 
 export default async function CartPage() {
   const session = await auth();
@@ -47,40 +47,7 @@ export default async function CartPage() {
       </div>
 
       {rows.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="mb-6 flex size-24 items-center justify-center rounded-full bg-midnight-ink/5">
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="text-midnight-ink/30"
-            >
-              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0" />
-            </svg>
-          </div>
-          <p className="text-2xl font-semibold text-midnight-ink/40">
-            Your cart is empty
-          </p>
-          <Link
-            href="/components"
-            className="mt-4 inline-flex items-center gap-2 text-cobalt-blue hover:underline"
-          >
-            Browse components
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M6 4L10 8L6 12" />
-            </svg>
-          </Link>
-        </div>
+        <EmptyCart />
       ) : (
         <CartSection rows={rows} />
       )}

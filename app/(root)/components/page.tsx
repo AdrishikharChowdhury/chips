@@ -1,5 +1,5 @@
-
 import ComponentList from "@/components/root/ComponentList";
+import EmptyComponents from "@/components/root/EmptyComponents";
 import { ComponentPagination } from "@/components/root/ComponentPagination";
 import { fetchComponents } from "@/lib/actions/component";
 
@@ -14,6 +14,8 @@ export default async function ComponentPage({
 
   const { components, totalCount } = await fetchComponents(currentPage, perPage);
   const totalPages = Math.ceil(totalCount / perPage);
+
+  if (totalCount === 0) return <EmptyComponents />;
 
   return (
     <div>

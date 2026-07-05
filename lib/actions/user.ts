@@ -49,7 +49,6 @@ export const fetchNonPendingAccounts = async () => {
         fullName: usersTable.fullName,
         email: usersTable.email,
         universityName: usersTable.universityName,
-        organizationLogo: usersTable.organizationLogo,
         universityCard: usersTable.universityCard,
         status: usersTable.status,
         role: usersTable.role,

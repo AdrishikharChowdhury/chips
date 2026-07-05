@@ -15,13 +15,12 @@ export const STATUS_ENUM = pgEnum("status", [
   "APPROVED",
   "REJECTED",
 ]);
-export const ROLE_ENUM = pgEnum("role", ["USER", "ADMIN"]);
+export const ROLE_ENUM = pgEnum("role", ["USER", "ADMIN","OWNER"]);
 export const BORROW_STATUS_ENUM = pgEnum("borrow_status", [
   "PENDING",
   "BORROWED",
   "RETURNED",
 ]);
-export const ORG_ROLE_ENUM = pgEnum("org_role", ["OWNER", "MEMBER"]);
 
 export const universitiesTable = pgTable("universities", {
   id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
@@ -31,7 +30,7 @@ export const universitiesTable = pgTable("universities", {
     withTimezone: true,
   }).defaultNow().notNull(),
   universityLogo: text("university_logo").notNull(),
-  uniRole: ORG_ROLE_ENUM("university_role").notNull().default("OWNER"),
+  universityRole: ROLE_ENUM("university_role").notNull().default("OWNER"),
 });
 
 export const usersTable = pgTable("users", {
@@ -42,13 +41,12 @@ export const usersTable = pgTable("users", {
   universityName: varchar("university_name", { length: 255 }).notNull(),
   universityCard: text("university_card").notNull(),
   status: STATUS_ENUM("status").notNull().default("PENDING"),
-  role: ROLE_ENUM("role").notNull().default("USER"),
+  role: ROLE_ENUM("role").notNull(),
   lastActivityDate: date("last_activity_date").notNull().defaultNow(),
   createdAt: timestamp("created_at", {
     withTimezone: true,
   }).defaultNow(),
   universitySlug: varchar("university_slug", { length: 255 }).references(() => universitiesTable.slug),
-  universityRole: ORG_ROLE_ENUM("university_role").default("MEMBER"),
   universityId: integer("university_id").notNull(),
   
 });
