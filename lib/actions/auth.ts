@@ -74,7 +74,7 @@ export const signUp = async (
     otpHmac: string;
   },
 ) => {
-  const { fullName, email, password, universityId, universityCard, otp, otpExpiry, otpHmac } = params;
+  const { fullName, email, password, universityName, organizationLogo, universityCard, universityId, otp, otpExpiry, otpHmac } = params;
 
   const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1"
 
@@ -102,8 +102,10 @@ export const signUp = async (
       fullName,
       email,
       password: hashedPassword,
-      universityId,
+      universityName,
+      organizationLogo,
       universityCard,
+      universityId,
     });
 
     await signInWithCredentials({ email, password });
@@ -126,7 +128,7 @@ export const signUp = async (
 
 export const updateProfile = async (
   userId: string,
-  data: { fullName?: string; universityCard?: string; universityId?: number },
+  data: { fullName?: string; universityName?: string; organizationLogo?: string; universityCard?: string },
 ) => {
   try {
     await db

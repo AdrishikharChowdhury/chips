@@ -1,12 +1,12 @@
 import Image from "next/image";
-import { CalendarDays, IdCard, Activity, User, Edit } from "lucide-react";
+import { CalendarDays, Building2, Activity, User, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/auth";
 import { redirect } from "next/navigation";
 
 interface UniversityCardProps {
   universityCard: string;
-  universityId: number;
+  universityName: string;
   status: string;
   role: string;
   lastActivityDate: string | null;
@@ -15,7 +15,7 @@ interface UniversityCardProps {
 
 export function UniversityCard({
   universityCard,
-  universityId,
+  universityName,
   status,
   role,
   lastActivityDate,
@@ -25,15 +25,15 @@ export function UniversityCard({
     <div className="grid md:grid-cols-2 bg-[#fffef9] border-2 border-midnight-ink/20 shadow-xl">
       <div className="space-y-6 p-6">
         <h2 className="text-xl font-bold text-midnight-ink">
-          University ID Card
+          University
         </h2>
         <div className="flex items-center justify-center overflow-hidden rounded-xl border-2 border-midnight-ink/10">
           <Image
             src={universityCard}
             width={400}
             height={280}
-            alt="University ID Card"
-            className="size-full object-cover"
+            alt="University Card"
+            className="size-full object-contain p-4"
           />
         </div>
       </div>
@@ -44,11 +44,11 @@ export function UniversityCard({
           </h2>
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <IdCard size={20} className="text-cobalt-blue" />
+              <Building2 size={20} className="text-cobalt-blue" />
               <div className="flex items-center gap-2">
-                <p className="text-sm text-midnight-ink/50">University ID:</p>
+                <p className="text-sm text-midnight-ink/50">University:</p>
                 <p className="text-lg font-bold text-midnight-ink">
-                  {universityId}
+                  {universityName}
                 </p>
               </div>
             </div>

@@ -25,11 +25,11 @@ export default function PendingUserCard({id, fullName,email, universityCard}: Pe
       <div className="flex items-center justify-end gap-12">
         <ImagePopover
           src={universityCard}
-          alt={`${fullName}'s university card`}
+          alt={`${fullName}'s university logo`}
         >
           <button className="flex items-center gap-2 cursor-pointer">
             <span className="text-sm font-semibold text-cobalt-blue underline underline-offset-2 hover:text-cobalt-blue/70 transition-colors">
-              View Card
+              View Logo
             </span>
           </button>
         </ImagePopover>

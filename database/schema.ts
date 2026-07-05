@@ -21,13 +21,25 @@ export const BORROW_STATUS_ENUM = pgEnum("borrow_status", [
   "BORROWED",
   "RETURNED",
 ]);
+export const ORG_ROLE_ENUM = pgEnum("org_role", ["OWNER", "MEMBER"]);
+
+export const universitiesTable = pgTable("universities", {
+  id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
+  fullName: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  createdAt: timestamp("created_at", {
+    withTimezone: true,
+  }).defaultNow().notNull(),
+  universityLogo: text("university_logo").notNull(),
+  uniRole: ORG_ROLE_ENUM("university_role").notNull().default("OWNER"),
+});
 
 export const usersTable = pgTable("users", {
   id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
   fullName: varchar("full_name", { length: 255 }).notNull(),
   email: text("email").notNull().unique(),
-  universityId: integer("university_id").notNull().unique(),
   password: text("password").notNull(),
+  universityName: varchar("university_name", { length: 255 }).notNull(),
   universityCard: text("university_card").notNull(),
   status: STATUS_ENUM("status").notNull().default("PENDING"),
   role: ROLE_ENUM("role").notNull().default("USER"),
@@ -35,6 +47,10 @@ export const usersTable = pgTable("users", {
   createdAt: timestamp("created_at", {
     withTimezone: true,
   }).defaultNow(),
+  universitySlug: varchar("university_slug", { length: 255 }).references(() => universitiesTable.slug),
+  universityRole: ORG_ROLE_ENUM("university_role").default("MEMBER"),
+  universityId: integer("university_id").notNull(),
+  
 });
 
 export const componentsTable = pgTable("components", {

@@ -40,12 +40,16 @@ export default function AuthForm({
   onSubmit,
 }: AuthFormProps) {
   const isSignIn = type === "SIGN_IN";
+  const [orgMode, setOrgMode] = useState<"CREATE" | "JOIN">("JOIN");
   const router = useRouter();
   const [step, setStep] = useState<"form" | "otp">("form");
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [otpExpiry, setOtpExpiry] = useState(0);
   const [otpHmac, setOtpHmac] = useState("");
+  const [orgName, setOrgName] = useState("");
+  const [orgId, setOrgId] = useState("");
   const [otpValue, setOtpValue] = useState("");
+  const [orgLogo, setOrgLogo] = useState("");
 
   const form = useForm({
     resolver: zodResolver(schema as any),
@@ -71,13 +75,22 @@ export default function AuthForm({
   };
 
   const handleSubmit = async (data: Record<string, unknown>) => {
+    const payload = {
+      ...data,
+      universityName: orgName,
+      ...(orgMode === "CREATE" && { universityLogo: orgLogo }),
+      ...(orgMode === "JOIN" && {
+        universityId: orgId,
+        universityCard: orgLogo,
+      }),
+    };
     if (!isSignIn) {
       if (step === "otp") {
         if (otpValue.length < 6) {
           toast.error("Please enter the complete OTP");
           return;
         }
-        const result = await onSubmit(data, otpValue, otpExpiry, otpHmac);
+        const result = await onSubmit(payload, otpValue, otpExpiry, otpHmac);
         if (result.success) {
           toast.success(result.message);
           router.push("/");
@@ -180,6 +193,88 @@ export default function AuthForm({
               />
             </FieldGroup>
           ))}
+          {!isSignIn && (
+            <FieldGroup className="flex flex-row gap-6 justify-start">
+              <Field
+                orientation="horizontal"
+                className="flex-row items-center gap-2 w-auto"
+              >
+                <Input
+                  type="radio"
+                  name="orgMode"
+                  value="CREATE"
+                  checked={orgMode === "CREATE"}
+                  onChange={() => setOrgMode("CREATE")}
+                  className="size-4 accent-cobalt-blue border-0 p-0 h-auto w-auto"
+                />
+                <FieldLabel className="cursor-pointer">Create University</FieldLabel>
+              </Field>
+              <Field
+                orientation="horizontal"
+                className="flex-row items-center gap-2 w-auto"
+              >
+                <Input
+                  type="radio"
+                  name="orgMode"
+                  value="JOIN"
+                  checked={orgMode === "JOIN"}
+                  onChange={() => setOrgMode("JOIN")}
+                  className="size-4 accent-cobalt-blue border-0 p-0 h-auto w-auto"
+                />
+                <FieldLabel className="cursor-pointer">Join University</FieldLabel>
+              </Field>
+            </FieldGroup>
+          )}
+          <FieldGroup>
+            <Field>
+              <FieldLabel>University Name</FieldLabel>
+              <Input
+                className="form-input pl-4"
+                placeholder="Enter University Name"
+                onChange={(e) => setOrgName(e.target.value)}
+                value={orgName}
+                required
+              />
+            </Field>
+          </FieldGroup>
+          {orgMode === "CREATE" ? (
+            <>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel>Organization Logo:</FieldLabel>
+                  <ImageUpload
+                    onUpload={(url) => setOrgLogo(url)}
+                    value={orgLogo}
+                  />
+                </Field>
+              </FieldGroup>
+            </>
+          ) : (
+            <>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel>University ID:</FieldLabel>
+                  <Input
+                    className="form-input pl-4"
+                    placeholder="Enter University ID"
+                    onChange={(e) => setOrgId(e.target.value)}
+                    value={orgId}
+                    required
+                  />
+                </Field>
+              </FieldGroup>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel>University Card:</FieldLabel>
+                  <ImageUpload
+                    onUpload={(url) => setOrgLogo(url)}
+                    value={orgLogo}
+                  />
+                </Field>
+              </FieldGroup>
+            </>
+          )}
+
           {isSignIn ? (
             <Button
               type="submit"

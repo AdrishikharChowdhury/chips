@@ -16,8 +16,10 @@ export interface AuthCredentials {
   fullName: string;
   email: string;
   password: string;
-  universityId: number;
-  universityCard: string;
+  universityName: string;
+  organizationLogo?: string;
+  universityCard?: string;
+  universityId?: string;
 }
 
 export interface AdminSideBarLink {

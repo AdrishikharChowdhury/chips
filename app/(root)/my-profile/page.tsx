@@ -54,7 +54,7 @@ export default async function MyProfilePage() {
 
       <UniversityCard
         universityCard={u.universityCard}
-        universityId={u.universityId}
+        universityName={u.universityName}
         status={u.status}
         role={u.role}
         lastActivityDate={u.lastActivityDate}

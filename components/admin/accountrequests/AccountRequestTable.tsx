@@ -52,10 +52,10 @@ export async function AccountRequestTable({ searchQuery }: { searchQuery?: strin
                 Email
               </TableHead>
               <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
-                University ID
+                University Name
               </TableHead>
               <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
-                University Card
+                University Logo
               </TableHead>
               <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
                 Status
@@ -88,17 +88,17 @@ export async function AccountRequestTable({ searchQuery }: { searchQuery?: strin
                 <TableCell className="text-sm text-midnight-ink/70">
                   {req.email}
                 </TableCell>
-                <TableCell className="text-center">
-                  {req.universityId}
+                <TableCell className="text-sm text-midnight-ink/70">
+                  {req.universityName}
                 </TableCell>
                 <TableCell>
                   <ImagePopover
                     src={req.universityCard}
-                    alt={`${req.fullName}'s university card`}
+                    alt={`${req.fullName}'s university logo`}
                   >
                     <button className="flex items-center gap-2 cursor-pointer">
                       <span className="text-sm font-semibold text-cobalt-blue underline underline-offset-2 hover:text-cobalt-blue/70 transition-colors">
-                        View Card
+                        View Logo
                       </span>
                     </button>
                   </ImagePopover>

@@ -20,7 +20,7 @@ interface EditProfilePageProps {
     id: string;
     fullName: string;
     email: string;
-    universityId: number;
+    universityName: string;
     universityCard: string;
   };
 }
@@ -29,14 +29,14 @@ export default function EditProfileForm({ user: u }: EditProfilePageProps) {
   const router = useRouter();
   const { update } = useSession();
   const [fullName, setFullName] = useState(u.fullName);
-  const [universityId, setUniversityId] = useState(String(u.universityId));
+  const [universityName, setUniversityName] = useState(u.universityName);
   const [universityCard, setUniversityCard] = useState(u.universityCard);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await updateProfile(u.id, {
       fullName,
-      universityId: Number(universityId),
+      universityName,
       universityCard,
     });
     await update({ name: fullName });
@@ -101,13 +101,13 @@ export default function EditProfileForm({ user: u }: EditProfilePageProps) {
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="universityId">University ID</FieldLabel>
+              <FieldLabel htmlFor="universityName">University Name</FieldLabel>
               <FieldContent>
                 <input
-                  id="universityId"
-                  type="number"
-                  value={universityId}
-                  onChange={(e) => setUniversityId(e.target.value)}
+                  id="universityName"
+                  type="text"
+                  value={universityName}
+                  onChange={(e) => setUniversityName(e.target.value)}
                   className="form-input"
                   required
                 />
@@ -116,7 +116,7 @@ export default function EditProfileForm({ user: u }: EditProfilePageProps) {
 
             <Field>
               <FieldLabel htmlFor="universityCard">
-                University ID Card
+                University Card
               </FieldLabel>
               <FieldContent>
                 <ImageUpload

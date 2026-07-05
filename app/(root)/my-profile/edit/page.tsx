@@ -23,7 +23,7 @@ export default async function EditProfilePage() {
         id: u.id,
         fullName: u.fullName,
         email: u.email,
-        universityId: u.universityId,
+        universityName: u.universityName,
         universityCard: u.universityCard,
       }}
     />

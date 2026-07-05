@@ -14,8 +14,6 @@ export default function SignUpPage() {
         email: "",
         password: "",
         fullName: "",
-        universityId: 0,
-        universityCard: "",
       }}
       onSubmit={(data, otp, otpExpiry, otpHmac) =>
         signUp({ ...(data as any), otp, otpExpiry, otpHmac })

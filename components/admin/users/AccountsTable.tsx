@@ -45,10 +45,10 @@ export async function AccountsTable({ searchQuery }: { searchQuery?: string }) {
                 Name
               </TableHead>
               <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
-                University ID
+                University Name
               </TableHead>
               <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
-                ID Card
+                University Logo
               </TableHead>
               <TableHead className="text-sm font-bold uppercase tracking-wider text-midnight-ink/50">
                 Role
@@ -79,7 +79,7 @@ export async function AccountsTable({ searchQuery }: { searchQuery?: string }) {
                 <TableCell className="flex gap-2 items-center">
                   <Image
                     src={acc.universityCard}
-                    alt={`${acc.fullName}'s university card`}
+                    alt={`${acc.fullName}'s university logo`}
                     width={56}
                     height={56}
                     className="size-14 rounded-full"
@@ -88,16 +88,16 @@ export async function AccountsTable({ searchQuery }: { searchQuery?: string }) {
                     {acc.fullName}
                   </p>
                 </TableCell>
-                <TableCell className="text-sm text-midnight-ink/70 text-center">
-                  {acc.universityId}
+                <TableCell className="text-sm text-midnight-ink/70">
+                  {acc.universityName}
                 </TableCell>
                 <TableCell>
                   <ImagePopover
                     src={acc.universityCard}
-                    alt={`${acc.fullName}'s university card`}
+                    alt={`${acc.fullName}'s university logo`}
                   >
                     <button className="text-sm font-semibold text-cobalt-blue underline underline-offset-2 hover:text-cobalt-blue/70 transition-colors cursor-pointer">
-                      View Card
+                      View Logo
                     </button>
                   </ImagePopover>
                 </TableCell>
