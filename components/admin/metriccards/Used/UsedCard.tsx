@@ -1,6 +1,6 @@
 import { db } from "@/database";
 import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
-import { desc, eq, sql, sum } from "drizzle-orm";
+import { and, desc, eq, sql, sum } from "drizzle-orm";
 import UsedChart from "./UsedChart";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 import Link from "next/link";
@@ -18,7 +18,7 @@ const CHART_COLORS = [
   "#059669",
 ];
 
-export default async function UsedCard() {
+export default async function UsedCard({ slug }: { slug: string }) {
   const rows = await db
     .select({
       componentTitle: componentsTable.title,
@@ -32,7 +32,10 @@ export default async function UsedCard() {
       eq(borrowRecords.componentId, componentsTable.id),
     )
     .innerJoin(usersTable, eq(borrowRecords.userId, usersTable.id))
-    .where(eq(borrowRecords.status, "BORROWED"))
+    .where(and(
+      eq(borrowRecords.status, "BORROWED"),
+      eq(borrowRecords.universitySlug, slug),
+    ))
     .groupBy(
       borrowRecords.componentId,
       componentsTable.title,
@@ -80,7 +83,7 @@ export default async function UsedCard() {
 
   return (
     <div
-      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-start h-fit`}
+      className={`bg-cream-paper py-6 px-4 sm:py-8 sm:px-8 lg:py-10 lg:px-12 rounded-2xl flex flex-col items-center justify-start h-fit`}
     >
       <div className="flex justify-between items-center w-full">
         <h2 className="text-2xl font-semibold">Used</h2>
@@ -102,7 +105,7 @@ export default async function UsedCard() {
         <>
           <UsedChart metrics={metrics} data={data} />
           <div className="w-full overflow-y-scroll flex flex-col gap-4">
-            {rows.slice(0, 3).map((r, idx: number) => (
+            {rows.slice(0, 3).map((r) => (
               <section
                 key={r.recordIds[0]}
                 className="bg-marigold-yellow/10 p-4 w-full border-cobalt-blue border-2 rounded-2xl flex justify-between items-center"

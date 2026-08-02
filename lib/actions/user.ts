@@ -1,16 +1,36 @@
 "use server";
 
+import { auth } from "@/auth";
 import { db } from "@/database";
 import { borrowRecords, cartItemsTable, usersTable } from "@/database/schema";
 import { and, eq, inArray, sum } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
+async function getAdminSlug() {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) throw new Error("Unauthorized");
+
+  const [user] = await db
+    .select({ slug: usersTable.universitySlug })
+    .from(usersTable)
+    .where(eq(usersTable.id, userId))
+    .limit(1);
+  return user?.slug;
+}
+
 export const fetchPendingAccountRequests = async () => {
   try {
+    const slug = await getAdminSlug();
+    if (!slug) return [];
+
     const users = await db
       .select()
       .from(usersTable)
-      .where(eq(usersTable.status, "PENDING"));
+      .where(and(
+        eq(usersTable.status, "PENDING"),
+        eq(usersTable.universitySlug, slug),
+      ));
     return users;
   } catch (error) {
     throw new Error("Failed to fetch account requests");
@@ -19,10 +39,16 @@ export const fetchPendingAccountRequests = async () => {
 
 export const approveAccountRequest = async (userId: string, formData: FormData) => {
   try {
+    const slug = await getAdminSlug();
+    if (!slug) return;
+
     await db
       .update(usersTable)
       .set({ status: "APPROVED" })
-      .where(eq(usersTable.id, userId));
+      .where(and(
+        eq(usersTable.id, userId),
+        eq(usersTable.universitySlug, slug),
+      ));
     revalidatePath("/admin/account-requests");
   } catch (error) {
     console.log(error);
@@ -31,10 +57,16 @@ export const approveAccountRequest = async (userId: string, formData: FormData) 
 
 export const rejectAccountRequest = async (userId: string, formData: FormData) => {
   try {
+    const slug = await getAdminSlug();
+    if (!slug) return;
+
     await db
       .update(usersTable)
       .set({ status: "REJECTED" })
-      .where(eq(usersTable.id, userId));
+      .where(and(
+        eq(usersTable.id, userId),
+        eq(usersTable.universitySlug, slug),
+      ));
     revalidatePath("/admin/account-requests");
   } catch (error) {
     console.log(error);
@@ -43,6 +75,9 @@ export const rejectAccountRequest = async (userId: string, formData: FormData) =
 
 export const fetchNonPendingAccounts = async () => {
   try {
+    const slug = await getAdminSlug();
+    if (!slug) return [];
+
     const users = await db
       .select({
         id: usersTable.id,
@@ -56,7 +91,10 @@ export const fetchNonPendingAccounts = async () => {
         lastActivityDate: usersTable.lastActivityDate,
       })
       .from(usersTable)
-      .where(eq(usersTable.status, "APPROVED"));
+      .where(and(
+        eq(usersTable.status, "APPROVED"),
+        eq(usersTable.universitySlug, slug),
+      ));
 
     const userIds = users.map((u) => u.id);
 
@@ -87,12 +125,18 @@ export const fetchNonPendingAccounts = async () => {
 
 export const updateUserRole = async (userId: string, formData: FormData) => {
   try {
+    const slug = await getAdminSlug();
+    if (!slug) return;
+
     const newRole = formData.get("role") as string;
     if (!newRole || !["USER", "ADMIN"].includes(newRole)) return;
     await db
       .update(usersTable)
       .set({ role: newRole as "USER" | "ADMIN" })
-      .where(eq(usersTable.id, userId));
+      .where(and(
+        eq(usersTable.id, userId),
+        eq(usersTable.universitySlug, slug),
+      ));
     revalidatePath("/admin/users");
   } catch (error) {
     console.log(error);
@@ -101,6 +145,17 @@ export const updateUserRole = async (userId: string, formData: FormData) => {
 
 export const deleteUser = async (userId: string, formData: FormData) => {
   try {
+    const slug = await getAdminSlug();
+    if (!slug) return;
+
+    const [target] = await db
+      .select({ slug: usersTable.universitySlug })
+      .from(usersTable)
+      .where(eq(usersTable.id, userId))
+      .limit(1);
+
+    if (!target || target.slug !== slug) return;
+
     await db.delete(cartItemsTable).where(eq(cartItemsTable.userId, userId));
     await db.delete(borrowRecords).where(eq(borrowRecords.userId, userId));
     await db.delete(usersTable).where(eq(usersTable.id, userId));

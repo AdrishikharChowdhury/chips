@@ -2,21 +2,24 @@ import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 import { db } from "@/database";
 import { usersTable } from "@/database/schema";
 import { deleteUser } from "@/lib/actions/user";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ImagePopover } from "../accountrequests/ImagePopover";
 
-export default async function AllUsersCard() {
+export default async function AllUsersCard({ slug }: { slug: string }) {
   const allUsers = await db
     .select()
     .from(usersTable)
-    .where(eq(usersTable.status, "APPROVED"))
+    .where(and(
+      eq(usersTable.status, "APPROVED"),
+      eq(usersTable.universitySlug, slug),
+    ))
     .limit(4)
     .orderBy(desc(usersTable.createdAt));
   return (
-    <section className="bg-cream-paper py-10 px-12 flex flex-col gap-4 rounded-2xl">
+    <section className="bg-cream-paper py-6 px-4 sm:py-8 sm:px-8 lg:py-10 lg:px-12 flex flex-col gap-4 rounded-2xl">
       <div className="w-full flex justify-between items-center">
         <h2 className="text-2xl font-semibold mb-2">All Users</h2>
         <Link
@@ -34,7 +37,7 @@ export default async function AllUsersCard() {
           </span>
         </div>
       ) : (
-        <div className="grid grid-cols-2 grid-rows-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {allUsers.map((user, index) => (
             <div
               key={index}

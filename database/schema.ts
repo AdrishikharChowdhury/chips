@@ -65,6 +65,7 @@ export const componentsTable = pgTable("components", {
   createdAt: timestamp("created_at", {
     withTimezone: true,
   }).defaultNow(),
+  universitySlug: varchar("university_slug", { length: 255 }).notNull().references(() => universitiesTable.slug),
 });
 
 export const borrowRecords = pgTable("borrow_records", {
@@ -89,6 +90,7 @@ export const borrowRecords = pgTable("borrow_records", {
     .defaultNow()
     .notNull(),
   amount: integer("amount").notNull().default(1),
+  universitySlug: varchar("university_slug", { length: 255 }).notNull().references(() => universitiesTable.slug),
 });
 
 export const cartItemsTable = pgTable("cart_items", {

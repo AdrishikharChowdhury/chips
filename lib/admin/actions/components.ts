@@ -1,12 +1,26 @@
 "use server";
 
+import { auth } from "@/auth";
 import { db } from "@/database";
-import { componentsTable } from "@/database/schema";
+import { componentsTable, usersTable } from "@/database/schema";
 import { ComponentParams } from "@/types";
+import { eq } from "drizzle-orm";
 
 export const createComponent = async (params: ComponentParams) => {
   try {
-    const newComponent = await db.insert(componentsTable).values({...params,availableCopies:params.totalCopies}).returning();
+    const session = await auth();
+    const userId = session?.user?.id;
+    if (!userId) return { success: false, message: "Unauthorized" };
+    const [user] = await db
+      .select({ slug: usersTable.universitySlug })
+      .from(usersTable)
+      .where(eq(usersTable.id, userId))
+      .limit(1);
+    const newComponent = await db.insert(componentsTable).values({
+      ...params,
+      availableCopies: params.totalCopies,
+      universitySlug: user?.slug ?? "",
+    }).returning();
     return {
       success: true,
       data: JSON.parse(JSON.stringify(newComponent[0])),

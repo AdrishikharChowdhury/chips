@@ -11,18 +11,19 @@ import {
 import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
 import { deleteComponent } from "@/lib/actions/component";
-import { ilike } from "drizzle-orm";
+import { and, eq, ilike } from "drizzle-orm";
 import Image from "next/image";
 import { Pencil, Trash } from "lucide-react";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 
-export async function ComponentTable({ searchQuery }: { searchQuery?: string }) {
+export async function ComponentTable({ searchQuery, slug }: { searchQuery?: string; slug: string }) {
+  const baseWhere = eq(componentsTable.universitySlug, slug);
   const components = searchQuery
     ? await db
         .select()
         .from(componentsTable)
-        .where(ilike(componentsTable.title, `%${searchQuery}%`))
-    : await db.select().from(componentsTable);
+        .where(and(baseWhere, ilike(componentsTable.title, `%${searchQuery}%`)))
+    : await db.select().from(componentsTable).where(baseWhere);
 
   return (
     <div className="bg-cream-paper">

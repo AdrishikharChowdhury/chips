@@ -17,6 +17,7 @@ export default function SignUpPage() {
       }}
       onSubmit={(data, otp, otpExpiry, otpHmac) =>
         signUp({ ...(data as any), otp, otpExpiry, otpHmac })
+       
       }
     />
   );

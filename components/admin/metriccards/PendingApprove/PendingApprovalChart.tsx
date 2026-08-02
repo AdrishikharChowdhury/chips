@@ -13,7 +13,7 @@ export default function PendingApprovalChart({ data }: PendingApprovalChartProps
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex w-full max-w-full flex-col items-center overflow-x-auto">
       <RingChart
         data={data}
         size={350}

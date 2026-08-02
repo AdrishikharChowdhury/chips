@@ -6,8 +6,8 @@ import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import ComponentCard from "@/components/root/ComponentCard";
-import { ShoppingCart } from "lucide-react";
 import { auth } from "@/auth";
+import AddToCartButton from "@/components/root/AddToCartButton";
 
 export default async function ComponentPage({
   params,
@@ -128,14 +128,7 @@ export default async function ComponentPage({
                 </span>
               </Button>
             </Link>
-            <Link href={`/cart`}>
-              <Button className="bg-poppy-red text-cream-paper hover:bg-poppy-red/90 py-6 px-8 w-fit cursor-pointer">
-                <ShoppingCart />
-                <span className="font-degular-display text-lg">
-                  Add to Cart
-                </span>
-              </Button>
-            </Link>
+            <AddToCartButton id={id} />
           </div>
           
         </div>

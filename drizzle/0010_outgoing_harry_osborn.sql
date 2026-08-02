@@ -1,0 +1,4 @@
+ALTER TABLE "borrow_records" ADD COLUMN "university_slug" varchar(255) NOT NULL;--> statement-breakpoint
+ALTER TABLE "components" ADD COLUMN "university_slug" varchar(255) NOT NULL;--> statement-breakpoint
+ALTER TABLE "borrow_records" ADD CONSTRAINT "borrow_records_university_slug_universities_slug_fk" FOREIGN KEY ("university_slug") REFERENCES "public"."universities"("slug") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "components" ADD CONSTRAINT "components_university_slug_universities_slug_fk" FOREIGN KEY ("university_slug") REFERENCES "public"."universities"("slug") ON DELETE no action ON UPDATE no action;

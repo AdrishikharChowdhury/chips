@@ -1,4 +1,8 @@
 
+import { auth } from "@/auth";
+import { db } from "@/database";
+import { usersTable } from "@/database/schema";
+import { eq } from "drizzle-orm";
 import RecentComponents from "@/components/admin/allcomponents/RecentComponents";
 import AvailableCopiesCard from "@/components/admin/metriccards/AvailableCopies/AvailableCopiesCard";
 import PendingApprovalCard from "@/components/admin/metriccards/PendingApprove/PendingApprovalCard";
@@ -8,6 +12,17 @@ import PendingUsers from "@/components/admin/requestcards/PendingUsers";
 import Link from "next/link";
 
 export default async function AdminPage() {
+  const session = await auth();
+  const userId = session?.user?.id;
+  const [user] = userId
+    ? await db
+        .select({ slug: usersTable.universitySlug })
+        .from(usersTable)
+        .where(eq(usersTable.id, userId))
+        .limit(1)
+    : [];
+  const slug = user?.slug;
+  if (!slug) return null;
 
   return (
     <div>
@@ -21,10 +36,10 @@ export default async function AdminPage() {
             View All
           </Link>
         </article>
-        <article className="grid grid-cols-2 gap-4">
-          <AvailableCopiesCard />
-          <PendingApprovalCard />
-          <UsedCard />
+        <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <AvailableCopiesCard slug={slug} />
+          <PendingApprovalCard slug={slug} />
+          <UsedCard slug={slug} />
         </article>
       </section>
       <section className="flex flex-col gap-4">
@@ -37,9 +52,9 @@ export default async function AdminPage() {
             View All
           </Link>
         </article>
-        <article className="grid grid-cols-2 gap-4">
-          <AllUsersCard />
-          <PendingUsers />
+        <article className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <AllUsersCard slug={slug} />
+          <PendingUsers slug={slug} />
         </article>
       </section>
       <section className="flex flex-col gap-4 w-full">
@@ -53,7 +68,7 @@ export default async function AdminPage() {
           </Link>
           
         </article>
-        <RecentComponents />
+        <RecentComponents slug={slug} />
       </section>
     </div>
   );

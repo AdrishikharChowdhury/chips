@@ -1,6 +1,6 @@
 import { db } from "@/database";
 import { borrowRecords, componentsTable, usersTable } from "@/database/schema";
-import { desc, eq, sql, sum } from "drizzle-orm";
+import { and, desc, eq, sql, sum } from "drizzle-orm";
 import PendingApprovalChart from "./PendingApprovalChart";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 import Link from "next/link";
@@ -18,7 +18,7 @@ const CHART_COLORS = [
   "#059669",
 ];
 
-export default async function PendingApprovalCard() {
+export default async function PendingApprovalCard({ slug }: { slug: string }) {
   const pending = await db
     .select({
       componentTitle: componentsTable.title,
@@ -32,7 +32,10 @@ export default async function PendingApprovalCard() {
       componentsTable,
       eq(borrowRecords.componentId, componentsTable.id),
     ).innerJoin(usersTable, eq(borrowRecords.userId, usersTable.id))
-    .where(eq(borrowRecords.status, "PENDING"))
+    .where(and(
+      eq(borrowRecords.status, "PENDING"),
+      eq(borrowRecords.universitySlug, slug),
+    ))
     .groupBy(
       borrowRecords.componentId,
       borrowRecords.userId,
@@ -52,7 +55,7 @@ export default async function PendingApprovalCard() {
 
   return (
     <div
-      className={`bg-cream-paper py-10 px-12 rounded-2xl flex flex-col items-center justify-start h-fit`}
+      className={`bg-cream-paper py-6 px-4 sm:py-8 sm:px-8 lg:py-10 lg:px-12 rounded-2xl flex flex-col items-center justify-start h-fit`}
       suppressHydrationWarning
     >
       <div className="flex justify-between items-center w-full">
@@ -78,7 +81,7 @@ export default async function PendingApprovalCard() {
           <>
             <PendingApprovalChart data={chartData} />
             <div className="w-full flex flex-col gap-4">
-              {pending.slice(0,3).map((p, idx: number) => (
+              {pending.slice(0,3).map((p) => (
                 <section key={p.recordIds[0]} className="bg-marigold-yellow/10 p-4 w-full border-poppy-red border-2 rounded-2xl flex justify-between items-center">
                   <aside className="flex items-center gap-2">
                     <figure className="bg-poppy-red text-white rounded-full size-12 flex items-center justify-center font-degular-display text-lg">

@@ -15,7 +15,7 @@ import { ImagePopover } from "../accountrequests/ImagePopover";
 import { Trash } from "lucide-react";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 
-export async function AccountsTable({ searchQuery }: { searchQuery?: string }) {
+export async function AccountsTable({ searchQuery }: { searchQuery?: string; slug?: string }) {
   const allAccounts =  await fetchNonPendingAccounts();
   const accounts = searchQuery
     ? allAccounts.filter((a) =>

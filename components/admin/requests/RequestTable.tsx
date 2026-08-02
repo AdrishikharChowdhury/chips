@@ -30,7 +30,7 @@ interface GroupedRequest {
   recordIds: string[];
 }
 
-export async function RequestTable({ searchQuery }: { searchQuery?: string }) {
+export async function RequestTable({ searchQuery, slug }: { searchQuery?: string; slug: string }) {
   const rawRecords = await db
     .select({
       id: borrowRecords.id,
@@ -54,6 +54,7 @@ export async function RequestTable({ searchQuery }: { searchQuery?: string }) {
       componentsTable,
       eq(borrowRecords.componentId, componentsTable.id),
     )
+    .where(eq(borrowRecords.universitySlug, slug))
     .orderBy(borrowRecords.createdAt);
 
   const filteredRawRecords = searchQuery

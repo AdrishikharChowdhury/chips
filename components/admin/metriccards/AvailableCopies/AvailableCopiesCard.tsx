@@ -1,10 +1,10 @@
 import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
-import { sql } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import AvailableCopiesChart from "./AvailableCopiesChart";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 
-export default async function AvailableCopiesCard() {
+export default async function AvailableCopiesCard({ slug }: { slug: string }) {
   const components = await db
     .select({
       title: componentsTable.title,
@@ -12,7 +12,8 @@ export default async function AvailableCopiesCard() {
       totalCopies: componentsTable.totalCopies,
     })
     .from(componentsTable)
-    .orderBy(sql`${componentsTable.availableCopies} DESC`);
+    .where(eq(componentsTable.universitySlug, slug))
+    .orderBy(desc(componentsTable.availableCopies));
 
   const data = components
     .filter((c) => c.totalCopies > 0)
@@ -26,7 +27,7 @@ export default async function AvailableCopiesCard() {
     });
 
   return (
-    <div className="bg-cream-paper py-10 px-12 rounded-2xl flex flex-col col-span-2 items-center justify-start">
+    <div className="bg-cream-paper py-6 px-4 sm:py-8 sm:px-8 lg:py-10 lg:px-12 rounded-2xl flex flex-col xl:col-span-2 items-center justify-start">
       <h2 className="text-left text-2xl font-semibold mb-2 w-full">Available</h2>
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full">

@@ -4,13 +4,17 @@ import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Session } from "next-auth";
 
 export default function Sidebar({ session }: { session: Session }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    setCollapsed(window.innerWidth < 1024);
+  }, []);
 
   return (
     <div className={cn("admin-sidebar", collapsed && "collapsed")}>

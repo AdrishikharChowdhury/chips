@@ -1,18 +1,21 @@
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 import Link from "next/link";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/database";
 import { usersTable } from "@/database/schema";
 import PendingUserCard from "./PendingUserCard";
 
-export default async function PendingUsers() {
+export default async function PendingUsers({ slug }: { slug: string }) {
   const pendingUsers = await db
         .select()
         .from(usersTable)
-        .where(eq(usersTable.status, "PENDING")).limit(7).orderBy(desc(usersTable.createdAt));
+        .where(and(
+          eq(usersTable.status, "PENDING"),
+          eq(usersTable.universitySlug, slug),
+        )).limit(7).orderBy(desc(usersTable.createdAt));
   
   return (
-    <section className="bg-cream-paper py-10 px-12 flex flex-col gap-4 rounded-2xl">
+    <section className="bg-cream-paper py-6 px-4 sm:py-8 sm:px-8 lg:py-10 lg:px-12 flex flex-col gap-4 rounded-2xl">
       <div className="w-full flex justify-between items-center">
         <h2 className="text-2xl font-semibold mb-2">Pending Approvals</h2>
         <Link

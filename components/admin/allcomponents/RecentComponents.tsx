@@ -2,20 +2,21 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
 import { deleteComponent } from "@/lib/actions/component";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { Pencil, Plus, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function RecentComponents() {
+export default async function RecentComponents({ slug }: { slug: string }) {
   const recentComponents = await db
     .select()
     .from(componentsTable)
+    .where(eq(componentsTable.universitySlug, slug))
     .limit(5)
     .orderBy(desc(componentsTable.createdAt));
 
   return (
-    <section className="w-full p-4 bg-cream-paper rounded-2xl grid grid-cols-2 gap-4">
+    <section className="w-full p-4 bg-cream-paper rounded-2xl grid grid-cols-1 sm:grid-cols-2 gap-4">
       <Link href="/admin/components/new" className="w-full">
         <Button className="bg-marigold-yellow/30 py-14 pl-4 text-xl font-degular-display border-marigold-yellow border-2 rounded-2xl flex justify-start hover:bg-marigold-yellow/20 cursor-pointer w-full">
           <p className="text-left font-degular-display text-midnight-ink flex items-center gap-4">

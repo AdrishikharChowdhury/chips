@@ -16,7 +16,7 @@ export default function UsedChart({ metrics, data }: UsedChartProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex w-full max-w-full flex-col items-center overflow-x-auto">
       <RadarChart
         data={data}
         metrics={metrics}

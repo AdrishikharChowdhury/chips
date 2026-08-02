@@ -95,6 +95,7 @@ export const signUp = async (
     password,
     universityName = "",
     universityLogo,
+    universitySlug,
     universityCard,
     universityId: rawUniversityId,
     otp,
@@ -138,6 +139,7 @@ export const signUp = async (
         universityName,
         universityCard: universityCard || "",
         universityId,
+        universitySlug: universitySlug ?? "",
       });
     } else {
       await createOrg({
@@ -160,14 +162,15 @@ export const signUp = async (
       console.warn("Workflow trigger failed:", e);
     }
 
-    if (Number(universityId)) {
-      redirect("/");
-    } else {
-      redirect("/admin");
-    }
   } catch (error) {
     console.log(error, "Sign Up Error");
     return { success: false, message: "Sign Up Error" };
+  }
+
+  if (Number(universityId)) {
+    redirect("/");
+  } else {
+    redirect("/admin");
   }
 };
 
@@ -213,6 +216,7 @@ async function joinOrg({
   universityName,
   universityCard,
   universityId,
+  universitySlug
 }: {
   fullName: string;
   email: string;
@@ -220,6 +224,7 @@ async function joinOrg({
   universityName: string;
   universityCard: string;
   universityId: number;
+  universitySlug: string;
 }) {
   await db.insert(usersTable).values({
     fullName,
@@ -229,6 +234,7 @@ async function joinOrg({
     universityCard,
     universityId,
     role: "USER",
+    universitySlug
   });
 }
 
