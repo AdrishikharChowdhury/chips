@@ -20,6 +20,7 @@ import { navigationLinks } from "@/constants";
 export default function Header({ session }: { session: Session }) {
   const pathname = usePathname();
   const isSignIn = session?.user;
+  const navLinks = navigationLinks.slice(0,4);
   return (
     <header className="my-10 flex items-center justify-between gap-5">
       <Link href="/" className="flex items-center gap-2">
@@ -36,7 +37,7 @@ export default function Header({ session }: { session: Session }) {
       </Link>
       <nav>
         <ul className="flex flex-row items-center gap-8">
-          {navigationLinks.map((link) => (
+          {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
@@ -76,11 +77,11 @@ export default function Header({ session }: { session: Session }) {
                     <DropdownMenuGroup>
                       <DropdownMenuItem className="cursor-pointer rounded-none px-3 py-2.5 text-base transition-colors hover:bg-cobalt-blue/20">
                         <Link
-                          href="/my-profile"
+                          href={navigationLinks[4].href}
                           className="flex w-full items-center gap-2 text-midnight-ink transition-colors hover:text-cobalt-blue"
                         >
                           <UserIcon size={18} />
-                          My Profile
+                          {navigationLinks[4].label}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem

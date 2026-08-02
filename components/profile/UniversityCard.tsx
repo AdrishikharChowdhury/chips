@@ -112,7 +112,7 @@ export function UniversityCard({
           <form
             action={async () => {
               "use server";
-              redirect("/my-profile/edit");
+              redirect("/home/my-profile/edit");
             }}
           >
             <Button className="font-degular-display text-xl py-6 w-fit px-4">

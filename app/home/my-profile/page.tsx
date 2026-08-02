@@ -7,6 +7,7 @@ import { UniversityCard } from "@/components/profile/UniversityCard";
 import { BorrowCard } from "@/components/borrow/BorrowCard";
 import { auth } from "@/auth";
 import { fetchBorrowedComponents } from "@/lib/actions/component";
+import { navigationLinks } from "@/constants";
 
 export default async function MyProfilePage() {
   const session = await auth();
@@ -65,7 +66,7 @@ export default async function MyProfilePage() {
           <h2 className="text-3xl font-semibold">Your Components</h2>
           {Object.keys(records).length > 0 && (
             <Link
-              href="/components/borrow"
+              href={navigationLinks[2].href}
               className="text-sm font-semibold text-cobalt-blue hover:underline"
             >
               View all

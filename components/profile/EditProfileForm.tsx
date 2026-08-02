@@ -40,7 +40,7 @@ export default function EditProfileForm({ user: u }: EditProfilePageProps) {
       universityCard,
     });
     await update({ name: fullName });
-    router.push("/my-profile");
+    router.push("/home/my-profile");
     router.refresh();
     console.log(u);
   };
@@ -136,7 +136,7 @@ export default function EditProfileForm({ user: u }: EditProfilePageProps) {
               Save Changes
             </button>
             <Link
-              href="/my-profile"
+              href="/home/my-profile"
               className="inline-flex min-h-12 items-center gap-2 rounded-none border-2 border-midnight-ink/20 px-6 font-degular-display text-lg font-bold text-white transition-colors bg-poppy-red"
             >
               Cancel

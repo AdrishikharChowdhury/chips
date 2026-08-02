@@ -1,21 +1,25 @@
 export const navigationLinks = [
   {
-    href: "/",
+    href: "/home",
     label: "Home",
   },
 
   {
-    href: "/components",
+    href: "/home/components",
     label: "Components",
   },
   {
-    href: "/components/borrow",
+    href: "/home/components/borrow",
     label: "Borrowed Components",
   },
   {
-    href: "/cart",
+    href: "/home/cart",
     label: "Cart",
   },
+  {
+    href: "/home/my-profile",
+    label: "My Profile",
+  }
 ];
 
 export const adminSideBarLinks = [
