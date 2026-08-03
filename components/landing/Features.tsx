@@ -75,7 +75,7 @@ export default function Features() {
     <section id="features" className="h-screen flex justify-center items-center">
       <div className="flex flex-col gap-14 py-24">
       <div className="flex flex-col items-start gap-6">
-        <span className="rounded-full bg-marigold-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-midnight-ink">
+        <span className="border-2 bg-marigold-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-midnight-ink">
           Features
         </span>
         <h2 className="font-degular-display text-4xl font-bold leading-tight tracking-wide text-midnight-ink xs:text-5xl md:text-6xl">
