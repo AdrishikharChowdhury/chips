@@ -11,11 +11,11 @@ export default function Hero() {
           <span className="absolute -left-10 -top-12 hidden size-6 bg-cobalt-blue lg:block" />
           <span className="absolute -left-6 top-24 hidden size-4 border-2 border-midnight-ink lg:block" />
 
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-marigold-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-midnight-ink">
+          <div className="flex flex-wrap items-center gap-5">
+            <span className="ml-4 bg-marigold-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-midnight-ink border-2">
               Beta
             </span>
-            <span className="rounded-full border-2 border-cobalt-blue px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-cobalt-blue">
+            <span className="border-2 border-cobalt-blue px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-cobalt-blue">
               Centralized Hardware Inventory
             </span>
           </div>

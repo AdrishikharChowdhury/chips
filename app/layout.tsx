@@ -34,7 +34,7 @@ export default async function RootLayout({
       lang="en"
       className={cn(
         "h-full",
-        "antialiased",
+        "antialiased scroll-smooth",
         degularDisplay.variable,
         usual.variable,
       )}
