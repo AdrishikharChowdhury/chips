@@ -58,7 +58,7 @@ export default function HIW() {
           <h2 className="font-degular-display text-4xl font-bold leading-tight tracking-wide text-midnight-ink xs:text-5xl md:text-6xl">
             Live in <span className="text-cobalt-blue">three steps</span>
           </h2>
-          <p className="max-w-140 text-lg leading-relaxed text-midnight-ink/70">
+          <p className="text-lg leading-relaxed text-midnight-ink/60 font-semibold ml-4">
             From empty shelf to a tracked, borrowable campus inventory in
             minutes — no spreadsheets, no setup costs.
           </p>

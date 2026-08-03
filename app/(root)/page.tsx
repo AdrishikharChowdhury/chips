@@ -1,3 +1,4 @@
+import Contact from "@/components/landing/Contact";
 import Features from "@/components/landing/Features";
 import Hero from "@/components/landing/Hero";
 import HIW from "@/components/landing/HIW";
@@ -9,6 +10,7 @@ export default function HomePage() {
       <Hero />
       <Features />
       <HIW />
+      <Contact />
       <HomeButton />
     </div>
   )

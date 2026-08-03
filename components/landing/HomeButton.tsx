@@ -22,7 +22,7 @@ export default function HomeButton() {
       <Button
         onClick={handleHomeClick}
         aria-label="Go home"
-        className="relative size-full border-2 border-midnight-ink bg-poppy-red text-cream-paper hover:bg-midnight-ink"
+        className="relative size-full border-2 border-midnight-ink bg-primary text-cream-paper hover:bg-midnight-ink"
       >
         <Home className="size-6" />
       </Button>
