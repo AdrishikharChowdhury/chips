@@ -45,7 +45,7 @@ export default function ComponentOverview({
           </p>
         </div>
         <p className="book-description">{description}</p>
-        <Link href={`/components/borrow/${id}`}>
+        <Link href={`/home/components/borrow/${id}`}>
           <Button className="book-overview_btn">
             <Image
               src="/icons/component.svg"

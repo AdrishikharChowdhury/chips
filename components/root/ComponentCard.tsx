@@ -25,7 +25,7 @@ export default function ComponentCard({
 
   return (
     <div className="flex w-full flex-col overflow-hidden border-2 border-midnight-ink/10 bg-cream-paper transition-colors hover:border-cobalt-blue/40">
-        <Link href={`/components/${id}`} className="group flex flex-col">
+        <Link href={`/home/components/${id}`} className="group flex flex-col">
           <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden bg-midnight-ink/3">
             <Image
               src={cover}

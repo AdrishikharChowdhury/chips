@@ -368,10 +368,6 @@ export const pendingUsers = [
 
 export const landingLinks = [
   {
-    label: "Home",
-    href: "#home"
-  },
-  {
     label: "Features",
     href: "#features"
   },
