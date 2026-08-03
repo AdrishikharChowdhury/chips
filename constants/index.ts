@@ -365,3 +365,33 @@ export const pendingUsers = [
   { fullName: "Frank Miller", email: "frank.miller@example.com", status: "PENDING" },
   { fullName: "Grace Lee", email: "grace.lee@example.com", status: "PENDING" }
 ];
+
+export const landingLinks = [
+  {
+    label: "Home",
+    href: "#home"
+  },
+  {
+    label: "Features",
+    href: "#features"
+  },
+  {
+    label: "How It Works",
+    href: "#hiw"
+  },
+  {
+    label: "Contact",
+    href: "#contact"
+  }
+];
+
+export const footerLinks = [
+  {
+    label: "Privacy",
+    href: "/privacy"
+  },
+  {
+    label: "Terms",
+    href: "/terms"
+  }
+]

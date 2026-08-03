@@ -15,7 +15,7 @@ export default async function AdminLayout({
   const session = await auth();
 
   if (!session) {
-    redirect("/sign-in");
+    redirect("/");
   }
 
   const id = session?.user?.id;

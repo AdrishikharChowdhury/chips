@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 export default async function AuthLayout({ children }: { children: ReactNode }) {
   const session = await auth();
-  if (session) redirect("/");
+  if (session) redirect("/home");
   return (
     <main className="auth-container">
       <section className="auth-form">
