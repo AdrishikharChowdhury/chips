@@ -107,7 +107,7 @@ export default function AuthForm({
     const result = await onSubmit(data);
     if (result.success) {
       toast.success(result.message);
-      router.push("/");
+      router.push("/home");
     } else {
       toast.error(result.message);
     }

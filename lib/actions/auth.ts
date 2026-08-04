@@ -72,7 +72,7 @@ export const signInWithCredentials = async (
       if (result.user.role === "ADMIN" || result.user.role === "OWNER") {
         redirect("/admin");
       } else {
-        redirect("/");
+        redirect("/home");
       }
     }
     return { success: true, message: "User signed in successfully" };
@@ -168,7 +168,7 @@ export const signUp = async (
   }
 
   if (Number(universityId)) {
-    redirect("/");
+    redirect("/home");
   } else {
     redirect("/admin");
   }
