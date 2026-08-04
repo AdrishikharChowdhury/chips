@@ -4,10 +4,10 @@ import React from "react";
 
 export default function Hero() {
   return (
-    <section id="home" className="flex flex-col gap-16 py-12 lg:py-20">
-      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:items-stretch lg:gap-20">
+    <section id="home" className="flex flex-col gap-16 py-12 lg:py-20 h-screen justify-center items-center">
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:items-stretch lg:gap-20 h-full">
         {/* Text column */}
-        <div className="relative flex flex-col items-start gap-8">
+        <div className="relative flex flex-col items-start gap-8 justify-center h-full">
           <span className="absolute -left-10 -top-12 hidden size-6 bg-cobalt-blue lg:block" />
           <span className="absolute -left-6 top-24 hidden size-4 border-2 border-midnight-ink lg:block" />
 
@@ -48,7 +48,7 @@ export default function Hero() {
             </Link>
           </div>
 
-          <div className="mt-4 grid w-full max-w-115 grid-cols-3 gap-4 border-t-2 border-midnight-ink pt-6">
+          <div className="mt-4 grid w-full max-w-115 grid-cols-3 gap-4 border-y-2 border-midnight-ink py-6">
             {[
               { n: "01", l: "University" },
               { n: "02", l: "Steps to Borrow" },
@@ -80,10 +80,9 @@ export default function Hero() {
             />
           </div>
         </div>
+        
       </div>
-
-      {/* Bauhaus color marquee */}
-      <div className="grid grid-cols-4">
+      <div className="grid grid-cols-4 w-full">
         {["bg-midnight-ink", "bg-cobalt-blue", "bg-poppy-red", "bg-marigold-yellow"].map(
           (c) => (
             <span key={c} className={`h-3 ${c}`} />

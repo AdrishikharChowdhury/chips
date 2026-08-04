@@ -1,26 +1,6 @@
 "use client";
 import React, { useState } from "react";
-
-const channels = [
-  {
-    tag: "Email",
-    title: "hello@chips.campus",
-    desc: "For partnerships, press and general enquiries.",
-    color: "#1457d8",
-  },
-  {
-    tag: "Support",
-    title: "support@chips.campus",
-    desc: "For account, billing and inventory issues.",
-    color: "#e84522",
-  },
-  {
-    tag: "Campus",
-    title: "CTO office",
-    desc: "For universities and admins going live.",
-    color: "#f5b400",
-  },
-];
+import { channels } from "../../constants";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);

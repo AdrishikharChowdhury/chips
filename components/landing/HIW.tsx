@@ -1,51 +1,6 @@
 import Image from "next/image";
-import React from "react";
-
-const steps = [
-  {
-    id: "01",
-    title: "Create your university",
-    desc: "Sign up, create your university space and add your logo. You become the owner with a slug-scoped workspace from day one.",
-    tag: "Setup",
-    color: "#1457d8",
-    shape: "square",
-  },
-  {
-    id: "02",
-    title: "Catalog your components",
-    desc: "Admins add components with photos, types, ratings and copy counts. Approve members by verifying their university ID cards.",
-    tag: "Inventory",
-    color: "#e84522",
-    shape: "circle",
-  },
-  {
-    id: "03",
-    title: "Members borrow & return",
-    desc: "Members request components, admins approve or bulk-update, and returns restock available copies automatically.",
-    tag: "Track",
-    color: "#f5b400",
-    shape: "triangle",
-  },
-];
-
-function Mark({ shape, color }: { shape: string; color: string }) {
-  if (shape === "circle") {
-    return <span className="size-6 rounded-full" style={{ backgroundColor: color }} />;
-  }
-  if (shape === "triangle") {
-    return (
-      <span
-        className="size-0"
-        style={{
-          borderLeft: "12px solid transparent",
-          borderRight: "12px solid transparent",
-          borderBottom: `20px solid ${color}`,
-        }}
-      />
-    );
-  }
-  return <span className="size-6" style={{ backgroundColor: color }} />;
-}
+import { steps } from "../../constants";
+import { Mark } from "./Mark";
 
 export default function HIW() {
   return (

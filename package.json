@@ -12,6 +12,7 @@
     "db:generate": "npx drizzle-kit generate"
   },
   "dependencies": {
+    "@aejkatappaja/phantom-ui": "^1.6.1",
     "@base-ui/react": "^1.6.0",
     "@emailjs/nodejs": "^5.0.2",
     "@hookform/resolvers": "^5.4.0",

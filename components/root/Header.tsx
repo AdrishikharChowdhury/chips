@@ -23,7 +23,7 @@ export default function Header({ session }: { session: Session }) {
   const navLinks = navigationLinks.slice(0,4);
   return (
     <header className="my-10 flex items-center justify-between gap-5">
-      <Link href="/" className="flex items-center gap-2">
+      <Link href="/home" className="flex items-center gap-2">
         <Image
           src="/logo.svg"
           className="size-40"

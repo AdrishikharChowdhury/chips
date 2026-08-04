@@ -391,3 +391,102 @@ export const footerLinks = [
     href: "/terms"
   }
 ]
+
+export const features = [
+  {
+    id: "01",
+    title: "University Workspaces",
+    desc: "Every university gets its own slug-scoped space. Members, components and requests stay isolated — no cross-campus noise.",
+    tag: "Multi-tenant",
+    accent: "#1457d8",
+    shape: "circle",
+  },
+  {
+    id: "02",
+    title: "Borrow Request Workflow",
+    desc: "Members request components, admins approve or reject. Status flows PENDING → BORROWED → RETURNED with full traceability.",
+    tag: "Workflow",
+    accent: "#e84522",
+    shape: "square",
+  },
+  {
+    id: "03",
+    title: "Live Inventory",
+    desc: "Available copies update the moment a borrow is approved or a return lands. Everyone sees the same truth.",
+    tag: "Realtime",
+    accent: "#f5b400",
+    shape: "triangle",
+  },
+  {
+    id: "04",
+    title: "Admin Analytics",
+    desc: "Dashboards chart available copies, pending approvals and usage per component — at a glance, per university.",
+    tag: "Insights",
+    accent: "#1457d8",
+    shape: "square",
+  },
+  {
+    id: "05",
+    title: "Group Status Updates",
+    desc: "Bulk-approve or return multiple requests at once. No clicking through rows one by one.",
+    tag: "Efficiency",
+    accent: "#e84522",
+    shape: "circle",
+  },
+  {
+    id: "06",
+    title: "Member Approvals",
+    desc: "University ID cards gate access. Admins approve accounts before anyone can borrow a single board.",
+    tag: "Secure",
+    accent: "#f5b400",
+    shape: "triangle",
+  },
+];
+
+export const steps = [
+  {
+    id: "01",
+    title: "Create your university",
+    desc: "Sign up, create your university space and add your logo. You become the owner with a slug-scoped workspace from day one.",
+    tag: "Setup",
+    color: "#1457d8",
+    shape: "square",
+  },
+  {
+    id: "02",
+    title: "Catalog your components",
+    desc: "Admins add components with photos, types, ratings and copy counts. Approve members by verifying their university ID cards.",
+    tag: "Inventory",
+    color: "#e84522",
+    shape: "circle",
+  },
+  {
+    id: "03",
+    title: "Members borrow & return",
+    desc: "Members request components, admins approve or bulk-update, and returns restock available copies automatically.",
+    tag: "Track",
+    color: "#f5b400",
+    shape: "triangle",
+  },
+];
+
+export const channels = [
+  {
+    tag: "Email",
+    title: "hello@chips.campus",
+    desc: "For partnerships, press and general enquiries.",
+    color: "#1457d8",
+  },
+  {
+    tag: "Support",
+    title: "support@chips.campus",
+    desc: "For account, billing and inventory issues.",
+    color: "#e84522",
+  },
+  {
+    tag: "Campus",
+    title: "CTO office",
+    desc: "For universities and admins going live.",
+    color: "#f5b400",
+  },
+];

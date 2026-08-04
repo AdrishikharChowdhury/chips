@@ -59,7 +59,7 @@ export default function CartSection({ rows }: CartSectionProps) {
     if (allSuccess) {
       await clearCart();
       toast.success("All components borrowed successfully.");
-      router.push("/components/borrow");
+      router.push("/home/components/borrow");
     } else {
       const failed = results.find((r) => !r?.success);
       toast.error(failed?.message ?? "An error occurred.");
