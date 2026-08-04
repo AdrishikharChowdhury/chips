@@ -67,7 +67,7 @@ export default function ComponentCard({
           <Button
             onClick={(e) => {
               e.stopPropagation();
-              router.push(`/components/borrow/${id}`);
+              router.push(`/home/components/borrow/${id}`);
             }}
             className="w-fit bg-cobalt-blue text-xs font-bold text-cream-paper hover:bg-cobalt-blue/90"
           >

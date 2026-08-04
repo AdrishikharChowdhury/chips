@@ -114,7 +114,7 @@ export default async function ComponentPage({
             <p className="mt-1 text-midnight-ink/60">{c.summary}</p>
           </div>
           <div className="flex items-center justify-between flex-row-reverse" >
-            <Link href={`/components/borrow/${c.id}`}>
+            <Link href={`/home/components/borrow/${c.id}`}>
               <Button className="bg-cobalt-blue text-cream-paper hover:bg-cobalt-blue/90 py-6 px-8 w-fit cursor-pointer">
                 <Image
                   src="/icons/component.svg"
