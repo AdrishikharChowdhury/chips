@@ -4,14 +4,14 @@ import React from "react";
 
 export default function Hero() {
   return (
-    <section id="home" className="flex flex-col gap-16 py-12 lg:py-20 h-screen justify-center items-center">
-      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:items-stretch lg:gap-20 h-full">
+    <section id="home" className="flex flex-col gap-12 py-10 lg:py-16 min-h-screen justify-center">
+      <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-20">
         {/* Text column */}
-        <div className="relative flex flex-col items-start gap-8 justify-center h-full">
+        <div className="relative flex flex-col items-start gap-6 justify-center lg:h-full">
           <span className="absolute -left-10 -top-12 hidden size-6 bg-cobalt-blue lg:block" />
           <span className="absolute -left-6 top-24 hidden size-4 border-2 border-midnight-ink lg:block" />
 
-          <div className="flex flex-wrap items-center gap-5">
+          <div className="flex flex-wrap items-center gap-4">
             <span className="ml-4 bg-marigold-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-midnight-ink border-2">
               Beta
             </span>
@@ -20,14 +20,14 @@ export default function Hero() {
             </span>
           </div>
 
-          <h1 className="font-degular-display text-5xl font-bold leading-tight tracking-wide text-midnight-ink xs:text-6xl md:text-7xl">
+          <h1 className="font-degular-display text-4xl font-bold leading-tight tracking-wide text-midnight-ink xs:text-5xl md:text-6xl xl:text-7xl">
             Centralized Hardware
             <span className="block text-cobalt-blue">
               Inventory for Prototype Systems
             </span>
           </h1>
 
-          <p className="max-w-115 text-lg leading-relaxed text-midnight-ink/70">
+          <p className="max-w-115 text-base leading-relaxed text-midnight-ink/70 md:text-lg">
             CHIPS gives university labs and makerspaces a shared, trackable
             catalog of electronic components — borrow, return, restock. No
             spreadsheets. No lost inventory.
@@ -55,7 +55,7 @@ export default function Hero() {
               { n: "03", l: "Slug-scoped Admin" },
             ].map((s) => (
               <div key={s.n} className="flex flex-col gap-1">
-                <span className="font-degular-display text-2xl font-bold text-poppy-red">
+                <span className="font-degular-display text-xl font-bold text-poppy-red xs:text-2xl">
                   {s.n}
                 </span>
                 <span className="text-xs font-semibold uppercase tracking-wider text-midnight-ink/50">
@@ -67,10 +67,10 @@ export default function Hero() {
         </div>
 
         {/* Poster column — framed like a print, offset shapes behind */}
-        <div className="relative min-h-80 lg:min-h-full">
+        <div className="relative min-h-72 lg:min-h-full">
           <span className="absolute -right-8 -top-8 hidden size-16 bg-marigold-yellow lg:block" />
           <span className="absolute -bottom-8 -left-8 hidden size-24 bg-blush-pink lg:block" />
-          <div className="relative h-full min-h-80 border-2 border-midnight-ink">
+          <div className="relative h-full min-h-72 border-2 border-midnight-ink">
             <Image
               src="/images/hero.webp"
               alt="CHIPS hero illustration"

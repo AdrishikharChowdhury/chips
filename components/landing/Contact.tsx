@@ -11,8 +11,8 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="flex justify-center items-center h-screen">
-      <div className="py-24 w-full">
+    <section id="contact" className="flex justify-center items-center min-h-screen">
+      <div className="py-16 w-full md:py-24">
         <div className="flex flex-col gap-6">
           <span className="border-2 bg-marigold-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-midnight-ink w-fit">
             Contact
@@ -66,12 +66,12 @@ export default function Contact() {
             <span className="absolute -right-4 -bottom-4 size-20 bg-blush-pink" />
   
             {submitted ? (
-              <div className="relative flex h-full min-h-80 flex-col items-start justify-center gap-6 border-2 border-midnight-ink bg-cream-paper p-10">
-                <span className="size-10 bg-poppy-red" />
-                <h3 className="font-degular-display text-3xl font-bold text-midnight-ink">
+              <div className="relative flex h-full min-h-72 flex-col items-start justify-center gap-5 border-2 border-midnight-ink bg-cream-paper p-8 md:p-10">
+                <span className="size-8 bg-poppy-red md:size-10" />
+                <h3 className="font-degular-display text-2xl font-bold text-midnight-ink md:text-3xl">
                   Message sent
                 </h3>
-                <p className="max-w-105 text-lg leading-relaxed text-midnight-ink/70">
+                <p className="max-w-105 text-base leading-relaxed text-midnight-ink/70 md:text-lg">
                   We&apos;ll get back to you within one working day. Check your
                   inbox shortly.
                 </p>
@@ -79,7 +79,7 @@ export default function Contact() {
             ) : (
               <form
                 onSubmit={handleSubmit}
-                className="relative flex flex-col gap-6 border-2 border-midnight-ink bg-cream-paper p-10"
+                className="relative flex flex-col gap-5 border-2 border-midnight-ink bg-cream-paper p-8 md:p-10"
               >
                 <div className="flex flex-col gap-2">
                   <label
