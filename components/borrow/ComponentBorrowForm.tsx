@@ -82,7 +82,7 @@ export function ComponentBorrowForm({
           const result = await borrowComponent({ componentId: id, dueDate: date, amount });
           if (result.success) {
             toast.success(result.message);
-            redirect("/components/borrow")
+            redirect("/home/components/borrow")
           } else {
             toast.error(result.message);
           }

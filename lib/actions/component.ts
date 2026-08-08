@@ -223,8 +223,8 @@ export const clearCart = async () => {
   } catch (error) {
     console.log(error);
   }
-  revalidatePath("/cart");
-  redirect("/cart");
+  revalidatePath("/home/cart");
+  redirect("/home/cart");
 };
 
 export const fetchBorrowedComponents = async () => {

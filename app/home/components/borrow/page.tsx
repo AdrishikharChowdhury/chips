@@ -56,7 +56,7 @@ export default async function BorrowPage({
           </div>
           <p className="text-2xl font-semibold text-midnight-ink/40">No components borrowed yet</p>
           <Link
-            href="/components"
+            href="/home/components"
             className="mt-4 inline-flex items-center gap-2 text-cobalt-blue hover:underline"
           >
             Browse components
