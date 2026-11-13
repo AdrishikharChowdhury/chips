@@ -251,10 +251,12 @@ export const fetchBorrowedComponents = async () => {
       componentsTable,
       eq(borrowRecords.componentId, componentsTable.id),
     )
-    .where(and(
-      eq(borrowRecords.userId, userId),
-      eq(borrowRecords.status, "BORROWED"),
-    ))
+    .where(
+      and(
+        eq(borrowRecords.userId, userId),
+        eq(borrowRecords.status, "BORROWED"),
+      ),
+    )
     .orderBy(desc(borrowRecords.createdAt));
   return rows;
 };
@@ -267,15 +269,51 @@ export const deleteComponent = async (componentId: string) => {
   try {
     await db
       .delete(componentsTable)
-      .where(and(
-        eq(componentsTable.id, componentId),
-        eq(componentsTable.universitySlug, slug),
-      ));
+      .where(
+        and(
+          eq(componentsTable.id, componentId),
+          eq(componentsTable.universitySlug, slug),
+        ),
+      );
     revalidatePath("/admin/components");
   } catch (error) {
     console.log(error);
   }
   redirect("/admin/component-requests");
+};
+
+export const updateComponent = async (componentId: string) => {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  const slug = await getAdminSlug();
+  if (!slug) return;
+
+  try {
+    const component = await db
+      .select()
+      .from(componentsTable)
+      .where(
+        and(
+          eq(componentsTable.id, componentId),
+          eq(componentsTable.universitySlug, slug),
+        ),
+      );
+
+    if (!component) {
+      return {
+        success: false,
+        message: "Component Not Found",
+      };
+    }
+
+    return {
+      success: true,
+      data: component,
+      message: "Component Fetched Successfully",
+    };
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 export const updateGroupStatus = async (formData: FormData) => {
@@ -301,10 +339,12 @@ export const updateGroupStatus = async (formData: FormData) => {
           amount: borrowRecords.amount,
         })
         .from(borrowRecords)
-        .where(and(
-          inArray(borrowRecords.id, requestIds),
-          eq(borrowRecords.universitySlug, slug),
-        ));
+        .where(
+          and(
+            inArray(borrowRecords.id, requestIds),
+            eq(borrowRecords.universitySlug, slug),
+          ),
+        );
       if (records.length) {
         const totalAmount = records.reduce((sum, r) => sum + r.amount, 0);
         await db
@@ -312,10 +352,12 @@ export const updateGroupStatus = async (formData: FormData) => {
           .set({
             availableCopies: sql`${componentsTable.availableCopies} + ${totalAmount}`,
           })
-          .where(and(
-            eq(componentsTable.id, records[0].componentId),
-            eq(componentsTable.universitySlug, slug),
-          ));
+          .where(
+            and(
+              eq(componentsTable.id, records[0].componentId),
+              eq(componentsTable.universitySlug, slug),
+            ),
+          );
       }
       await db
         .update(borrowRecords)
@@ -323,18 +365,22 @@ export const updateGroupStatus = async (formData: FormData) => {
           status: newStatus as "BORROWED" | "RETURNED",
           returnDate: new Date().toISOString().slice(0, 10),
         })
-        .where(and(
-          inArray(borrowRecords.id, requestIds),
-          eq(borrowRecords.universitySlug, slug),
-        ));
+        .where(
+          and(
+            inArray(borrowRecords.id, requestIds),
+            eq(borrowRecords.universitySlug, slug),
+          ),
+        );
     } else {
       await db
         .update(borrowRecords)
         .set({ status: newStatus as "BORROWED" | "RETURNED" })
-        .where(and(
-          inArray(borrowRecords.id, requestIds),
-          eq(borrowRecords.universitySlug, slug),
-        ));
+        .where(
+          and(
+            inArray(borrowRecords.id, requestIds),
+            eq(borrowRecords.universitySlug, slug),
+          ),
+        );
     }
     revalidatePath("/admin");
     revalidatePath("/admin/component-requests");
@@ -353,10 +399,12 @@ export const approveRequest = async (requestId: string) => {
     await db
       .update(borrowRecords)
       .set({ status: "BORROWED" })
-      .where(and(
-        eq(borrowRecords.id, requestId),
-        eq(borrowRecords.universitySlug, slug),
-      ));
+      .where(
+        and(
+          eq(borrowRecords.id, requestId),
+          eq(borrowRecords.universitySlug, slug),
+        ),
+      );
     revalidatePath("/admin/component-requests");
   } catch (error) {
     console.log(error);
@@ -373,10 +421,12 @@ export const rejectRequest = async (requestId: string) => {
     await db
       .update(borrowRecords)
       .set({ status: "RETURNED" })
-      .where(and(
-        eq(borrowRecords.id, requestId),
-        eq(borrowRecords.universitySlug, slug),
-      ));
+      .where(
+        and(
+          eq(borrowRecords.id, requestId),
+          eq(borrowRecords.universitySlug, slug),
+        ),
+      );
     revalidatePath("/admin/component-requests");
   } catch (error) {
     console.log(error);
@@ -396,10 +446,12 @@ export const returnRequest = async (requestId: string) => {
         amount: borrowRecords.amount,
       })
       .from(borrowRecords)
-      .where(and(
-        eq(borrowRecords.id, requestId),
-        eq(borrowRecords.universitySlug, slug),
-      ))
+      .where(
+        and(
+          eq(borrowRecords.id, requestId),
+          eq(borrowRecords.universitySlug, slug),
+        ),
+      )
       .limit(1);
 
     if (record.length) {
@@ -408,10 +460,12 @@ export const returnRequest = async (requestId: string) => {
         .set({
           availableCopies: sql`${componentsTable.availableCopies} + ${record[0].amount}`,
         })
-        .where(and(
-          eq(componentsTable.id, record[0].componentId),
-          eq(componentsTable.universitySlug, slug),
-        ));
+        .where(
+          and(
+            eq(componentsTable.id, record[0].componentId),
+            eq(componentsTable.universitySlug, slug),
+          ),
+        );
     }
 
     await db
@@ -420,10 +474,12 @@ export const returnRequest = async (requestId: string) => {
         status: "RETURNED",
         returnDate: new Date().toISOString().slice(0, 10),
       })
-      .where(and(
-        eq(borrowRecords.id, requestId),
-        eq(borrowRecords.universitySlug, slug),
-      ));
+      .where(
+        and(
+          eq(borrowRecords.id, requestId),
+          eq(borrowRecords.universitySlug, slug),
+        ),
+      );
     revalidatePath("/admin/component-requests");
   } catch (error) {
     console.log(error);
@@ -449,10 +505,12 @@ export const updateRequestStatus = async (
           amount: borrowRecords.amount,
         })
         .from(borrowRecords)
-        .where(and(
-          eq(borrowRecords.id, requestId),
-          eq(borrowRecords.universitySlug, slug),
-        ))
+        .where(
+          and(
+            eq(borrowRecords.id, requestId),
+            eq(borrowRecords.universitySlug, slug),
+          ),
+        )
         .limit(1);
       if (record.length) {
         await db
@@ -460,10 +518,12 @@ export const updateRequestStatus = async (
           .set({
             availableCopies: sql`${componentsTable.availableCopies} + ${record[0].amount}`,
           })
-          .where(and(
-            eq(componentsTable.id, record[0].componentId),
-            eq(componentsTable.universitySlug, slug),
-          ));
+          .where(
+            and(
+              eq(componentsTable.id, record[0].componentId),
+              eq(componentsTable.universitySlug, slug),
+            ),
+          );
       }
       await db
         .update(borrowRecords)
@@ -471,18 +531,22 @@ export const updateRequestStatus = async (
           status: newStatus as "BORROWED" | "RETURNED",
           returnDate: new Date().toISOString().slice(0, 10),
         })
-        .where(and(
-          eq(borrowRecords.id, requestId),
-          eq(borrowRecords.universitySlug, slug),
-        ));
+        .where(
+          and(
+            eq(borrowRecords.id, requestId),
+            eq(borrowRecords.universitySlug, slug),
+          ),
+        );
     } else {
       await db
         .update(borrowRecords)
         .set({ status: newStatus as "BORROWED" | "RETURNED" })
-        .where(and(
-          eq(borrowRecords.id, requestId),
-          eq(borrowRecords.universitySlug, slug),
-        ));
+        .where(
+          and(
+            eq(borrowRecords.id, requestId),
+            eq(borrowRecords.universitySlug, slug),
+          ),
+        );
     }
     revalidatePath("/admin/component-requests");
   } catch (error) {
@@ -497,10 +561,12 @@ export const deleteBorrowRecordInAdmin = async (requestId: string) => {
   try {
     await db
       .delete(borrowRecords)
-      .where(and(
-        eq(borrowRecords.id, requestId),
-        eq(borrowRecords.universitySlug, slug),
-      ));
+      .where(
+        and(
+          eq(borrowRecords.id, requestId),
+          eq(borrowRecords.universitySlug, slug),
+        ),
+      );
     revalidatePath("/admin/component-requests");
   } catch (error) {
     console.log(error);
