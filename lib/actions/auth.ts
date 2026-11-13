@@ -119,13 +119,21 @@ export const signUp = async (
     };
   }
 
-  const existingUser = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.email, email))
-    .limit(1);
-  if (existingUser.length > 0) {
-    return { success: false, message: "User already exists" };
+  try {
+    const existingUser = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.email, email))
+      .limit(1);
+    if (existingUser.length > 0) {
+      return { success: false, message: "User already exists" };
+    }
+  } catch (error) {
+    console.error("Failed to check for existing user:", error);
+    return {
+      success: false,
+      message: "Service temporarily unavailable. Please try again.",
+    };
   }
 
   const hashedPassword = await hash(password, 10);
