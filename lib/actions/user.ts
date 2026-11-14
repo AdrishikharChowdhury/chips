@@ -6,7 +6,23 @@ import { borrowRecords, cartItemsTable, usersTable } from "@/database/schema";
 import { and, eq, inArray, sum } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-async function getAdminSlug() {
+export async function getUserRole() {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) throw new Error("Unauthorized");
+
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, userId))
+    .limit(1);
+
+  if (!user) throw new Error("User Not Found");
+
+  return user.role;
+}
+
+export async function getAdminSlug() {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) throw new Error("Unauthorized");
@@ -27,17 +43,22 @@ export const fetchPendingAccountRequests = async () => {
     const users = await db
       .select()
       .from(usersTable)
-      .where(and(
-        eq(usersTable.status, "PENDING"),
-        eq(usersTable.universitySlug, slug),
-      ));
+      .where(
+        and(
+          eq(usersTable.status, "PENDING"),
+          eq(usersTable.universitySlug, slug),
+        ),
+      );
     return users;
   } catch (error) {
     throw new Error("Failed to fetch account requests");
   }
 };
 
-export const approveAccountRequest = async (userId: string, formData: FormData) => {
+export const approveAccountRequest = async (
+  userId: string,
+  formData: FormData,
+) => {
   try {
     const slug = await getAdminSlug();
     if (!slug) return;
@@ -45,17 +66,19 @@ export const approveAccountRequest = async (userId: string, formData: FormData) 
     await db
       .update(usersTable)
       .set({ status: "APPROVED" })
-      .where(and(
-        eq(usersTable.id, userId),
-        eq(usersTable.universitySlug, slug),
-      ));
+      .where(
+        and(eq(usersTable.id, userId), eq(usersTable.universitySlug, slug)),
+      );
     revalidatePath("/admin/account-requests");
   } catch (error) {
     console.log(error);
   }
 };
 
-export const rejectAccountRequest = async (userId: string, formData: FormData) => {
+export const rejectAccountRequest = async (
+  userId: string,
+  formData: FormData,
+) => {
   try {
     const slug = await getAdminSlug();
     if (!slug) return;
@@ -63,10 +86,9 @@ export const rejectAccountRequest = async (userId: string, formData: FormData) =
     await db
       .update(usersTable)
       .set({ status: "REJECTED" })
-      .where(and(
-        eq(usersTable.id, userId),
-        eq(usersTable.universitySlug, slug),
-      ));
+      .where(
+        and(eq(usersTable.id, userId), eq(usersTable.universitySlug, slug)),
+      );
     revalidatePath("/admin/account-requests");
   } catch (error) {
     console.log(error);
@@ -91,28 +113,35 @@ export const fetchNonPendingAccounts = async () => {
         lastActivityDate: usersTable.lastActivityDate,
       })
       .from(usersTable)
-      .where(and(
-        eq(usersTable.status, "APPROVED"),
-        eq(usersTable.universitySlug, slug),
-      ));
+      .where(
+        and(
+          eq(usersTable.status, "APPROVED"),
+          eq(usersTable.universitySlug, slug),
+        ),
+      );
 
     const userIds = users.map((u) => u.id);
 
-    const borrowCounts = userIds.length > 0
-      ? await db
-          .select({
-            userId: borrowRecords.userId,
-            borrowCount: sum(borrowRecords.amount),
-          })
-          .from(borrowRecords)
-          .where(and(
-            inArray(borrowRecords.userId, userIds),
-            inArray(borrowRecords.status, ["PENDING", "BORROWED"]),
-          ))
-          .groupBy(borrowRecords.userId)
-      : [];
+    const borrowCounts =
+      userIds.length > 0
+        ? await db
+            .select({
+              userId: borrowRecords.userId,
+              borrowCount: sum(borrowRecords.amount),
+            })
+            .from(borrowRecords)
+            .where(
+              and(
+                inArray(borrowRecords.userId, userIds),
+                inArray(borrowRecords.status, ["PENDING", "BORROWED"]),
+              ),
+            )
+            .groupBy(borrowRecords.userId)
+        : [];
 
-    const countMap = new Map(borrowCounts.map((bc) => [bc.userId, bc.borrowCount]));
+    const countMap = new Map(
+      borrowCounts.map((bc) => [bc.userId, bc.borrowCount]),
+    );
 
     return users.map((u) => ({
       ...u,
@@ -133,10 +162,9 @@ export const updateUserRole = async (userId: string, formData: FormData) => {
     await db
       .update(usersTable)
       .set({ role: newRole as "USER" | "ADMIN" })
-      .where(and(
-        eq(usersTable.id, userId),
-        eq(usersTable.universitySlug, slug),
-      ));
+      .where(
+        and(eq(usersTable.id, userId), eq(usersTable.universitySlug, slug)),
+      );
     revalidatePath("/admin/users");
   } catch (error) {
     console.log(error);

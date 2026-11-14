@@ -1,1 +1,0 @@
-ALTER TABLE "components" ALTER COLUMN "rating" SET DATA TYPE real;
