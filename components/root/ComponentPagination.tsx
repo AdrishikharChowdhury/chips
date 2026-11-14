@@ -1,5 +1,7 @@
 "use client"
 
+import { usePathname } from "next/navigation"
+
 import {
   Pagination,
   PaginationContent,
@@ -13,13 +15,14 @@ import {
 interface ComponentPaginationProps {
   currentPage: number
   totalPages: number
-  basePath?: string
 }
 
-export function ComponentPagination({ currentPage, totalPages, basePath = "/components" }: ComponentPaginationProps) {
+export function ComponentPagination({ currentPage, totalPages }: ComponentPaginationProps) {
+  const pathname = usePathname()
+
   if (totalPages <= 1) return null
 
-  const buildHref = (page: number) => page === 1 ? basePath : `${basePath}?page=${page}`
+  const buildHref = (page: number) => page === 1 ? pathname : `${pathname}?page=${page}`
 
   const pages: (number | "ellipsis")[] = []
   const delta = 1

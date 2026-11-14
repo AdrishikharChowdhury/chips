@@ -75,7 +75,6 @@ export default async function BorrowPage({
       <ComponentPagination
         currentPage={currentPage}
         totalPages={totalPages}
-        basePath="/components/borrow"
       />
     </div>
   );
