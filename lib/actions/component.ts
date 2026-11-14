@@ -564,7 +564,7 @@ export const editComponent = async (componentId:string) => {
   if (!role || !slug) return;
 
   try {
-    const component = await db
+    const [component] = await db
       .select()
       .from(componentsTable)
       .where(
@@ -572,7 +572,8 @@ export const editComponent = async (componentId:string) => {
           eq(componentsTable.id, componentId),
           eq(componentsTable.universitySlug, slug),
         ),
-      );
+      )
+      .limit(1);
 
     if (!component) {
       return {
