@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
-import { deleteComponent } from "@/lib/actions/component";
+import { deleteComponent, updateComponent } from "@/lib/actions/component";
 import { desc, eq } from "drizzle-orm";
 import { Pencil, Plus, Trash } from "lucide-react";
 import Image from "next/image";
@@ -61,9 +61,11 @@ export default async function RecentComponents({ slug }: { slug: string }) {
             </article>
           </aside>
           <aside className="flex items-center gap-2 shrink-0">
-            <button className="flex size-9 items-center justify-center border-2 border-cobalt-blue/30 text-cobalt-blue hover:bg-cobalt-blue hover:text-cream-paper transition-colors">
-              <Pencil size={16} />
-            </button>
+            <form action={updateComponent.bind(null, component.id)}>
+              <button className="flex size-9 items-center justify-center border-2 border-cobalt-blue/30 text-cobalt-blue hover:bg-cobalt-blue hover:text-cream-paper transition-colors">
+                <Pencil size={16} />
+              </button>
+            </form>
             <form action={deleteComponent.bind(null, component.id)}>
               <button
                 type="submit"

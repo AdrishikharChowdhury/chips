@@ -1,1 +1,0 @@
-ALTER TABLE "borrow_records" ADD COLUMN "amount" integer DEFAULT 1 NOT NULL;

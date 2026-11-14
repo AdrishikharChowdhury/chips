@@ -3,18 +3,25 @@ import { adminSideBarLinks } from "@/constants";
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Session } from "next-auth";
+import { Eye } from "lucide-react";
 
 export default function Sidebar({ session }: { session: Session }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const router = useRouter();
+
 
   useEffect(() => {
     setCollapsed(window.innerWidth < 1024);
   }, []);
+
+  const switchToStudent = () => {
+    router.push('/home')
+  }
 
   return (
     <div className={cn("admin-sidebar", collapsed && "collapsed")}>
@@ -37,7 +44,10 @@ export default function Sidebar({ session }: { session: Session }) {
               <Link
                 key={adminLink.text}
                 href={adminLink.route}
-                className={cn("link", isSelected && "bg-poppy-red hover:bg-poppy-red/70")}
+                className={cn(
+                  "link",
+                  isSelected && "bg-poppy-red hover:bg-poppy-red/70",
+                )}
               >
                 <div className="flex items-center gap-2">
                   <Image
@@ -58,50 +68,58 @@ export default function Sidebar({ session }: { session: Session }) {
           })}
         </div>
       </div>
-      <div
-        className={
-          collapsed ? "space-y-4 mx-auto" : "flex justify-between items-center"
-        }
-      >
-        <div className="flex items-center gap-2">
-          <Avatar>
-            <AvatarFallback className="bg-poppy-red text-black text-xl font-semibold hover:bg-midnight-ink/5">
-              <span className="text-white">
-                <p>{getInitials(session?.user?.name || "IN")}</p>
-              </span>
-            </AvatarFallback>
-          </Avatar>
-          {!collapsed && (
-            <div>
-              <p className="text-white font-extrabold text-lg">
-                {session?.user?.name}
-              </p>
-              <p className="text-white text-sm font-light">
-                @{session?.user?.email}
-              </p>
-            </div>
-          )}
-        </div>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="flex size-8 items-center justify-center rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground self-end"
-          aria-label="Toggle sidebar"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d={collapsed ? "M6 4L10 8L6 12" : "M10 4L6 8L10 12"}
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+      <div className="flex flex-col gap-4">
+        <button onClick={switchToStudent} className={`w-full ${!collapsed ? "py-4 px-6" : "pl-4"} mx-auto flex gap-4 cursor-pointer items-center`}>
+          <Eye size={24} />
+          {!collapsed ? <p>Switch to Student View</p> : ""}
         </button>
+        <div
+          className={
+            collapsed
+              ? "space-y-4 mx-auto"
+              : "flex justify-between items-center"
+          }
+        >
+          <div className="flex items-center gap-2">
+            <Avatar>
+              <AvatarFallback className="bg-poppy-red text-black text-xl font-semibold hover:bg-midnight-ink/5">
+                <span className="text-white">
+                  <p>{getInitials(session?.user?.name || "IN")}</p>
+                </span>
+              </AvatarFallback>
+            </Avatar>
+            {!collapsed && (
+              <div>
+                <p className="text-white font-extrabold text-lg">
+                  {session?.user?.name}
+                </p>
+                <p className="text-white text-sm font-light">
+                  @{session?.user?.email}
+                </p>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="flex size-8 items-center justify-center rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground self-end"
+            aria-label="Toggle sidebar"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d={collapsed ? "M6 4L10 8L6 12" : "M10 4L6 8L10 12"}
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );

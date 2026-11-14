@@ -10,13 +10,19 @@ import {
 } from "@/components/ui/table";
 import { db } from "@/database";
 import { componentsTable } from "@/database/schema";
-import { deleteComponent } from "@/lib/actions/component";
+import { deleteComponent, updateComponent } from "@/lib/actions/component";
 import { and, eq, ilike } from "drizzle-orm";
 import Image from "next/image";
 import { Pencil, Trash } from "lucide-react";
 import { ApprovalAnimation } from "@/components/lottie/ApprovalAnimation";
 
-export async function ComponentTable({ searchQuery, slug }: { searchQuery?: string; slug: string }) {
+export async function ComponentTable({
+  searchQuery,
+  slug,
+}: {
+  searchQuery?: string;
+  slug: string;
+}) {
   const baseWhere = eq(componentsTable.universitySlug, slug);
   const components = searchQuery
     ? await db
@@ -123,9 +129,11 @@ export async function ComponentTable({ searchQuery, slug }: { searchQuery?: stri
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button className="flex size-9 items-center justify-center border-2 border-cobalt-blue/30 text-cobalt-blue hover:bg-cobalt-blue hover:text-cream-paper transition-colors">
-                        <Pencil size={16} />
-                      </button>
+                      <form action={updateComponent.bind(null,component.id)}>
+                        <button className="flex size-9 items-center justify-center border-2 border-cobalt-blue/30 text-cobalt-blue hover:bg-cobalt-blue hover:text-cream-paper transition-colors">
+                          <Pencil size={16} />
+                        </button>
+                      </form>
                       <form action={deleteComponent.bind(null, component.id)}>
                         <button
                           type="submit"

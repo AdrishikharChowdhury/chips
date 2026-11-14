@@ -15,37 +15,61 @@ import { componentSchema } from "@/lib/validations";
 import { InputGroupTextarea } from "@/components/ui/input-group";
 import ImageUpload from "./ImageUpload";
 import { componentFields } from "@/constants";
-import { createComponent } from "@/lib/admin/actions/components";
+import {
+  createComponent,
+  updateComponentDetails,
+} from "@/lib/admin/actions/components";
+import { Components } from "@/types";
 import { useRouter } from "next/navigation";
 
-interface AuthFormProps {
+interface ComponentFormProps {
   type?: "CREATE" | "UPDATE";
+  component?: Components;
+  componentId?: string;
 }
 
-export default function ComponentForm({ type, ...component }: AuthFormProps) {
+export default function ComponentForm({
+  type = "CREATE",
+  component,
+  componentId,
+}: ComponentFormProps) {
+  const isUpdate = type === "UPDATE";
   const router = useRouter();
-  const form = useForm<z.infer<typeof componentSchema>>({
+  const form = useForm<
+    z.input<typeof componentSchema>,
+    unknown,
+    z.output<typeof componentSchema>
+  >({
     resolver: zodResolver(componentSchema),
     defaultValues: {
-      title: "",
-      manufacturer: "",
-      description: "",
-      type: "",
-      rating: 1,
-      totalCopies: 1,
-      availableCopies: 1,
-      cover: "",
-      summary: "",
+      title: component?.title ?? "",
+      manufacturer: component?.manufacturer ?? "",
+      description: component?.description ?? "",
+      type: component?.type ?? "",
+      rating: component?.rating ?? 1,
+      totalCopies: component?.totalCopies ?? 1,
+      availableCopies: component?.availableCopies ?? 1,
+      cover: component?.cover ?? "",
+      summary: component?.summary ?? "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof componentSchema>) => {
-    const result = await createComponent(values);
+    const result =
+      isUpdate && componentId
+        ? await updateComponentDetails(componentId, values)
+        : await createComponent(values);
+
     if (result.success) {
-      toast.success("Component created successfully");
+      toast.success(
+        isUpdate
+          ? "Component updated successfully"
+          : "Component created successfully",
+      );
       router.push("/admin/components");
+      router.refresh();
     } else {
-      toast.error(result.message);
+      toast.error(result.message ?? "Something went wrong");
     }
   };
 
@@ -70,7 +94,8 @@ export default function ComponentForm({ type, ...component }: AuthFormProps) {
                 {field.type === "textarea" ? (
                   <InputGroupTextarea
                     className="component-form_input pl-4 min-h-50 border bg-midnight-ink/5 text-lg!"
-                    {...(ctrlField as any)}
+                    {...ctrlField}
+                    value={ctrlField.value as string | number}
                     id={`form-rhf-demo-${field.id}`}
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
@@ -85,12 +110,14 @@ export default function ComponentForm({ type, ...component }: AuthFormProps) {
                 ) : (
                   <Input
                     className="component-form_input pl-4"
-                    {...(ctrlField as any)}
+                    {...ctrlField}
+                    value={ctrlField.value as string | number}
                     id={`form-rhf-demo-${field.id}`}
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
                     required
                     type={field.type}
+                    step={field.id === "rating" ? "0.1" : undefined}
                     placeholder={field.placeholder}
                   />
                 )}
@@ -108,7 +135,7 @@ export default function ComponentForm({ type, ...component }: AuthFormProps) {
         type="submit"
         className="form-btn text-xl font-degular-display font-extrabold"
       >
-        Add Component
+        {isUpdate ? "Update Component" : "Add Component"}
       </Button>
     </form>
   );

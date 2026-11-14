@@ -2,7 +2,7 @@
 import { cn, getInitials } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Session } from "next-auth";
 import { Button } from "@/components/ui/button";
@@ -16,11 +16,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SignOutIcon, UserIcon } from "@phosphor-icons/react";
 import { navigationLinks } from "@/constants";
+import { Eye } from "lucide-react";
 
-export default function Header({ session }: { session: Session }) {
+export default function Header({
+  session,
+  isAuthority,
+  slug,
+}: {
+  session: Session;
+  isAuthority: boolean;
+  slug: string;
+}) {
   const pathname = usePathname();
+  const router = useRouter();
   const isSignIn = session?.user;
-  const navLinks = navigationLinks.slice(0,4);
+  const navLinks = navigationLinks.slice(0, 4);
+
+  const switchToAdminOwner = () => {
+    router.push("/admin");
+  };
+
   return (
     <header className="my-10 flex items-center justify-between gap-5">
       <Link href="/home" className="flex items-center gap-2">
@@ -84,6 +99,15 @@ export default function Header({ session }: { session: Session }) {
                           {navigationLinks[4].label}
                         </Link>
                       </DropdownMenuItem>
+                      {isAuthority && (
+                        <DropdownMenuItem
+                          onClick={switchToAdminOwner}
+                          className="w-full transition-colors hover:bg-marigold-yellow/20 text-base text-center py-2.5 px-3 flex cursor-pointer text-midnight-ink"
+                        >
+                          <Eye size={18} />
+                          {slug} View
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem
                         onClick={() => signOut()}
                         className="cursor-pointer rounded-none px-3 py-2.5 text-base text-midnight-ink transition-colors hover:bg-poppy-red/20 hover:text-poppy-red"

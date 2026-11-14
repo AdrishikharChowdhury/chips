@@ -14,6 +14,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { and, eq, count, desc, inArray, sql } from "drizzle-orm";
 import { toast } from "sonner";
+import { getUserRole } from "./user";
 
 async function getAdminSlug() {
   const session = await auth();
@@ -285,35 +286,7 @@ export const deleteComponent = async (componentId: string) => {
 export const updateComponent = async (componentId: string) => {
   const session = await auth();
   if (!session?.user?.id) return;
-  const slug = await getAdminSlug();
-  if (!slug) return;
-
-  try {
-    const component = await db
-      .select()
-      .from(componentsTable)
-      .where(
-        and(
-          eq(componentsTable.id, componentId),
-          eq(componentsTable.universitySlug, slug),
-        ),
-      );
-
-    if (!component) {
-      return {
-        success: false,
-        message: "Component Not Found",
-      };
-    }
-
-    return {
-      success: true,
-      data: component,
-      message: "Component Fetched Successfully",
-    };
-  } catch (e) {
-    console.error(e);
-  }
+  redirect(`/admin/components/${componentId}`);
 };
 
 export const updateGroupStatus = async (formData: FormData) => {
@@ -582,5 +555,39 @@ export const deleteBorrowRecordUser = async (requestId: string) => {
     revalidatePath("/components/borrow");
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const editComponent = async (componentId:string) => {
+  const slug = await getAdminSlug();
+  const role = await getUserRole();
+  if (!role || !slug) return;
+
+  try {
+    const [component] = await db
+      .select()
+      .from(componentsTable)
+      .where(
+        and(
+          eq(componentsTable.id, componentId),
+          eq(componentsTable.universitySlug, slug),
+        ),
+      )
+      .limit(1);
+
+    if (!component) {
+      return {
+        success: false,
+        message: "Component Not Found",
+      };
+    }
+
+    return {
+      success: true,
+      data: component,
+      message: "Component Fetched Successfully",
+    };
+  } catch (e) {
+    console.error(e);
   }
 };

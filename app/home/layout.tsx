@@ -7,6 +7,7 @@ import { after } from "next/server";
 import { db } from "@/database";
 import { usersTable } from "@/database/schema";
 import { eq } from "drizzle-orm";
+import { getAdminSlug, getUserRole } from "@/lib/actions/user";
 
 export default async function RootLayout({
   children,
@@ -15,6 +16,9 @@ export default async function RootLayout({
 }) {
   const session = await auth();
   if (!session) redirect("/");
+
+  const slug = await getUserRole();
+  const isAuthority: boolean = slug === "ADMIN" || slug === "OWNER";
 
   after(async () => {
     if (!session?.user?.id) return;
@@ -27,7 +31,8 @@ export default async function RootLayout({
       .where(eq(usersTable.id, session?.user?.id))
       .limit(1);
 
-    if (user[0]?.lastActivityDate === new Date().toISOString().slice(0, 10)) return;
+    if (user[0]?.lastActivityDate === new Date().toISOString().slice(0, 10))
+      return;
 
     await db
       .update(usersTable)
@@ -38,7 +43,7 @@ export default async function RootLayout({
   return (
     <main className="root-container">
       <div className="mx-auto flex min-h-screen flex-col max-w-7xl">
-        <Header session={session} />
+        <Header slug={slug} isAuthority={isAuthority} session={session} />
         <div className="mt-20 flex-1">{children}</div>
         <Footer />
       </div>
