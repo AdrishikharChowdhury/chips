@@ -69,9 +69,9 @@ export default function Sidebar({ session }: { session: Session }) {
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <button onClick={switchToStudent} className={`w-max bg-cobalt-blue text-center ${!collapsed?"py-4 px-6":"p-3"} mx-auto flex gap-4 cursor-pointer`}>
+        <button onClick={switchToStudent} className={`w-full ${!collapsed ? "py-4 px-6" : "pl-4"} mx-auto flex gap-4 cursor-pointer items-center`}>
+          <Eye size={24} />
           {!collapsed ? <p>Switch to Student View</p> : ""}
-          <Eye />
         </button>
         <div
           className={

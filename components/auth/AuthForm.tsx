@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { sendOtp } from "@/lib/actions/otp";
 import OtpInput from "./OtpInput";
 import UniversitySelect from "./UniversitySelect";
+import { Eye, EyeOff } from "lucide-react";
 
 interface AuthFormProps {
   schema: ZodType;
@@ -52,6 +53,7 @@ export default function AuthForm({
   const [otpValue, setOtpValue] = useState("");
   const [orgLogo, setOrgLogo] = useState("");
   const [slug, setSlug] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(schema as any),
@@ -177,16 +179,41 @@ export default function AuthForm({
                         value={ctrlField.value as string}
                       />
                     ) : (
-                      <Input
-                        className="form-input pl-4"
-                        {...(ctrlField as any)}
-                        id={`form-rhf-demo-${field}`}
-                        aria-invalid={fieldState.invalid}
-                        autoComplete="off"
-                        required
-                        type={FIELD_TYPES[field as keyof typeof FIELD_TYPES]}
-                        placeholder={`Enter your ${FIELD_NAMES[field as keyof typeof FIELD_NAMES]}`}
-                      />
+                      <div className="relative">
+                        <Input
+                          className={`form-input pl-4 ${field === "password" ? "pr-11" : ""}`}
+                          {...(ctrlField as any)}
+                          id={`form-rhf-demo-${field}`}
+                          aria-invalid={fieldState.invalid}
+                          autoComplete="off"
+                          required
+                          type={
+                            field === "password" && showPassword
+                              ? "text"
+                              : FIELD_TYPES[
+                                  field as keyof typeof FIELD_TYPES
+                                ]
+                          }
+                          placeholder={`Enter your ${FIELD_NAMES[field as keyof typeof FIELD_NAMES]}`}
+                        />
+                        {field === "password" && (
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            aria-label={
+                              showPassword ? "Hide password" : "Show password"
+                            }
+                            aria-pressed={showPassword}
+                            className="absolute inset-y-0 right-3 flex items-center text-midnight-ink/60 transition-colors hover:text-midnight-ink"
+                          >
+                            {showPassword ? (
+                              <EyeOff size={20} />
+                            ) : (
+                              <Eye size={20} />
+                            )}
+                          </button>
+                        )}
+                      </div>
                     )}
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
